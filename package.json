@@ -9,8 +9,8 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "serve": "npm run build && cdk deploy --profile shankar",
-    "login": "aws sso login --profile shankar"
+    "serve": "npm run build && cdk deploy --profile shankar-dev-profile",
+    "login": "aws sso login --profile shankar-dev-profile"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
