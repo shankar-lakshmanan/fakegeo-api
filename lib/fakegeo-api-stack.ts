@@ -21,7 +21,7 @@ export class FakegeoApiStack extends cdk.Stack {
       "FakeGeoFunction",
       {
         runtime: lambda.Runtime.NODEJS_20_X,
-        entry: path.join(__dirname, "..", "lambda", "fakeGeo.ts"),
+        entry: path.join(__dirname, "..", "lambda/handlers", "fakeGeoHandler.ts"),
         handler: "handler",
         // timeout: cdk.Duration.minutes(10),
         // memorySize: 2048,

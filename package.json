@@ -10,9 +10,12 @@
     "test": "jest",
     "cdk": "cdk",
     "serve": "npm run build && cdk deploy --profile shankar-dev-profile",
-    "login": "aws sso login --profile shankar-dev-profile"
+    "login": "aws sso login --profile shankar-dev-profile",
+    "local": "cdk synth && sam local invoke FakeGeoFunction -t ./cdk.out/FakegeoApiStack.template.json --event %EVENT_FILE%",
+    "api": "cdk synth && sam local start-api -t ./cdk.out/FakegeoApiStack.template.json"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.145",
     "@types/jest": "^29.5.12",
     "@types/node": "20.12.7",
     "aws-cdk": "2.143.0",
