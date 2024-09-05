@@ -12,14 +12,17 @@
     "serve": "npm run build && cdk deploy --profile shankar-dev-profile",
     "login": "aws sso login --profile shankar-dev-profile",
     "local": "cdk synth && sam local invoke FakeGeoFunction -t ./cdk.out/FakegeoApiStack.template.json --event %EVENT_FILE%",
-    "api": "cdk synth && sam local start-api -t ./cdk.out/FakegeoApiStack.template.json"
+    "api": "cdk synth && sam local start-api -t ./cdk.out/FakegeoApiStack.template.json",
+    "generate-docs": "ts-node ./generate-swagger.ts"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.145",
     "@types/jest": "^29.5.12",
     "@types/node": "20.12.7",
+    "@types/swagger-jsdoc": "^6.0.4",
     "aws-cdk": "2.143.0",
     "jest": "^29.7.0",
+    "swagger-jsdoc": "^6.2.8",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "~5.4.5"
