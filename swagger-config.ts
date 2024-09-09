@@ -11,6 +11,13 @@ const options: Options = {
       version: "1.0.0", // API version
       description: "Documentation for FakeGeo API", // Short description of the API
     },
+    tags: [
+      {
+        name: "point",
+        description: "Operations related to geographical points",
+      },
+      // Add more global tags here as needed
+    ],
   },
   // Path to the files with the API documentation annotations
   apis: ["./lambda/**/*.ts"], // Adjust the path to match your project structure

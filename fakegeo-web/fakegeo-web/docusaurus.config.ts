@@ -76,9 +76,15 @@ const config: Config = {
           },
         ],
         // Theme Options for modifying how redoc renders them
-        theme: {
-          // Change with your site colors
-          primaryColor: '#1890ff',
+        // theme: {
+        //   // Change with your site colors
+        //   primaryColor: '#1890ff',
+        // },
+        config: {
+          expandResponses: 'all', // Expand responses for status codes 200 and 201
+          scrollYOffset: 60,          // Adjust scroll offset for fixed headers
+          // Include request samples in multiple languages
+          requestSamples: ['curl', 'http', 'python', 'javascript'],
         },
       },
     ] satisfies Redocusaurus.PresetEntry,

@@ -5,6 +5,12 @@
     "version": "1.0.0",
     "description": "Documentation for FakeGeo API"
   },
+  "tags": [
+    {
+      "name": "point",
+      "description": "Operations related to geographical points"
+    }
+  ],
   "paths": {
     "/fakegeo": {
       "get": {
@@ -32,8 +38,11 @@
     },
     "/point": {
       "get": {
-        "summary": "Returns a random point",
-        "description": "Generates a random geographical point using the Turf.js library.",
+        "tags": [
+          "point"
+        ],
+        "summary": "Returns a point",
+        "description": "Generates a geographical point.",
         "responses": {
           "200": {
             "description": "A successful response",
@@ -44,28 +53,70 @@
                   "properties": {
                     "type": {
                       "type": "string",
-                      "example": "FeatureCollection"
+                      "example": "Feature"
                     },
-                    "features": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "geometry": {
-                            "type": "object",
-                            "properties": {
-                              "coordinates": {
-                                "type": "array",
-                                "items": {
-                                  "type": "number"
-                                },
-                                "example": [
-                                  -101.278818,
-                                  40.816337
-                                ]
-                              }
-                            }
-                          }
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "Point"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          },
+                          "example": [
+                            -101.278818,
+                            40.816337
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/point/random": {
+      "get": {
+        "tags": [
+          "point"
+        ],
+        "summary": "Returns a random point",
+        "description": "Generates a random geographical point.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "Point"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          },
+                          "example": [
+                            -101.278818,
+                            40.816337
+                          ]
                         }
                       }
                     }
@@ -78,6 +129,5 @@
       }
     }
   },
-  "components": {},
-  "tags": []
+  "components": {}
 }

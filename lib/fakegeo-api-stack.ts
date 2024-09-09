@@ -40,17 +40,17 @@ export class FakegeoApiStack extends cdk.Stack {
       proxy: false,
     });
 
+    const methodOptions =  {
+      apiKeyRequired: true,
+    }
+
     // Define the '/fakegeo' hello world resource with a GET method
     const fakegeoResource = api.root.addResource("fakegeo");
-    fakegeoResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), {
-      apiKeyRequired: true,
-    });
+    fakegeoResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     
-
     const pointResource = api.root.addResource("point");
-    pointResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), {
-      apiKeyRequired: true,
-    });
+    const pointRandomResource = pointResource.addResource('random');
+    pointResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
     const plan = new apigateway.UsagePlan(this, "UsagePlan", {
       name: "Easy",
