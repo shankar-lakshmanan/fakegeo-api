@@ -1,7 +1,6 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
-// docusaurus.config.ts
 import type * as Redocusaurus from 'redocusaurus';
 
 const config: Config = {
@@ -74,6 +73,11 @@ const config: Config = {
             spec: 'swagger-output.json',
             route: '/api/',
           },
+          // You can also pass it a OpenAPI spec URL
+          // {
+          //   spec: 'https://redocly.github.io/redoc/openapi.yaml',
+          //   route: '/openapi/',
+          // },
         ],
         // Theme Options for modifying how redoc renders them
         // theme: {
@@ -85,7 +89,7 @@ const config: Config = {
           scrollYOffset: 60,          // Adjust scroll offset for fixed headers
           // Include request samples in multiple languages
           requestSamples: ['curl', 'http', 'python', 'javascript'],
-        },
+        }
       },
     ] satisfies Redocusaurus.PresetEntry,
   ],
@@ -107,12 +111,12 @@ const config: Config = {
           label: 'Tutorial',
         },
         {to: '/blog', label: 'Blog', position: 'left'},
+        {to: '/api', label: 'API', position: 'left'},
         {
           href: 'https://github.com/facebook/docusaurus',
           label: 'GitHub',
           position: 'right',
         },
-        {to: '/api', label: 'API', position: 'left'},
       ],
     },
     footer: {
