@@ -13,9 +13,13 @@ const options: Options = {
     },
     tags: [
       {
-        name: "point",
+        name: "Point",
         description: "Operations related to geographical points",
       },
+      {
+        name: "Point feature",
+        description: "Operations related to geographical point features",
+      }
       // Add more global tags here as needed
     ],
   },

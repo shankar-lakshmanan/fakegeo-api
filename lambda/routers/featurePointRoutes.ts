@@ -3,14 +3,14 @@ import { RandomPoint } from "../functions/point/randomPoint";
 import { WithinPoint } from "../functions/point/withinPoint";
 import { WithinRandomPoint } from "../functions/point/withinRandomPoint";
 
-export const pointRoutes: Record<string, Function> = {
+export const featurePointRoutes: Record<string, Function> = {
   /**
    * @openapi
-   * /point:
+   * /feature/point:
    *   get:
    *     tags:
-   *       - Point
-   *     summary: Returns a point
+   *       - Point feature
+   *     summary: Returns a point geojson Feature
    *     description: Generates a geographical point.
    *     responses:
    *       200:
@@ -35,15 +35,15 @@ export const pointRoutes: Record<string, Function> = {
    *                         type: number
    *                       example: [-101.278818, 40.816337]
    */
-  "GET /point": Point,
+  "GET /feature/point": Point,
 
   /**
    * @openapi
-   * /point/random:
+   * /feature/point/random:
    *   get:
    *     tags:
-   *       - Point
-   *     summary: Returns a random point
+   *       - Point feature
+   *     summary: Returns a random point geojson Feature
    *     description: Generates a random geographical point.
    *     responses:
    *       200:
@@ -68,15 +68,15 @@ export const pointRoutes: Record<string, Function> = {
    *                         type: number
    *                       example: [-101.278818, 40.816337]
    */
-  "GET /point/random": RandomPoint,
+  "GET /feature/point/random": RandomPoint,
 
   /**
  * @openapi
- * /point:
+ * /feature/point:
  *   post:
  *     tags:
- *       - Point
- *     summary: Returns a point within a GeoJSON polygon or bbox
+ *       - Point feature
+ *     summary: Returns a point geojson Feature within a GeoJSON polygon or bbox
  *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a point within it.
  *     requestBody:
  *       required: false
@@ -129,15 +129,15 @@ export const pointRoutes: Record<string, Function> = {
  *                       example: [-99.40157045143154, 39.19210754121596]
  */
 
-  "POST /point": WithinPoint,
+  "POST /feature/point": WithinPoint,
 
     /**
  * @openapi
- * /point/random:
+ * /feature/point/random:
  *   post:
  *     tags:
- *       - Point
- *     summary: Returns a random point within a GeoJSON polygon or bbox
+ *       - Point feature
+ *     summary: Returns a random point geojson Feature within a GeoJSON polygon or bbox
  *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a random point within it.
  *     requestBody:
  *       required: false
@@ -189,5 +189,5 @@ export const pointRoutes: Record<string, Function> = {
  *                         type: number
  *                       example: []
  */
-  "POST /point/random": WithinRandomPoint,
+  "POST /feature/point/random": WithinRandomPoint,
 };
