@@ -52,6 +52,7 @@ export class FakegeoApiStack extends cdk.Stack {
     const pointRandomResource = pointResource.addResource('random');
     pointResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     pointResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    pointRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
     const plan = new apigateway.UsagePlan(this, "UsagePlan", {
       name: "Easy",
