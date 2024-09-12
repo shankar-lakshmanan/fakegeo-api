@@ -56,10 +56,23 @@ export class FakegeoApiStack extends cdk.Stack {
 
     const featureResource = api.root.addResource("feature");
     const featurePointResource = featureResource.addResource("point");
-    const featurePointRandomResource = featureResource.addResource('random');
+    const featurePointRandomResource = featurePointResource.addResource('random');
     featurePointResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featurePointResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featurePointRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+
+    
+    const lineResource = api.root.addResource("line");
+    const lineRandomResource = lineResource.addResource('random');
+    lineResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    lineResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    lineRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+
+    const featureLineResource = featureResource.addResource("line");
+    const featureLineRandomResource = featureLineResource.addResource('random');
+    featureLineResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureLineResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureLineRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
     const plan = new apigateway.UsagePlan(this, "UsagePlan", {
       name: "Easy",

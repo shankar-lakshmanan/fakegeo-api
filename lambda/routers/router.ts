@@ -3,11 +3,15 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { pointRoutes } from "./pointRoutes";
 import { fakeGeoRoutes } from "./fakeGeoRoutes";
 import { featurePointRoutes } from "./featurePointRoutes";
+import { lineRoutes } from "./lineRoutes";
+import { featureLineRoutes } from "./featureLineRoutes";
 
 const routes: Record<string, Function> = {
   ...fakeGeoRoutes,
   ...pointRoutes,
-  ...featurePointRoutes
+  ...featurePointRoutes,
+  ...lineRoutes,
+  ...featureLineRoutes
 };
 
 export const router = async (

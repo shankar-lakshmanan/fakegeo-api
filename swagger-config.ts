@@ -19,6 +19,14 @@ const options: Options = {
       {
         name: "Point feature",
         description: "Operations related to geographical point features",
+      },
+      {
+        name: "Line",
+        description: "Operations related to geographical lines",
+      },
+      {
+        name: "Line feature",
+        description: "Operations related to geographical line features",
       }
       // Add more global tags here as needed
     ],
