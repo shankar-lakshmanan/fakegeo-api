@@ -1,7 +1,4 @@
-import { Polygon } from "../functions/polygon/polygon";
-import { RandomPolygon } from "../functions/polygon/randomPolygon";
-import { WithinPolygon } from "../functions/polygon/withinPolygon";
-import { WithinRandomPolygon } from "../functions/polygon/withinRandomPolygon";
+import { Polygon, RandomPolygon, WithinPolygon, WithinRandomPolygon } from "../functions/polygon/polygon";
 
 export const polygonRoutes: Record<string, Function> = {
 /**

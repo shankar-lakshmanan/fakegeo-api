@@ -1,7 +1,4 @@
-import { Point } from "../functions/point/point";
-import { RandomPoint } from "../functions/point/randomPoint";
-import { WithinPoint } from "../functions/point/withinPoint";
-import { WithinRandomPoint } from "../functions/point/withinRandomPoint";
+import { Point, RandomPoint, WithinPoint, WithinRandomPoint } from "../functions/point/point";
 
 export const pointRoutes: Record<string, Function> = {
   /**

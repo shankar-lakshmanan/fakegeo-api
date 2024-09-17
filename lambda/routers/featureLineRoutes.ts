@@ -1,7 +1,4 @@
-import { Line } from "../functions/line/line";
-import { RandomLine } from "../functions/line/randomLine";
-import { WithinLine } from "../functions/line/withinLine";
-import { WithinRandomLine } from "../functions/line/withinRandomLine";
+import { Line, RandomLine,WithinLine, WithinRandomLine  } from "../functions/line/line";
 
 export const featureLineRoutes: Record<string, Function> = {
   /**
