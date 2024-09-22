@@ -1,7 +1,8 @@
 import * as turf from "@turf/turf";
-import {Feature, Geometry} from "geojson";
+import {Feature, Geometry, FeatureCollection} from "geojson";
 import { APIGatewayProxyResult } from "aws-lambda";
 import { GetBadRequestErrorResponse, GetInternalServerErrorResponse, GetOkResponse, OkResponse } from "../../util/stringify";
+import { thousandPoints } from "./thousandPoints";
 
 export function Point(
   ): OkResponse {
@@ -107,6 +108,49 @@ try {
   }
 
   return GetOkResponse(point);
+} catch (error:any) {
+  return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
+}
+}
+
+
+export function Points(
+): OkResponse {
+  const points: FeatureCollection = thousandPoints;
+  const thirtyPoints = points.features.slice(970);
+  const reducedPoints: FeatureCollection = {
+    ...points,
+    features: [...thirtyPoints]
+  }
+  return GetOkResponse(reducedPoints);
+}
+
+export function PointsLimitAndWithin(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}")
+
+  try {
+  const { limit } = body;
+
+  const points: FeatureCollection = thousandPoints;
+  let finalPoints: FeatureCollection;
+  if (limit) {
+    if(limit < 1000){
+      const limitPoints = points.features.slice(1000 - limit);
+      const reducedPoints: FeatureCollection = {
+        ...points,
+        features: [...limitPoints]
+      }
+      finalPoints = reducedPoints;
+    } else if(limit > 1000){
+      finalPoints = points
+    } else {
+      return GetBadRequestErrorResponse("Invalid input. Provide a valid limit number");
+    }
+  } else {
+    return GetBadRequestErrorResponse("Invalid input. Provide a valid limit number");
+  }
+
+  return GetOkResponse(finalPoints);
 } catch (error:any) {
   return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
 }

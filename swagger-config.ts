@@ -35,6 +35,10 @@ const options: Options = {
       {
         name: "Polygon feature",
         description: "Operations related to geographical polygon features",
+      },
+      {
+        name: "Points",
+        description: "Operations related to geographical points",
       }
       // Add more global tags here as needed
     ],
