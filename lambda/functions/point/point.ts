@@ -3,6 +3,7 @@ import {Feature, Geometry, FeatureCollection} from "geojson";
 import { APIGatewayProxyResult } from "aws-lambda";
 import { GetBadRequestErrorResponse, GetInternalServerErrorResponse, GetOkResponse, OkResponse } from "../../util/stringify";
 import { thousandPoints } from "./thousandPoints";
+import { booleanPointInPolygon } from "@turf/turf";
 
 export function Point(
   ): OkResponse {
@@ -129,25 +130,53 @@ export function PointsLimitAndWithin(event: any): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}")
 
   try {
-  const { limit } = body;
+  const { limit, geojsonPolygon, bbox } = body;
 
-  const points: FeatureCollection = thousandPoints;
+  let points: FeatureCollection = thousandPoints;
   let finalPoints: FeatureCollection;
+  // Check if geojsonPolygon is valid
+  if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
+
+    const filteredPoints = points.features.filter((feature) => {
+      // Check if the feature is a point and within the bbox polygon
+      return feature.geometry.type === "Point" && booleanPointInPolygon(feature.geometry.coordinates, geojsonPolygon);
+    });
+    
+    // Wrap the filtered points back into a FeatureCollection
+    points = turf.featureCollection(filteredPoints);
+
+  } else if (bbox && isValidBBox(bbox)) {
+    const bboxPolygonGeometry = turf.bboxPolygon(bbox); // Create a polygon from the bbox
+    
+    const filteredPoints = points.features.filter((feature) => {
+      // Check if the feature is a point and within the bbox polygon
+      return feature.geometry.type === "Point" && booleanPointInPolygon(feature.geometry.coordinates, bboxPolygonGeometry);
+    });
+    
+    // Wrap the filtered points back into a FeatureCollection
+    points = turf.featureCollection(filteredPoints);
+  }
+
   if (limit) {
-    if(limit < 1000){
-      const limitPoints = points.features.slice(1000 - limit);
-      const reducedPoints: FeatureCollection = {
+    if (points.features.length <= limit) {
+      // If there are fewer or equal points than the limit, return all points
+      finalPoints = points;
+    } else if (limit < 1000) {
+      // If limit is less than 1000, return the specified number of points
+      const limitedPoints = points.features.slice(0, limit);
+      finalPoints = {
         ...points,
-        features: [...limitPoints]
-      }
-      finalPoints = reducedPoints;
+        features: limitedPoints,
+      };
     } else if(limit > 1000){
-      finalPoints = points
+      // If limit is greater than 1000, return all points
+      finalPoints = points;
     } else {
       return GetBadRequestErrorResponse("Invalid input. Provide a valid limit number");
     }
   } else {
-    return GetBadRequestErrorResponse("Invalid input. Provide a valid limit number");
+    // If no limit is specified, return all points
+    finalPoints = points;
   }
 
   return GetOkResponse(finalPoints);

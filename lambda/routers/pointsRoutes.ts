@@ -71,14 +71,15 @@ export const pointsRoutes: Record<string, Function> = {
 
   "GET /points": Points,
 
- /**
+ 
+/**
  * @openapi
  * /points:
  *   post:
  *     tags:
  *       - Points
- *     summary: Returns a limited number of geographical points
- *     description: Accepts a limit and returns that many points from a collection of geographical points. Limit must be less than or equal to 1000.
+ *     summary: Returns a limited number of geographical points within a bounding box or GeoJSON polygon
+ *     description: Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of geographical points. The limit must be less than or equal to 1000.
  *     requestBody:
  *       required: true
  *       content:
@@ -90,6 +91,25 @@ export const pointsRoutes: Record<string, Function> = {
  *                 type: integer
  *                 description: Number of points to return (must be <= 1000)
  *                 example: 30
+ *               geojsonPolygon:
+ *                 type: object
+ *                 description: GeoJSON Polygon to filter points within
+ *                 example:
+ *                   type: "Polygon"
+ *                   coordinates:
+ *                     - [
+ *                         [-104.83004979248041, 39.06523015276548],
+ *                         [-102.45708546876439, 31.328195547453603],
+ *                         [-86.94737395052326, 31.832777392621864],
+ *                         [-84.34442721393819, 42.32251654152694],
+ *                         [-104.83004979248041, 39.06523015276548]
+ *                       ]
+ *               bbox:
+ *                 type: array
+ *                 description: Bounding box in the format [minX, minY, maxX, maxY] to filter points within
+ *                 items:
+ *                   type: number
+ *                 example: [-104.83004979248041, 31.328195547453603, -84.34442721393819, 43.89485607270808]
  *     responses:
  *       200:
  *         description: A successful response with a collection of geographical points.
@@ -121,7 +141,7 @@ export const pointsRoutes: Record<string, Function> = {
  *                               type: number
  *                               example: [-101.278818, 40.816337]
  *       400:
- *         description: Bad request - Invalid limit value
+ *         description: Bad request - Invalid limit value, GeoJSON Polygon, or BBox
  *         content:
  *           application/json:
  *             schema:
@@ -129,7 +149,7 @@ export const pointsRoutes: Record<string, Function> = {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Invalid input. Provide a valid limit number.
+ *                   example: Invalid input. Provide a valid limit number, GeoJSON Polygon, or bbox.
  *       500:
  *         description: Internal server error
  *         content:
@@ -139,231 +159,15 @@ export const pointsRoutes: Record<string, Function> = {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Error processing input <error_message>
+ *                   example: Error processing input. An internal error occurred
  */
 
   "POST /points": PointsLimitAndWithin,
 
 
 
+// "GET /points/random": Points,
+// "POST /points/random": PointsLimitAndWithin,
 
 
-
-
-  
-
-  /**
-   * @openapi
-   * /point/random:
-   *   get:
-   *     tags:
-   *       - Point
-   *     summary: Returns a random point
-   *     description: Generates a random geographical point.
-   *     responses:
-   *       200:
-   *         description: A successful response
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 type:
-   *                   type: string
-   *                   example: Feature
-   *                 geometry:
-   *                   type: object
-   *                   properties:
-   *                     type:
-   *                       type: string
-   *                       example: Point
-   *                     coordinates:
-   *                       type: array
-   *                       items:
-   *                         type: number
-   *                       example: [-101.278818, 40.816337]
-   *       400:
-   *         description: Bad request - Invalid data
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 message:
-   *                   type: string
-   *                   example: Invalid request
-   *       500:
-   *         description: Internal server error
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 message:
-   *                   type: string
-   *                   example: Internal Server Error
-   */
-  "GET /point/random": RandomPoint,
-
-  /**
-   * @openapi
-   * /point:
-   *   post:
-   *     tags:
-   *       - Point
-   *     summary: Returns a point within a GeoJSON polygon or bbox
-   *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a point within it.
-   *     requestBody:
-   *       required: false
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             properties:
-   *               geojsonPolygon:
-   *                 type: object
-   *                 description: GeoJSON Polygon to return a point within it
-   *                 example:
-   *                   type: "Polygon"
-   *                   coordinates:
-   *                     - [
-   *                         [-104.35959912130382, 40.186854567133594],
-   *                         [-99.75483802782351, 36.870115044295346],
-   *                         [-97.427541041584, 36.43876305758806],
-   *                         [-94.44354178155926, 38.13171162987652],
-   *                         [-99.30047105952276, 41.94545202484386],
-   *                         [-104.35959912130382, 40.186854567133594]
-   *                       ]
-   *               bbox:
-   *                 type: array
-   *                 description: Bounding box in the format [minX, minY, maxX, maxY] to return a point within it
-   *                 items:
-   *                   type: number
-   *                 example: [-104.35959912130382, 36.870115044295346, -94.44354178155926, 41.94545202484386]
-   *     responses:
-   *       200:
-   *         description: A successful response
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 type:
-   *                   type: string
-   *                   example: Feature
-   *                 geometry:
-   *                   type: object
-   *                   properties:
-   *                     type:
-   *                       type: string
-   *                       example: Point
-   *                     coordinates:
-   *                       type: array
-   *                       items:
-   *                         type: number
-   *                       example: [-99.40157045143154, 39.19210754121596]
-   *       400:
-   *         description: Bad request - Invalid input data
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 message:
-   *                   type: string
-   *                   example: Invalid request
-   *       500:
-   *         description: Internal server error
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 message:
-   *                   type: string
-   *                   example: Internal Server Error
-   */
-
-  "POST /point": WithinPoint,
-
-  /**
-   * @openapi
-   * /point/random:
-   *   post:
-   *     tags:
-   *       - Point
-   *     summary: Returns a random point within a GeoJSON polygon or bbox
-   *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a random point within it.
-   *     requestBody:
-   *       required: false
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             properties:
-   *               geojsonPolygon:
-   *                 type: object
-   *                 description: GeoJSON Polygon to return a random point within it
-   *                 example:
-   *                   type: "Polygon"
-   *                   coordinates:
-   *                     - [
-   *                         [-104.35959912130382, 40.186854567133594],
-   *                         [-99.75483802782351, 36.870115044295346],
-   *                         [-97.427541041584, 36.43876305758806],
-   *                         [-94.44354178155926, 38.13171162987652],
-   *                         [-99.30047105952276, 41.94545202484386],
-   *                         [-104.35959912130382, 40.186854567133594]
-   *                       ]
-   *               bbox:
-   *                 type: array
-   *                 description: Bounding box in the format [minX, minY, maxX, maxY] to return a random point within it
-   *                 items:
-   *                   type: number
-   *                 example: [-104.35959912130382, 36.870115044295346, -94.44354178155926, 41.94545202484386]
-   *     responses:
-   *       200:
-   *         description: A successful response
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 type:
-   *                   type: string
-   *                   example: Feature
-   *                 geometry:
-   *                   type: object
-   *                   properties:
-   *                     type:
-   *                       type: string
-   *                       example: Point
-   *                     coordinates:
-   *                       type: array
-   *                       items:
-   *                         type: number
-   *                       example: [-99.40157045143154, 39.19210754121596]
-   *       400:
-   *         description: Bad request - Invalid input data
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 message:
-   *                   type: string
-   *                   example: Invalid request
-   *       500:
-   *         description: Internal server error
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 message:
-   *                   type: string
-   *                   example: Internal Server Error
-   */
-
-  "POST /point/random": WithinRandomPoint,
 };
