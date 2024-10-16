@@ -184,3 +184,57 @@ export function PointsLimitAndWithin(event: any): APIGatewayProxyResult {
   return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
 }
 }
+
+
+export function RandomPoints(
+): OkResponse {
+  var thirtyPoints: FeatureCollection = turf.randomPoint(30, { bbox: [-180, -90, 180, 90] });
+  return GetOkResponse(thirtyPoints);
+}
+
+export function RandomPointsLimitAndWithin(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}")
+
+  try {
+  const { limit, geojsonPolygon, bbox } = body;
+
+  let points: FeatureCollection = {features:[], type:"FeatureCollection"};
+  let finalPoints: FeatureCollection;
+  // Check if geojsonPolygon is valid
+  if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
+    var bboxPoly = turf.bbox(geojsonPolygon);
+    points = turf.randomPoint(1000, { bbox: bboxPoly });
+
+  } else if (bbox && isValidBBox(bbox)) { // Create a polygon from the bbox
+    
+    points = turf.randomPoint(1000, { bbox: bbox });
+    
+  }
+
+  if (limit) {
+    if (points.features.length <= limit) {
+      // If there are fewer or equal points than the limit, return all points
+      finalPoints = points;
+    } else if (limit < 1000) {
+      // If limit is less than 1000, return the specified number of points
+      const limitedPoints = points.features.slice(0, limit);
+      finalPoints = {
+        ...points,
+        features: limitedPoints,
+      };
+    } else if(limit > 1000){
+      // If limit is greater than 1000, return all points
+      finalPoints = points;
+    } else {
+      return GetBadRequestErrorResponse("Invalid input. Provide a valid limit number");
+    }
+  } else {
+    // If no limit is specified, return all points
+    finalPoints = points;
+  }
+
+  return GetOkResponse(finalPoints);
+} catch (error:any) {
+  return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
+}
+}
