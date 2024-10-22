@@ -1,8 +1,11 @@
 import * as turf from "@turf/turf";
-import { Feature, Geometry, Point } from "geojson";
+import { Feature, Geometry, Point,FeatureCollection } from "geojson";
+
 
 import { APIGatewayProxyResult } from "aws-lambda";
 import { GetBadRequestErrorResponse, GetInternalServerErrorResponse, GetOkResponse, OkResponse } from "../../util/stringify";
+import { thousandLines } from "./thousandLines";
+import { booleanWithin } from "@turf/turf";
 
 export function Line(
   ): OkResponse {
@@ -165,6 +168,109 @@ export function WithinRandomLine(event: any): APIGatewayProxyResult {
     }
 
     return GetOkResponse(lineString);
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
+  }
+}
+
+
+export function Lines(): OkResponse {
+  const lines: FeatureCollection = thousandLines;
+  const thirtyLines = lines.features.slice(970);
+  const reducedLines: FeatureCollection = {
+    ...lines,
+    features: [...thirtyLines],
+  };
+  return GetOkResponse(reducedLines);
+}
+
+export function LinesLimitAndWithin(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+
+  try {
+    const { limit, geojsonPolygon, bbox } = body;
+
+    let lines: FeatureCollection = thousandLines;
+    let finalLines: FeatureCollection;
+
+    if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
+      const filteredLines = lines.features.filter((feature) => {
+        return feature.geometry.type === "LineString" && booleanWithin(feature.geometry, geojsonPolygon);
+      });
+      lines = turf.featureCollection(filteredLines);
+    } else if (bbox && isValidBBox(bbox)) {
+      const bboxPolygonGeometry = turf.bboxPolygon(bbox);
+      const filteredLines = lines.features.filter((feature) => {
+        return feature.geometry.type === "LineString" && booleanWithin(feature.geometry, bboxPolygonGeometry);
+      });
+      lines = turf.featureCollection(filteredLines);
+    }
+
+    if (limit) {
+      if (lines.features.length <= limit) {
+        finalLines = lines;
+      } else if (limit < 1000) {
+        const limitedLines = lines.features.slice(0, limit);
+        finalLines = {
+          ...lines,
+          features: limitedLines,
+        };
+      } else if (limit > 1000) {
+        finalLines = lines;
+      } else {
+        return GetBadRequestErrorResponse("Invalid input. Provide a valid limit number.");
+      }
+    } else {
+      finalLines = lines;
+    }
+
+    return GetOkResponse(finalLines);
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
+  }
+}
+
+
+export function RandomLines(): OkResponse {
+  const thirtyLines: FeatureCollection = turf.randomLineString(30, { bbox: [-180, -90, 180, 90] });
+  return GetOkResponse(thirtyLines);
+}
+
+export function RandomLinesLimitAndWithin(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+
+  try {
+    const { limit, geojsonPolygon, bbox } = body;
+
+    let lines: FeatureCollection = { features: [], type: "FeatureCollection" };
+    let finalLines: FeatureCollection;
+
+    if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
+      const bboxPoly = turf.bbox(geojsonPolygon);
+      lines = turf.randomLineString(1000, { bbox: bboxPoly });
+    } else if (bbox && isValidBBox(bbox)) {
+      lines = turf.randomLineString(1000, { bbox: bbox });
+    }
+
+    if (limit) {
+      if (lines.features.length <= limit) {
+        finalLines = lines;
+      } else if (limit < 1000) {
+        const limitedLines = lines.features.slice(0, limit);
+        finalLines = {
+          ...lines,
+          features: limitedLines,
+        };
+      } else if (limit > 1000) {
+        finalLines = lines;
+      } else {
+        return GetBadRequestErrorResponse("Invalid input. Provide a valid limit number.");
+      }
+    } else {
+      finalLines = lines;
+    }
+
+    return GetOkResponse(finalLines);
   } catch (error: any) {
     return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
   }

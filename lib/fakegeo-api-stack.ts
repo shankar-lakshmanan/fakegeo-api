@@ -90,6 +90,10 @@ export class FakegeoApiStack extends cdk.Stack {
     pointsResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     pointsResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
+    const linesResource = api.root.addResource("lines");
+    linesResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    linesResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+
     const plan = new apigateway.UsagePlan(this, "UsagePlan", {
       name: "Easy",
       throttle: {

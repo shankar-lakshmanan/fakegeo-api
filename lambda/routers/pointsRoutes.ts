@@ -1,12 +1,8 @@
 import {
-  Point,
   Points,
   PointsLimitAndWithin,
-  RandomPoint,
   RandomPoints,
   RandomPointsLimitAndWithin,
-  WithinPoint,
-  WithinRandomPoint,
 } from "../functions/point/point";
 
 export const pointsRoutes: Record<string, Function> = {
