@@ -33,6 +33,26 @@
     {
       "name": "Points",
       "description": "Operations related to geographical points"
+    },
+    {
+      "name": "Lines",
+      "description": "Operations related to geographical lines"
+    },
+    {
+      "name": "Polygons",
+      "description": "Operations related to geographical polygons"
+    },
+    {
+      "name": "Points features",
+      "description": "Operations related to geographical points"
+    },
+    {
+      "name": "Lines features",
+      "description": "Operations related to geographical lines"
+    },
+    {
+      "name": "Polygons features",
+      "description": "Operations related to geographical polygons"
     }
   ],
   "paths": {
@@ -476,6 +496,496 @@
         }
       }
     },
+    "/feature/lines": {
+      "get": {
+        "tags": [
+          "Lines features"
+        ],
+        "summary": "Returns a collection of geographical lines",
+        "description": "Retrieves a collection of 30 geographical lines.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "LineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number",
+                                    "example": [
+                                      -101.278818,
+                                      40.816337
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Lines features"
+        ],
+        "summary": "Returns a limited number of geographical lines within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of geographical lines. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of lines to return (must be <= 1000)",
+                    "example": 30
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter lines within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ],
+                          [
+                            -102.45708546876439,
+                            31.328195547453603
+                          ],
+                          [
+                            -86.94737395052326,
+                            31.832777392621864
+                          ],
+                          [
+                            -84.34442721393819,
+                            42.32251654152694
+                          ],
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to filter lines within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.83004979248041,
+                      31.328195547453603,
+                      -84.34442721393819,
+                      43.89485607270808
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "LineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number",
+                                    "example": [
+                                      -101.278818,
+                                      40.816337
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input. Provide a valid limit number, GeoJSON Polygon, or bbox."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error processing input. An internal error occurred"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feature/lines/random": {
+      "get": {
+        "tags": [
+          "Lines features"
+        ],
+        "summary": "Returns a collection of random geographical lines",
+        "description": "Retrieves a collection of 30 random geographical lines.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "LineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number",
+                                    "example": [
+                                      -101.278818,
+                                      40.816337
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Lines features"
+        ],
+        "summary": "Returns a limited number of random geographical lines within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of random geographical lines. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of lines to return (must be <= 1000)",
+                    "example": 30
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter lines within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ],
+                          [
+                            -102.45708546876439,
+                            31.328195547453603
+                          ],
+                          [
+                            -86.94737395052326,
+                            31.832777392621864
+                          ],
+                          [
+                            -84.34442721393819,
+                            42.32251654152694
+                          ],
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to filter lines within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.83004979248041,
+                      31.328195547453603,
+                      -84.34442721393819,
+                      43.89485607270808
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of random geographical lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "LineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number",
+                                    "example": [
+                                      -101.278818,
+                                      40.816337
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input. Provide a valid limit number, GeoJSON Polygon, or bbox."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error processing input. An internal error occurred"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/feature/point": {
       "get": {
         "tags": [
@@ -895,6 +1405,484 @@
                     "message": {
                       "type": "string",
                       "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feature/points": {
+      "get": {
+        "tags": [
+          "Points features"
+        ],
+        "summary": "Returns a collection of geographical points",
+        "description": "Retrieves a collection of 30 geographical points.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical points.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "Point"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "number",
+                                  "example": [
+                                    -101.278818,
+                                    40.816337
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Points features"
+        ],
+        "summary": "Returns a limited number of geographical points within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of geographical points. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of points to return (must be <= 1000)",
+                    "example": 30
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter points within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ],
+                          [
+                            -102.45708546876439,
+                            31.328195547453603
+                          ],
+                          [
+                            -86.94737395052326,
+                            31.832777392621864
+                          ],
+                          [
+                            -84.34442721393819,
+                            42.32251654152694
+                          ],
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to filter points within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.83004979248041,
+                      31.328195547453603,
+                      -84.34442721393819,
+                      43.89485607270808
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical points.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "Point"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "number",
+                                  "example": [
+                                    -101.278818,
+                                    40.816337
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input. Provide a valid limit number, GeoJSON Polygon, or bbox."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error processing input. An internal error occurred"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feature/points/random": {
+      "get": {
+        "tags": [
+          "Points features"
+        ],
+        "summary": "Returns a collection of random geographical points",
+        "description": "Retrieves a collection of 30 random geographical points.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical points.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "Point"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "number"
+                                },
+                                "example": [
+                                  -101.278818,
+                                  40.816337
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Points features"
+        ],
+        "summary": "Returns a limited number of random geographical points within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of random geographical points. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of points to return (must be <= 1000)",
+                    "example": 30
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter points within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ],
+                          [
+                            -102.45708546876439,
+                            31.328195547453603
+                          ],
+                          [
+                            -86.94737395052326,
+                            31.832777392621864
+                          ],
+                          [
+                            -84.34442721393819,
+                            42.32251654152694
+                          ],
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to filter points within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.83004979248041,
+                      31.328195547453603,
+                      -84.34442721393819,
+                      43.89485607270808
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of random geographical points.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "Point"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "number",
+                                  "example": [
+                                    -101.278818,
+                                    40.816337
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input. Provide a valid limit number, GeoJSON Polygon, or bbox."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error processing input. An internal error occurred"
                     }
                   }
                 }
@@ -1438,6 +2426,222 @@
         }
       }
     },
+    "/feature/polygons": {
+      "get": {
+        "tags": [
+          "Polygons features"
+        ],
+        "summary": "Returns a collection of geographical polygons",
+        "description": "Retrieves a collection of 30 geographical polygons.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical polygons.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "Polygon"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number",
+                                      "example": [
+                                        -101.278818,
+                                        40.816337
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Polygons features"
+        ],
+        "summary": "Returns a limited number of geographical polygons within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of geographical polygons. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of polygons to return (must be <= 1000)"
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter polygons within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.8,
+                            39.1
+                          ],
+                          "..."
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY]",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.8,
+                      31.3,
+                      -84.3,
+                      43.9
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical polygons."
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/feature/polygons/random": {
+      "get": {
+        "tags": [
+          "Polygons features"
+        ],
+        "summary": "Returns a collection of random geographical polygons",
+        "description": "Retrieves a collection of 30 random geographical polygons.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical polygons."
+          },
+          "400": {
+            "description": "Bad request - Invalid data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Polygons features"
+        ],
+        "summary": "Returns a limited number of random geographical polygons within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of random geographical polygons. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of polygons to return (must be <= 1000)"
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter polygons within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.8,
+                            39.1
+                          ],
+                          "..."
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY]",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.8,
+                      31.3,
+                      -84.3,
+                      43.9
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of random geographical polygons."
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/line": {
       "get": {
         "tags": [
@@ -1845,6 +3049,496 @@
                           ]
                         }
                       }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lines": {
+      "get": {
+        "tags": [
+          "Lines"
+        ],
+        "summary": "Returns a collection of geographical lines",
+        "description": "Retrieves a collection of 30 geographical lines.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "LineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number",
+                                    "example": [
+                                      -101.278818,
+                                      40.816337
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Lines"
+        ],
+        "summary": "Returns a limited number of geographical lines within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of geographical lines. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of lines to return (must be <= 1000)",
+                    "example": 30
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter lines within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ],
+                          [
+                            -102.45708546876439,
+                            31.328195547453603
+                          ],
+                          [
+                            -86.94737395052326,
+                            31.832777392621864
+                          ],
+                          [
+                            -84.34442721393819,
+                            42.32251654152694
+                          ],
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to filter lines within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.83004979248041,
+                      31.328195547453603,
+                      -84.34442721393819,
+                      43.89485607270808
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "LineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number",
+                                    "example": [
+                                      -101.278818,
+                                      40.816337
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input. Provide a valid limit number, GeoJSON Polygon, or bbox."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error processing input. An internal error occurred"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lines/random": {
+      "get": {
+        "tags": [
+          "Lines"
+        ],
+        "summary": "Returns a collection of random geographical lines",
+        "description": "Retrieves a collection of 30 random geographical lines.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "LineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number",
+                                    "example": [
+                                      -101.278818,
+                                      40.816337
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Lines"
+        ],
+        "summary": "Returns a limited number of random geographical lines within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of random geographical lines. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of lines to return (must be <= 1000)",
+                    "example": 30
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter lines within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ],
+                          [
+                            -102.45708546876439,
+                            31.328195547453603
+                          ],
+                          [
+                            -86.94737395052326,
+                            31.832777392621864
+                          ],
+                          [
+                            -84.34442721393819,
+                            42.32251654152694
+                          ],
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to filter lines within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.83004979248041,
+                      31.328195547453603,
+                      -84.34442721393819,
+                      43.89485607270808
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of random geographical lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "LineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number",
+                                    "example": [
+                                      -101.278818,
+                                      40.816337
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input. Provide a valid limit number, GeoJSON Polygon, or bbox."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error processing input. An internal error occurred"
                     }
                   }
                 }
@@ -3290,6 +4984,222 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/polygons": {
+      "get": {
+        "tags": [
+          "Polygons"
+        ],
+        "summary": "Returns a collection of geographical polygons",
+        "description": "Retrieves a collection of 30 geographical polygons.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical polygons.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "Polygon"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number",
+                                      "example": [
+                                        -101.278818,
+                                        40.816337
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Polygons"
+        ],
+        "summary": "Returns a limited number of geographical polygons within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of geographical polygons. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of polygons to return (must be <= 1000)"
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter polygons within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.8,
+                            39.1
+                          ],
+                          "..."
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY]",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.8,
+                      31.3,
+                      -84.3,
+                      43.9
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical polygons."
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/polygons/random": {
+      "get": {
+        "tags": [
+          "Polygons"
+        ],
+        "summary": "Returns a collection of random geographical polygons",
+        "description": "Retrieves a collection of 30 random geographical polygons.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical polygons."
+          },
+          "400": {
+            "description": "Bad request - Invalid data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Polygons"
+        ],
+        "summary": "Returns a limited number of random geographical polygons within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of random geographical polygons. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of polygons to return (must be <= 1000)"
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter polygons within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.8,
+                            39.1
+                          ],
+                          "..."
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY]",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.8,
+                      31.3,
+                      -84.3,
+                      43.9
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of random geographical polygons."
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }

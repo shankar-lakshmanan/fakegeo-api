@@ -9,6 +9,10 @@ import { polygonRoutes } from "./polygonRoutes";
 import { featurePolygonRoutes } from "./featurePolygonRoutes";
 import { pointsRoutes } from "./pointsRoutes";
 import { linesRoutes } from "./linesRoutes";
+import { polygonsRoutes } from "./polygonsRoutes";
+import { featurePointsRoutes } from "./featurePointsRoutes";
+import { featureLinesRoutes } from "./featureLinesRoutes";
+import { featurePolygonsRoutes } from "./featurePolygonsRoutes";
 
 const routes: Record<string, Function> = {
   ...fakeGeoRoutes,
@@ -19,7 +23,11 @@ const routes: Record<string, Function> = {
   ...polygonRoutes,
   ...featurePolygonRoutes,
   ...pointsRoutes,
-  ...linesRoutes
+  ...linesRoutes,
+  ...polygonsRoutes,
+  ...featurePointsRoutes,
+  ...featureLinesRoutes,
+  ...featurePolygonsRoutes,
 };
 
 export const router = async (

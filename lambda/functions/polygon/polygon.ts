@@ -1,7 +1,8 @@
 import * as turf from "@turf/turf";
-import { Feature, Geometry, Point } from "geojson";
+import { Feature, Geometry, Point, FeatureCollection } from "geojson";
 import { APIGatewayProxyResult } from "aws-lambda";
 import { GetBadRequestErrorResponse, GetInternalServerErrorResponse, GetOkResponse, OkResponse } from "../../util/stringify";
+import { thousandPolygons } from "./thousandPolygons";
 
 export function Polygon(
   ): OkResponse {
@@ -218,4 +219,117 @@ export function WithinRandomPolygon(event: any): APIGatewayProxyResult {
   } catch (error: any) {
     return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
   }
+}
+
+
+/**
+ * Polygons() - Returns a collection of polygons, limited to the last 30 polygons.
+ */
+export function Polygons(): OkResponse {
+  const allPolygons = thousandPolygons;
+  const last30Polygons = allPolygons.features.slice(-30); // Get only the last 30 polygons
+
+  return GetOkResponse(turf.featureCollection(last30Polygons));
+}
+
+/**
+ * PolygonsLimitAndWithin() - Filters and limits polygons based on a GeoJSON polygon or bbox.
+ */
+export function PolygonsLimitAndWithin(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+
+  try {
+    const { limit, geojsonPolygon, bbox } = body;
+
+    let polygons: FeatureCollection = thousandPolygons;
+    let finalPolygons: FeatureCollection;
+
+    if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
+      const filteredPolygons = polygons.features.filter((feature) => {
+        return feature.geometry.type === "Polygon" && turf.booleanIntersects(feature.geometry, geojsonPolygon);
+      });
+      polygons = turf.featureCollection(filteredPolygons);
+    } else if (bbox && isValidBBox(bbox)) {
+      const bboxPolygonGeometry = turf.bboxPolygon(bbox);
+      const filteredPolygons = polygons.features.filter((feature) => {
+        return feature.geometry.type === "Polygon" && turf.booleanIntersects(feature.geometry, bboxPolygonGeometry);
+      });
+      polygons = turf.featureCollection(filteredPolygons);
+    }
+
+    if (limit) {
+      if (polygons.features.length <= limit) {
+        finalPolygons = polygons;
+      } else if (limit < 1000) {
+        const limitedPolygons = polygons.features.slice(0, limit);
+        finalPolygons = {
+          ...polygons,
+          features: limitedPolygons,
+        };
+      } else if (limit > 1000) {
+        finalPolygons = polygons;
+      } else {
+        return GetBadRequestErrorResponse("Invalid input. Provide a valid limit number.");
+      }
+    } else {
+      finalPolygons = polygons;
+    }
+
+    return GetOkResponse(finalPolygons);
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
+  }
+}
+
+
+/**
+ * RandomPolygons() - Returns 30 random polygons within a global bounding box.
+ */
+export function RandomPolygons(): OkResponse {
+  const globalBbox: [number, number, number, number] = [-180, -90, 180, 90];
+  const randomPolygons = [];
+
+  for (let i = 0; i < 30; i++) {
+    const polygon = turf.randomPolygon(1, { bbox: globalBbox });
+    randomPolygons.push(polygon.features[0]);
+  }
+
+  return GetOkResponse(turf.featureCollection(randomPolygons));
+}
+
+/**
+ * RandomPolygonsLimitAndWithin() - Filters and limits random polygons based on a GeoJSON polygon or bbox.
+ */
+export function RandomPolygonsLimitAndWithin(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+  const { geojsonPolygon, bbox, limit } = body;
+
+  const globalBbox: [number, number, number, number] = [-180, -90, 180, 90];
+  const randomPolygons = [];
+
+  for (let i = 0; i < 100; i++) { // Generate more than needed for filtering purposes
+    const polygon = turf.randomPolygon(1, { bbox: globalBbox });
+    randomPolygons.push(polygon.features[0]);
+  }
+
+  let filteredPolygons = randomPolygons;
+
+  // Apply GeoJSON polygon filter if provided
+  if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
+    filteredPolygons = filteredPolygons.filter((polygon) =>
+      turf.booleanIntersects(polygon, geojsonPolygon)
+    );
+  } 
+  // Apply bbox filter if provided
+  else if (bbox && isValidBBox(bbox)) {
+    const bboxPolygon = turf.bboxPolygon(bbox);
+    filteredPolygons = filteredPolygons.filter((polygon) =>
+      turf.booleanIntersects(polygon, bboxPolygon)
+    );
+  } else {
+    return GetBadRequestErrorResponse("Invalid input. Provide either a valid GeoJSON polygon or bbox.");
+  }
+
+  const limitedPolygons = filteredPolygons.slice(0, limit || 30); // Limit to specified number or default to 30
+  return GetOkResponse(turf.featureCollection(limitedPolygons));
 }

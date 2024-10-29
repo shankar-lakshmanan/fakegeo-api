@@ -90,9 +90,31 @@ export class FakegeoApiStack extends cdk.Stack {
     pointsResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     pointsResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
+    const featurePointsResource = featureResource.addResource("points");
+    const featurePointsRandomResource = featurePointsResource.addResource('random');
+    featurePointsResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featurePointsResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featurePointsRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+
     const linesResource = api.root.addResource("lines");
     linesResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     linesResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+
+    const featureLinesResource = featureResource.addResource("lines");
+    const featureLinesRandomResource = featureLinesResource.addResource('random');
+    featureLinesResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureLinesResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureLinesRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+
+    const polygonsResource = api.root.addResource("polygons");
+    polygonsResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    polygonsResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+
+    const featurePolygonsResource = featureResource.addResource("polygons");
+    const featurePolygonsRandomResource = featurePolygonsResource.addResource('random');
+    featurePolygonsResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featurePolygonsResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featurePolygonsRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
     const plan = new apigateway.UsagePlan(this, "UsagePlan", {
       name: "Easy",
