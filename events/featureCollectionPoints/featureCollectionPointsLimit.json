@@ -1,0 +1,5 @@
+{
+    "httpMethod": "POST",
+    "path": "/featureCollection/points",
+    "body": "{\"limit\": 3}"
+}

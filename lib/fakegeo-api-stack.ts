@@ -46,75 +46,45 @@ export class FakegeoApiStack extends cdk.Stack {
 
     // Define the '/fakegeo' hello world resource with a GET method
     const fakegeoResource = api.root.addResource("fakegeo");
-    fakegeoResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-    
-    const pointResource = api.root.addResource("point");
-    const pointRandomResource = pointResource.addResource('random');
-    pointResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-    pointResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-    pointRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    fakegeoResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
     const featureResource = api.root.addResource("feature");
     const featurePointResource = featureResource.addResource("point");
     const featurePointRandomResource = featurePointResource.addResource('random');
-    featurePointResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featurePointResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featurePointResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featurePointRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
-    
-    const lineResource = api.root.addResource("line");
-    const lineRandomResource = lineResource.addResource('random');
-    lineResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-    lineResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-    lineRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-
     const featureLineResource = featureResource.addResource("line");
     const featureLineRandomResource = featureLineResource.addResource('random');
-    featureLineResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureLineResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featureLineResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featureLineRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
-    const polygonResource = api.root.addResource("polygon");
-    const polygonRandomResource = polygonResource.addResource('random');
-    polygonResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-    polygonResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-    polygonRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-
     const featurePolygonResource = featureResource.addResource("polygon");
     const featurePolygonRandomResource = featurePolygonResource.addResource('random');
-    featurePolygonResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featurePolygonResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featurePolygonResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featurePolygonRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
-    const pointsResource = api.root.addResource("points");
-    pointsResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-    pointsResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    const featureCollectionResource = api.root.addResource("featureCollection");
+    const featureCollectionPointsResource = featureCollectionResource.addResource("points");
+    const featureCollectionPointsRandomResource = featureCollectionPointsResource.addResource('random');
+    featureCollectionPointsResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureCollectionPointsResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureCollectionPointsRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
-    const featurePointsResource = featureResource.addResource("points");
-    const featurePointsRandomResource = featurePointsResource.addResource('random');
-    featurePointsResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-    featurePointsResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-    featurePointsRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    const featureCollectionLinesResource = featureCollectionResource.addResource("lines");
+    const featureCollectionLinesRandomResource = featureCollectionLinesResource.addResource('random');
+    featureCollectionLinesResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureCollectionLinesResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureCollectionLinesRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
-    const linesResource = api.root.addResource("lines");
-    linesResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-    linesResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-
-    const featureLinesResource = featureResource.addResource("lines");
-    const featureLinesRandomResource = featureLinesResource.addResource('random');
-    featureLinesResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-    featureLinesResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-    featureLinesRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-
-    const polygonsResource = api.root.addResource("polygons");
-    polygonsResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-    polygonsResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-
-    const featurePolygonsResource = featureResource.addResource("polygons");
-    const featurePolygonsRandomResource = featurePolygonsResource.addResource('random');
-    featurePolygonsResource.addMethod('GET', new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-    featurePolygonsResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-    featurePolygonsRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    const featureCollectionPolygonsResource = featureCollectionResource.addResource("polygons");
+    const featureCollectionPolygonsRandomResource = featureCollectionPolygonsResource.addResource('random');
+    featureCollectionPolygonsResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureCollectionPolygonsResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureCollectionPolygonsRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
     const plan = new apigateway.UsagePlan(this, "UsagePlan", {
       name: "Easy",

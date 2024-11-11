@@ -1,5 +1,0 @@
-{
-    "httpMethod": "POST",
-    "path": "/lines",
-    "body": "{\"limit\": 3}"
-}

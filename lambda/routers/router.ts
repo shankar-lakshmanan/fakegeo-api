@@ -1,33 +1,21 @@
 // router.ts
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { pointRoutes } from "./pointRoutes";
 import { fakeGeoRoutes } from "./fakeGeoRoutes";
 import { featurePointRoutes } from "./featurePointRoutes";
-import { lineRoutes } from "./lineRoutes";
 import { featureLineRoutes } from "./featureLineRoutes";
-import { polygonRoutes } from "./polygonRoutes";
 import { featurePolygonRoutes } from "./featurePolygonRoutes";
-import { pointsRoutes } from "./pointsRoutes";
-import { linesRoutes } from "./linesRoutes";
-import { polygonsRoutes } from "./polygonsRoutes";
-import { featurePointsRoutes } from "./featurePointsRoutes";
-import { featureLinesRoutes } from "./featureLinesRoutes";
-import { featurePolygonsRoutes } from "./featurePolygonsRoutes";
+import { featureCollectionPointsRoutes } from "./featureCollectionPointsRoutes";
+import { featureCollectionLinesRoutes } from "./featureCollectionLinesRoutes";
+import { featureCollectionPolygonsRoutes } from "./featureCollectionPolygonsRoutes";
 
 const routes: Record<string, Function> = {
   ...fakeGeoRoutes,
-  ...pointRoutes,
   ...featurePointRoutes,
-  ...lineRoutes,
   ...featureLineRoutes,
-  ...polygonRoutes,
   ...featurePolygonRoutes,
-  ...pointsRoutes,
-  ...linesRoutes,
-  ...polygonsRoutes,
-  ...featurePointsRoutes,
-  ...featureLinesRoutes,
-  ...featurePolygonsRoutes,
+  ...featureCollectionPointsRoutes,
+  ...featureCollectionLinesRoutes,
+  ...featureCollectionPolygonsRoutes,
 };
 
 export const router = async (

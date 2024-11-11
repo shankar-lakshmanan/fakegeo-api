@@ -1,0 +1,5 @@
+{
+    "httpMethod": "POST",
+    "path": "/featureCollection/polygons",
+    "body": "{\"limit\": 3}"
+}

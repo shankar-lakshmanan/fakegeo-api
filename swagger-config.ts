@@ -13,52 +13,28 @@ const options: Options = {
     },
     tags: [
       {
-        name: "Point",
-        description: "Operations related to geographical points",
-      },
-      {
         name: "Point feature",
         description: "Operations related to geographical point features",
-      },
-      {
-        name: "Line",
-        description: "Operations related to geographical lines",
       },
       {
         name: "Line feature",
         description: "Operations related to geographical line features",
       },
       {
-        name: "Polygon",
-        description: "Operations related to geographical polygon",
-      },
-      {
         name: "Polygon feature",
         description: "Operations related to geographical polygon features",
       },
       {
-        name: "Points",
-        description: "Operations related to geographical points",
+        name: "Points featureCollection",
+        description: "Operations related to geographical points featureCollection"
       },
       {
-        name: "Lines",
-        description: "Operations related to geographical lines"
+        name: "Lines featureCollection",
+        description: "Operations related to geographical lines featureCollection"
       },
       {
-        name: "Polygons",
-        description: "Operations related to geographical polygons"
-      },
-      {
-        name: "Points features",
-        description: "Operations related to geographical points"
-      },
-      {
-        name: "Lines features",
-        description: "Operations related to geographical lines"
-      },
-      {
-        name: "Polygons features",
-        description: "Operations related to geographical polygons"
+        name: "Polygons featureCollection",
+        description: "Operations related to geographical polygons featureCollection"
       }
       // Add more global tags here as needed
     ],
