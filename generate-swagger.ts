@@ -1,7 +1,6 @@
 import swaggerSpec from "./swagger-config";
 import * as fs from "fs";
 
-console.log(swaggerSpec)
 // Write the swagger spec to a file
 fs.writeFileSync("./fakegeo-web/swagger-output.json", JSON.stringify(swaggerSpec, null, 2));
 

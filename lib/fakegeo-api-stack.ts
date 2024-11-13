@@ -55,6 +55,12 @@ export class FakegeoApiStack extends cdk.Stack {
     featurePointResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featurePointRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
+    const featureMultiPointResource = featureResource.addResource("multipoint");
+    const featureMultiPointRandomResource = featureMultiPointResource.addResource('random');
+    featureMultiPointResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureMultiPointResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureMultiPointRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+
     const featureLineResource = featureResource.addResource("line");
     const featureLineRandomResource = featureLineResource.addResource('random');
     featureLineResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
@@ -73,6 +79,12 @@ export class FakegeoApiStack extends cdk.Stack {
     featureCollectionPointsResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featureCollectionPointsResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featureCollectionPointsRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+
+    const featureCollectionMultiPointsResource = featureCollectionResource.addResource("multipoints");
+    const featureCollectionMultiPointsRandomResource = featureCollectionMultiPointsResource.addResource('random');
+    featureCollectionMultiPointsResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureCollectionMultiPointsResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureCollectionMultiPointsRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
     const featureCollectionLinesResource = featureCollectionResource.addResource("lines");
     const featureCollectionLinesRandomResource = featureCollectionLinesResource.addResource('random');
