@@ -554,6 +554,508 @@
         }
       }
     },
+    "/featureCollection/multilines": {
+      "get": {
+        "tags": [
+          "MultiLines featureCollection"
+        ],
+        "summary": "Returns a collection of geographical multi-lines",
+        "description": "Retrieves a collection of 30 geographical multi-lines.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical multi-lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "MultiLineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number",
+                                      "example": [
+                                        -101.278818,
+                                        40.816337
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MultiLines featureCollection"
+        ],
+        "summary": "Returns a limited number of geographical multi-lines within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of geographical multi-lines. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of multi-lines to return (must be <= 1000)",
+                    "example": 30
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter multi-lines within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ],
+                          [
+                            -102.45708546876439,
+                            31.328195547453603
+                          ],
+                          [
+                            -86.94737395052326,
+                            31.832777392621864
+                          ],
+                          [
+                            -84.34442721393819,
+                            42.32251654152694
+                          ],
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to filter multi-lines within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.83004979248041,
+                      31.328195547453603,
+                      -84.34442721393819,
+                      43.89485607270808
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical multi-lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "MultiLineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number",
+                                      "example": [
+                                        -101.278818,
+                                        40.816337
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input. Provide a valid limit number, GeoJSON Polygon, or bbox."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error processing input. An internal error occurred"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/featureCollection/multilines/random": {
+      "get": {
+        "tags": [
+          "MultiLines featureCollection"
+        ],
+        "summary": "Returns a collection of random geographical multi-lines",
+        "description": "Retrieves a collection of 30 random geographical multi-lines.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical multi-lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "MultiLineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number",
+                                      "example": [
+                                        -101.278818,
+                                        40.816337
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MultiLines featureCollection"
+        ],
+        "summary": "Returns a limited number of random geographical multi-lines within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of random geographical multi-lines. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of multi-lines to return (must be <= 1000)",
+                    "example": 30
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter multi-lines within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ],
+                          [
+                            -102.45708546876439,
+                            31.328195547453603
+                          ],
+                          [
+                            -86.94737395052326,
+                            31.832777392621864
+                          ],
+                          [
+                            -84.34442721393819,
+                            42.32251654152694
+                          ],
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to filter multi-lines within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.83004979248041,
+                      31.328195547453603,
+                      -84.34442721393819,
+                      43.89485607270808
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical multi-lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "MultiLineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number",
+                                      "example": [
+                                        -101.278818,
+                                        40.816337
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input. Provide a valid limit number, GeoJSON Polygon, or bbox."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error processing input. An internal error occurred"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/featureCollection/multipoints": {
       "get": {
         "tags": [
@@ -2141,6 +2643,458 @@
                             [
                               -96.78364279952356,
                               39.99810774123456
+                            ]
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feature/multiline": {
+      "get": {
+        "tags": [
+          "MultiLine feature"
+        ],
+        "summary": "Returns a multi-line geojson Feature",
+        "description": "Generates a geographical MultiLineString.",
+        "responses": {
+          "200": {
+            "description": "A successful response containing the multi-line feature",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "MultiLineString"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              }
+                            }
+                          },
+                          "example": [
+                            [
+                              [
+                                -98.46358188123595,
+                                38.16839367133355
+                              ],
+                              [
+                                -98.0095425039122,
+                                38.6109019399903
+                              ]
+                            ],
+                            [
+                              [
+                                -97.5063234325582,
+                                38.192492088530855
+                              ],
+                              [
+                                -96.76369691515532,
+                                38.668456803745556
+                              ]
+                            ]
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MultiLine feature"
+        ],
+        "summary": "Returns a multi-line geojson feature within a GeoJSON polygon or bbox",
+        "description": "Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a multi-line within it.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to return a multi-line within it",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.3,
+                            40.1
+                          ],
+                          [
+                            -99.7,
+                            36.8
+                          ],
+                          [
+                            -94.4,
+                            38.1
+                          ],
+                          [
+                            -99.3,
+                            41.9
+                          ],
+                          [
+                            -104.3,
+                            40.1
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box [minX, minY, maxX, maxY] to return a multi-line within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.3,
+                      36.8,
+                      -94.4,
+                      41.9
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "MultiLineString"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              }
+                            }
+                          },
+                          "example": [
+                            [
+                              [
+                                -99.4,
+                                39.1
+                              ],
+                              [
+                                -96.7,
+                                39.9
+                              ]
+                            ],
+                            [
+                              [
+                                -97.4,
+                                38.4
+                              ],
+                              [
+                                -94.5,
+                                37.9
+                              ]
+                            ]
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feature/multiline/random": {
+      "get": {
+        "tags": [
+          "MultiLine feature"
+        ],
+        "summary": "Returns a random multi-line geojson Feature",
+        "description": "Generates a random geographical MultiLineString.",
+        "responses": {
+          "200": {
+            "description": "A successful response containing the random multi-line feature",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "MultiLineString"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              }
+                            }
+                          },
+                          "example": [
+                            [
+                              [
+                                -98.46358188123595,
+                                38.16839367133355
+                              ],
+                              [
+                                -98.0095425039122,
+                                38.6109019399903
+                              ]
+                            ],
+                            [
+                              [
+                                -97.5063234325582,
+                                38.192492088530855
+                              ],
+                              [
+                                -96.76369691515532,
+                                38.668456803745556
+                              ]
+                            ]
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MultiLine feature"
+        ],
+        "summary": "Returns a random multi-line geojson feature within a GeoJSON polygon or bbox",
+        "description": "Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a random multi-line within it.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to return a random multi-line within it",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.3,
+                            40.1
+                          ],
+                          [
+                            -99.7,
+                            36.8
+                          ],
+                          [
+                            -94.4,
+                            38.1
+                          ],
+                          [
+                            -99.3,
+                            41.9
+                          ],
+                          [
+                            -104.3,
+                            40.1
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box [minX, minY, maxX, maxY] to return a random multi-line within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.3,
+                      36.8,
+                      -94.4,
+                      41.9
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "MultiLineString"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              }
+                            }
+                          },
+                          "example": [
+                            [
+                              [
+                                -99.4,
+                                39.1
+                              ],
+                              [
+                                -96.7,
+                                39.9
+                              ]
+                            ],
+                            [
+                              [
+                                -97.4,
+                                38.4
+                              ],
+                              [
+                                -94.5,
+                                37.9
+                              ]
                             ]
                           ]
                         }

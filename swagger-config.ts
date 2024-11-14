@@ -25,8 +25,12 @@ const options: Options = {
         description: "Operations related to geographical polygon feature",
       },
       {
-        name: "Multi Point feature",
+        name: "MultiPoint feature",
         description: "Operations related to geographical multi point feature",
+      },
+      {
+        name: "MultiLine feature",
+        description: "Operations related to geographical multi line feature",
       },
       {
         name: "Points featureCollection",
@@ -40,8 +44,11 @@ const options: Options = {
         name: "Polygons featureCollection",
         description: "Operations related to geographical polygons featureCollection"
       },{
-        name: "Multi Points featureCollection",
+        name: "Multipoints featureCollection",
         description: "Operations related to geographical multi points featureCollection"
+      },{
+        name: "MultiLines featureCollection",
+        description: "Operations related to geographical multi lines featureCollection"
       },
       // Add more global tags here as needed
     ],

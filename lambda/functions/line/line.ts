@@ -1,5 +1,5 @@
 import * as turf from "@turf/turf";
-import { Feature, Geometry, Point,FeatureCollection } from "geojson";
+import { Feature, Geometry, Point,FeatureCollection, MultiLineString, LineString } from "geojson";
 
 
 import { APIGatewayProxyResult } from "aws-lambda";
@@ -275,3 +275,5 @@ export function RandomLinesLimitAndWithin(event: any): APIGatewayProxyResult {
     return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
   }
 }
+
+
