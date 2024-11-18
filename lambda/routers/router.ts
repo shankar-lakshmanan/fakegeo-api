@@ -11,6 +11,8 @@ import { featureMultiPointRoutes } from "./featureMultiPointRoutes";
 import { featureCollectionMultiPointsRoutes } from "./featureCollectionMultiPointsRoutes";
 import { featureMultiLineRoutes } from "./featureMultiLineRoutes";
 import { featureCollectionMultiLinesRoutes } from "./featureCollectionMultiLinesRoutes";
+import { featureMultiPolygonRoutes } from "./featureMultiPolygonRoutes";
+import { featureCollectionMultiPolygonsRoutes } from "./featureCollectionMultiPolygonsRoutes";
 
 const routes: Record<string, Function> = {
   ...fakeGeoRoutes,
@@ -24,6 +26,8 @@ const routes: Record<string, Function> = {
   ...featureCollectionMultiPointsRoutes,
   ...featureMultiLineRoutes,
   ...featureCollectionMultiLinesRoutes,
+  ...featureMultiPolygonRoutes,
+  ...featureCollectionMultiPolygonsRoutes,
 };
 
 export const router = async (
