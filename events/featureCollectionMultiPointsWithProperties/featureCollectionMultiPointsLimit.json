@@ -1,0 +1,5 @@
+{
+    "httpMethod": "POST",
+    "path": "/featureCollection/multipoints/properties",
+    "body": "{\"limit\": 3}"
+}

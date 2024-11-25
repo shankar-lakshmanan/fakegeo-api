@@ -62,6 +62,7 @@ export class FakegeoApiStack extends cdk.Stack {
 
     const featureMultiPointResource = featureResource.addResource("multipoint");
     const featureMultiPointRandomResource = featureMultiPointResource.addResource('random');
+
     featureMultiPointResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featureMultiPointResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featureMultiPointRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
@@ -95,6 +96,7 @@ export class FakegeoApiStack extends cdk.Stack {
     const featureCollectionPointsPropertiesResource = featureCollectionResource.addResource("properties");
     const featureCollectionPointsRandomResource = featureCollectionPointsResource.addResource('random');
     const featureCollectionPointsRandomPropertiesResource = featureCollectionPointsResource.addResource('properties');
+    
     featureCollectionPointsResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featureCollectionPointsResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featureCollectionPointsPropertiesResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
@@ -103,6 +105,7 @@ export class FakegeoApiStack extends cdk.Stack {
 
     const featureCollectionMultiPointsResource = featureCollectionResource.addResource("multipoints");
     const featureCollectionMultiPointsRandomResource = featureCollectionMultiPointsResource.addResource('random');
+
     featureCollectionMultiPointsResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featureCollectionMultiPointsResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featureCollectionMultiPointsRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
