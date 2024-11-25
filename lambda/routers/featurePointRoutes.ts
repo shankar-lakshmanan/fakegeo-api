@@ -3,6 +3,10 @@ import {
   RandomPoint,
   WithinPoint,
   WithinRandomPoint,
+  PointWithProperties,
+  RandomPointWithProperties,
+  WithinPointWithProperties,
+  WithinRandomPointWithProperties,
 } from "../functions/point/point";
 
 export const featurePointRoutes: Record<string, Function> = {
@@ -36,29 +40,51 @@ export const featurePointRoutes: Record<string, Function> = {
    *                       items:
    *                         type: number
    *                       example: [-101.278818, 40.816337]
-   *       400:
-   *         description: Bad request - Invalid data
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 message:
-   *                   type: string
-   *                   example: Invalid request
-   *       500:
-   *         description: Internal server error
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 message:
-   *                   type: string
-   *                   example: Internal Server Error
    */
 
   "GET /feature/point": Point,
+
+  /**
+   * @openapi
+   * /feature/point/properties:
+   *   get:
+   *     tags:
+   *       - Point feature
+   *     summary: Returns a point geojson Feature with random properties
+   *     description: Generates a geographical point with random properties added to the feature's properties object.
+   *     responses:
+   *       200:
+   *         description: A successful response
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 type:
+   *                   type: string
+   *                   example: Feature
+   *                 geometry:
+   *                   type: object
+   *                   properties:
+   *                     type:
+   *                       type: string
+   *                       example: Point
+   *                     coordinates:
+   *                       type: array
+   *                       items:
+   *                         type: number
+   *                       example: [-101.278818, 40.816337]
+   *                 properties:
+   *                   type: object
+   *                   additionalProperties:
+   *                     type: any
+   *                   example:
+   *                     name: Random Point
+   *                     elevation: 1234
+   *                     description: A randomly generated feature with rich properties
+   */
+
+  "GET /feature/point/properties": PointWithProperties,
 
   /**
    * @openapi
@@ -90,29 +116,51 @@ export const featurePointRoutes: Record<string, Function> = {
    *                       items:
    *                         type: number
    *                       example: [-101.278818, 40.816337]
-   *       400:
-   *         description: Bad request - Invalid data
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 message:
-   *                   type: string
-   *                   example: Invalid request
-   *       500:
-   *         description: Internal server error
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 message:
-   *                   type: string
-   *                   example: Internal Server Error
    */
 
   "GET /feature/point/random": RandomPoint,
+
+  /**
+   * @openapi
+   * /feature/point/random/properties:
+   *   get:
+   *     tags:
+   *       - Point feature
+   *     summary: Returns a random point geojson Feature with random properties
+   *     description: Generates a random geographical point with additional random properties.
+   *     responses:
+   *       200:
+   *         description: A successful response
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 type:
+   *                   type: string
+   *                   example: Feature
+   *                 geometry:
+   *                   type: object
+   *                   properties:
+   *                     type:
+   *                       type: string
+   *                       example: Point
+   *                     coordinates:
+   *                       type: array
+   *                       items:
+   *                         type: number
+   *                       example: [-101.278818, 40.816337]
+   *                 properties:
+   *                   type: object
+   *                   additionalProperties:
+   *                     type: any
+   *                   example:
+   *                     category: Random Data
+   *                     elevation: 4567
+   *                     info: Additional details
+   */
+
+  "GET /feature/point/random/properties": RandomPointWithProperties,
 
   /**
    * @openapi
@@ -132,23 +180,13 @@ export const featurePointRoutes: Record<string, Function> = {
    *               geojsonPolygon:
    *                 type: object
    *                 description: GeoJSON Polygon to return a point within it
-   *                 example:
-   *                   type: "Polygon"
-   *                   coordinates:
-   *                     - [
-   *                         [-104.35959912130382, 40.186854567133594],
-   *                         [-99.75483802782351, 36.870115044295346],
-   *                         [-97.427541041584, 36.43876305758806],
-   *                         [-94.44354178155926, 38.13171162987652],
-   *                         [-99.30047105952276, 41.94545202484386],
-   *                         [-104.35959912130382, 40.186854567133594]
-   *                       ]
+   *                 example: { "type": "Polygon", "coordinates": [[[-104, 40], [-99, 36], [-94, 38], [-104, 40]]] }
    *               bbox:
    *                 type: array
-   *                 description: Bounding box in the format [minX, minY, maxX, maxY] to return a point within it
    *                 items:
    *                   type: number
-   *                 example: [-104.35959912130382, 36.870115044295346, -94.44354178155926, 41.94545202484386]
+   *                 description: Bounding box in [minX, minY, maxX, maxY] format
+   *                 example: [-104, 36, -94, 41]
    *     responses:
    *       200:
    *         description: A successful response
@@ -170,39 +208,19 @@ export const featurePointRoutes: Record<string, Function> = {
    *                       type: array
    *                       items:
    *                         type: number
-   *                       example: [-99.40157045143154, 39.19210754121596]
-   *       400:
-   *         description: Bad request - Invalid data
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 message:
-   *                   type: string
-   *                   example: Invalid request
-   *       500:
-   *         description: Internal server error
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 message:
-   *                   type: string
-   *                   example: Internal Server Error
+   *                       example: [-99.5, 38.2]
    */
 
   "POST /feature/point": WithinPoint,
 
   /**
    * @openapi
-   * /feature/point/random:
+   * /feature/point/properties:
    *   post:
    *     tags:
    *       - Point feature
-   *     summary: Returns a random point geojson Feature within a GeoJSON polygon or bbox
-   *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a random point within it.
+   *     summary: Returns a point geojson Feature within a GeoJSON polygon or bbox with random properties
+   *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a point within it, including additional random properties.
    *     requestBody:
    *       required: false
    *       content:
@@ -212,24 +230,14 @@ export const featurePointRoutes: Record<string, Function> = {
    *             properties:
    *               geojsonPolygon:
    *                 type: object
-   *                 description: GeoJSON Polygon to return a random point within it
-   *                 example:
-   *                   type: "Polygon"
-   *                   coordinates:
-   *                     - [
-   *                         [-104.35959912130382, 40.186854567133594],
-   *                         [-99.75483802782351, 36.870115044295346],
-   *                         [-97.427541041584, 36.43876305758806],
-   *                         [-94.44354178155926, 38.13171162987652],
-   *                         [-99.30047105952276, 41.94545202484386],
-   *                         [-104.35959912130382, 40.186854567133594]
-   *                       ]
+   *                 description: GeoJSON Polygon to return a point within it
+   *                 example: { "type": "Polygon", "coordinates": [[[-104, 40], [-99, 36], [-94, 38], [-104, 40]]] }
    *               bbox:
    *                 type: array
-   *                 description: Bounding box in the format [minX, minY, maxX, maxY] to return a random point within it
    *                 items:
    *                   type: number
-   *                 example: [-104.35959912130382, 36.870115044295346, -94.44354178155926, 41.94545202484386]
+   *                 description: Bounding box in [minX, minY, maxX, maxY] format
+   *                 example: [-104, 36, -94, 41]
    *     responses:
    *       200:
    *         description: A successful response
@@ -251,28 +259,128 @@ export const featurePointRoutes: Record<string, Function> = {
    *                       type: array
    *                       items:
    *                         type: number
-   *                       example: [-99.40157045143154, 39.19210754121596]
-   *       400:
-   *         description: Bad request - Invalid data
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 message:
-   *                   type: string
-   *                   example: Invalid request
-   *       500:
-   *         description: Internal server error
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 message:
-   *                   type: string
-   *                   example: Internal Server Error
+   *                       example: [-99.5, 38.2]
+   *                 properties:
+   *                   type: object
+   *                   additionalProperties:
+   *                     type: any
+   *                   example:
+   *                     category: Random Data
+   *                     elevation: 567
+   *                     description: Polygon-based random data
    */
 
-  "POST /feature/point/random": WithinRandomPoint,
+  "POST /feature/point/properties": WithinPointWithProperties,
+
+    /**
+     * @openapi
+     * /feature/point/random:
+     *   post:
+     *     tags:
+     *       - Point feature
+     *     summary: Returns a random point geojson Feature within a GeoJSON polygon or bbox
+     *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a random point within it.
+     *     requestBody:
+     *       required: false
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               geojsonPolygon:
+     *                 type: object
+     *                 description: GeoJSON Polygon to return a random point within it
+     *                 example: { "type": "Polygon", "coordinates": [[[-104, 40], [-99, 36], [-94, 38], [-104, 40]]] }
+     *               bbox:
+     *                 type: array
+     *                 items:
+     *                   type: number
+     *                 description: Bounding box in [minX, minY, maxX, maxY] format
+     *                 example: [-104, 36, -94, 41]
+     *     responses:
+     *       200:
+     *         description: A successful response
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 type:
+     *                   type: string
+     *                   example: Feature
+     *                 geometry:
+     *                   type: object
+     *                   properties:
+     *                     type:
+     *                       type: string
+     *                       example: Point
+     *                     coordinates:
+     *                       type: array
+     *                       items:
+     *                         type: number
+     *                       example: [-99.5, 38.2]
+     */
+  
+    "POST /feature/point/random": WithinRandomPoint,
+  
+    /**
+     * @openapi
+     * /feature/point/random/properties:
+     *   post:
+     *     tags:
+     *       - Point feature
+     *     summary: Returns a random point geojson Feature within a GeoJSON polygon or bbox with random properties
+     *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and generates a random point within it, including additional random properties.
+     *     requestBody:
+     *       required: false
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               geojsonPolygon:
+     *                 type: object
+     *                 description: GeoJSON Polygon to return a random point within it
+     *                 example: { "type": "Polygon", "coordinates": [[[-104, 40], [-99, 36], [-94, 38], [-104, 40]]] }
+     *               bbox:
+     *                 type: array
+     *                 items:
+     *                   type: number
+     *                 description: Bounding box in [minX, minY, maxX, maxY] format
+     *                 example: [-104, 36, -94, 41]
+     *     responses:
+     *       200:
+     *         description: A successful response
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 type:
+     *                   type: string
+     *                   example: Feature
+     *                 geometry:
+     *                   type: object
+     *                   properties:
+     *                     type:
+     *                       type: string
+     *                       example: Point
+     *                     coordinates:
+     *                       type: array
+     *                       items:
+     *                         type: number
+     *                       example: [-99.5, 38.2]
+     *                 properties:
+     *                   type: object
+     *                   additionalProperties:
+     *                     type: any
+     *                   example:
+     *                     randomProperty: Random Value
+     *                     category: Example Data
+     *                     description: Detailed random property
+     */
+  
+    "POST /feature/point/random/properties": WithinRandomPointWithProperties,
+  
+  
 };
