@@ -1,0 +1,5 @@
+{
+    "httpMethod": "POST",
+    "path": "/featureCollection/lines/properties",
+    "body": "{\"limit\": 3}"
+}

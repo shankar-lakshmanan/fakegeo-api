@@ -69,9 +69,12 @@ export class FakegeoApiStack extends cdk.Stack {
 
     const featureLineResource = featureResource.addResource("line");
     const featureLineRandomResource = featureLineResource.addResource('random');
+    const featureLinePropertiesResource = featureLineResource.addResource('properties');
+
     featureLineResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featureLineResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featureLineRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureLinePropertiesResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
     const featureMultiLineResource = featureResource.addResource("multiline");
     const featureMultiLineRandomResource = featureMultiLineResource.addResource('random');
@@ -112,9 +115,12 @@ export class FakegeoApiStack extends cdk.Stack {
 
     const featureCollectionLinesResource = featureCollectionResource.addResource("lines");
     const featureCollectionLinesRandomResource = featureCollectionLinesResource.addResource('random');
+    const featureCollectionLinesPropertiesResource = featureCollectionLinesResource.addResource('properties');
+
     featureCollectionLinesResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featureCollectionLinesResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featureCollectionLinesRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureCollectionLinesPropertiesResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
     const featureCollectionMultiLinesResource = featureCollectionResource.addResource("multilines");
     const featureCollectionMultiLinesRandomResource = featureCollectionMultiLinesResource.addResource('random');
