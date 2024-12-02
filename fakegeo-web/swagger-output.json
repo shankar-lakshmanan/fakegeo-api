@@ -317,6 +317,287 @@
         }
       }
     },
+    "/featureCollection/lines/properties": {
+      "get": {
+        "tags": [
+          "Lines featureCollection"
+        ],
+        "summary": "Returns a collection of geographical lines with properties",
+        "description": "Retrieves a collection of 30 geographical lines, each with associated properties.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical lines and their properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "LineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number",
+                                    "example": [
+                                      -101.278818,
+                                      40.816337
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Additional properties associated with the line",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "line_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Main Line"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "This is a sample description for a line feature."
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Lines featureCollection"
+        ],
+        "summary": "Returns a limited number of geographical lines with properties within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of geographical lines, with additional properties included. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of lines to return (must be <= 1000)",
+                    "example": 30
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter lines within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ],
+                          [
+                            -102.45708546876439,
+                            31.328195547453603
+                          ],
+                          [
+                            -86.94737395052326,
+                            31.832777392621864
+                          ],
+                          [
+                            -84.34442721393819,
+                            42.32251654152694
+                          ],
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to filter lines within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.83004979248041,
+                      31.328195547453603,
+                      -84.34442721393819,
+                      43.89485607270808
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical lines and their properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "LineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number",
+                                    "example": [
+                                      -101.278818,
+                                      40.816337
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Additional properties associated with the line",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "line_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Main Line"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "This is a sample description for a line feature."
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input. Provide a valid limit number, GeoJSON Polygon, or bbox."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error processing input. An internal error occurred"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/featureCollection/lines/random": {
       "get": {
         "tags": [
@@ -516,6 +797,297 @@
                                     ]
                                   }
                                 }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input. Provide a valid limit number, GeoJSON Polygon, or bbox."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error processing input. An internal error occurred"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/featureCollection/lines/random/properties": {
+      "get": {
+        "tags": [
+          "Lines featureCollection"
+        ],
+        "summary": "Returns a collection of random geographical lines with properties",
+        "description": "Retrieves a collection of 30 random geographical lines, each with associated properties.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of random geographical lines and their properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "LineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number",
+                                    "example": [
+                                      -101.278818,
+                                      40.816337
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Additional properties associated with the random line",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "random_line_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Random Line 1"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "A random line feature generated for demonstration purposes."
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-11-28T12:00:00Z"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Lines featureCollection"
+        ],
+        "summary": "Returns a limited number of random geographical lines with properties within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of random geographical lines, each with associated properties. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of lines to return (must be <= 1000)",
+                    "example": 30
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter lines within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ],
+                          [
+                            -102.45708546876439,
+                            31.328195547453603
+                          ],
+                          [
+                            -86.94737395052326,
+                            31.832777392621864
+                          ],
+                          [
+                            -84.34442721393819,
+                            42.32251654152694
+                          ],
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to filter lines within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.83004979248041,
+                      31.328195547453603,
+                      -84.34442721393819,
+                      43.89485607270808
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of random geographical lines and their properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "LineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number",
+                                    "example": [
+                                      -101.278818,
+                                      40.816337
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Additional properties associated with the random line",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "random_line_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Random Line 1"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "A random line feature generated for demonstration purposes."
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-11-28T12:00:00Z"
                               }
                             }
                           }
@@ -813,6 +1385,303 @@
         }
       }
     },
+    "/featureCollection/multilines/properties": {
+      "get": {
+        "tags": [
+          "MultiLines featureCollection"
+        ],
+        "summary": "Returns a collection of geographical multi-lines with properties",
+        "description": "Retrieves a collection of 30 geographical multi-lines, each enriched with metadata properties.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical multi-lines and properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "MultiLineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number",
+                                      "example": [
+                                        -101.278818,
+                                        40.816337
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Metadata associated with the MultiLineString feature",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "multiline_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "MultiLine 1"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "A detailed description of this multi-line feature."
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-12-01T15:00:00Z"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MultiLines featureCollection"
+        ],
+        "summary": "Returns a limited number of geographical multi-lines with properties within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of geographical multi-lines with metadata properties. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of multi-lines to return (must be <= 1000)",
+                    "example": 30
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter multi-lines within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ],
+                          [
+                            -102.45708546876439,
+                            31.328195547453603
+                          ],
+                          [
+                            -86.94737395052326,
+                            31.832777392621864
+                          ],
+                          [
+                            -84.34442721393819,
+                            42.32251654152694
+                          ],
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to filter multi-lines within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.83004979248041,
+                      31.328195547453603,
+                      -84.34442721393819,
+                      43.89485607270808
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical multi-lines and metadata properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "MultiLineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number",
+                                      "example": [
+                                        -101.278818,
+                                        40.816337
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Metadata associated with the MultiLineString feature",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "multiline_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "MultiLine 1"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "A detailed description of this multi-line feature."
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-12-01T15:00:00Z"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input. Provide a valid limit number, GeoJSON Polygon, or bbox."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error processing input. An internal error occurred"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/featureCollection/multilines/random": {
       "get": {
         "tags": [
@@ -1018,6 +1887,303 @@
                                     }
                                   }
                                 }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input. Provide a valid limit number, GeoJSON Polygon, or bbox."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error processing input. An internal error occurred"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/featureCollection/multilines/random/properties": {
+      "get": {
+        "tags": [
+          "MultiLines featureCollection"
+        ],
+        "summary": "Returns a collection of random geographical multi-lines with properties",
+        "description": "Retrieves a collection of 30 random geographical multi-lines, each with metadata properties.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical multi-lines with metadata properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "MultiLineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number",
+                                      "example": [
+                                        -101.278818,
+                                        40.816337
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Metadata associated with the MultiLineString feature",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "random_multiline_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Random MultiLine 1"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "A random multi-line feature with additional metadata."
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-12-01T15:00:00Z"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MultiLines featureCollection"
+        ],
+        "summary": "Returns a limited number of random geographical multi-lines with properties within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of random geographical multi-lines, each with metadata properties. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of multi-lines to return (must be <= 1000)",
+                    "example": 30
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter multi-lines within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ],
+                          [
+                            -102.45708546876439,
+                            31.328195547453603
+                          ],
+                          [
+                            -86.94737395052326,
+                            31.832777392621864
+                          ],
+                          [
+                            -84.34442721393819,
+                            42.32251654152694
+                          ],
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to filter multi-lines within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.83004979248041,
+                      31.328195547453603,
+                      -84.34442721393819,
+                      43.89485607270808
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical multi-lines and their metadata properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "MultiLineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number",
+                                      "example": [
+                                        -101.278818,
+                                        40.816337
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Metadata associated with the MultiLineString feature",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "random_multiline_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Random MultiLine 1"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "A random multi-line feature with metadata."
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-12-01T15:00:00Z"
                               }
                             }
                           }
@@ -1509,6 +2675,528 @@
                                   ]
                                 }
                               }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input. Provide a valid limit number, GeoJSON Polygon, or bbox."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error processing input. An internal error occurred"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/featureCollection/multipoints/properties": {
+      "get": {
+        "tags": [
+          "Multipoints featureCollection"
+        ],
+        "summary": "Returns a collection of geographical multipoints with additional properties",
+        "description": "Retrieves a collection of 30 geographical multipoints, including custom properties in the response.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical multipoints with properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "MultiPoint"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number"
+                                  },
+                                  "example": [
+                                    -101.278818,
+                                    40.816337
+                                  ]
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Additional metadata for each multipoint",
+                            "example": {
+                              "name": "Sample Point",
+                              "elevation": 500
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Multipoints featureCollection"
+        ],
+        "summary": "Returns a limited number of geographical multipoints with properties within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of geographical multipoints with additional properties. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of multipoints to return (must be <= 1000)",
+                    "example": 30
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter multipoints within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ],
+                          [
+                            -102.45708546876439,
+                            31.328195547453603
+                          ],
+                          [
+                            -86.94737395052326,
+                            31.832777392621864
+                          ],
+                          [
+                            -84.34442721393819,
+                            42.32251654152694
+                          ],
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to filter multipoints within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.83004979248041,
+                      31.328195547453603,
+                      -84.34442721393819,
+                      43.89485607270808
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical multipoints with properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "MultiPoint"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number"
+                                  },
+                                  "example": [
+                                    -101.278818,
+                                    40.816337
+                                  ]
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Additional metadata for each multipoint",
+                            "example": {
+                              "name": "Sample Point",
+                              "elevation": 500
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input. Provide a valid limit number, GeoJSON Polygon, or bbox."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error processing input. An internal error occurred"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/featureCollection/multipoints/random/properties": {
+      "get": {
+        "tags": [
+          "Multipoints featureCollection"
+        ],
+        "summary": "Returns a collection of random geographical multipoints with additional properties",
+        "description": "Retrieves a collection of 30 random geographical multipoints with additional properties.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of random geographical multipoints with properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "MultiPoint"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number"
+                                  },
+                                  "example": [
+                                    -101.278818,
+                                    40.816337
+                                  ]
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Additional metadata for each multipoint",
+                            "example": {
+                              "name": "Sample Point",
+                              "elevation": 500
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Multipoints featureCollection"
+        ],
+        "summary": "Returns a limited number of random geographical multipoints with properties within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of random geographical multipoints with additional properties. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of multipoints to return (must be <= 1000)",
+                    "example": 30
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter multipoints within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ],
+                          [
+                            -102.45708546876439,
+                            31.328195547453603
+                          ],
+                          [
+                            -86.94737395052326,
+                            31.832777392621864
+                          ],
+                          [
+                            -84.34442721393819,
+                            42.32251654152694
+                          ],
+                          [
+                            -104.83004979248041,
+                            39.06523015276548
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to filter multipoints within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.83004979248041,
+                      31.328195547453603,
+                      -84.34442721393819,
+                      43.89485607270808
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of random geographical multipoints with properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "MultiPoint"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number"
+                                  },
+                                  "example": [
+                                    -101.278818,
+                                    40.816337
+                                  ]
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Additional metadata for each multipoint",
+                            "example": {
+                              "name": "Sample Point",
+                              "elevation": 500
                             }
                           }
                         }
@@ -2923,22 +4611,126 @@
         }
       }
     },
-    "/featureCollection/polygons/random": {
+    "/featureCollection/polygons/properties": {
       "get": {
         "tags": [
           "Polygons featureCollection"
         ],
-        "summary": "Returns a collection of random geographical polygons",
-        "description": "Retrieves a collection of 30 random geographical polygons.",
+        "summary": "Returns a collection of geographical polygons with properties",
+        "description": "Retrieves a collection of 30 geographical polygons, each with associated metadata properties.",
         "responses": {
           "200": {
-            "description": "A successful response with a collection of geographical polygons."
+            "description": "A successful response with a collection of geographical polygons and properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "Polygon"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number",
+                                      "example": [
+                                        -101.278818,
+                                        40.816337
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Metadata associated with the polygon",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "polygon_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Polygon A"
+                              },
+                              "area": {
+                                "type": "number",
+                                "description": "Calculated area of the polygon in square kilometers",
+                                "example": 10.5
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-12-01T16:00:00Z"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "A detailed description of the polygon."
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad request - Invalid data"
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -2946,8 +4738,8 @@
         "tags": [
           "Polygons featureCollection"
         ],
-        "summary": "Returns a limited number of random geographical polygons within a bounding box or GeoJSON polygon",
-        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of random geographical polygons. The limit must be less than or equal to 1000.",
+        "summary": "Returns a limited number of geographical polygons with properties within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of geographical polygons, with metadata properties included. The limit must be less than or equal to 1000.",
         "requestBody": {
           "required": true,
           "content": {
@@ -2957,7 +4749,8 @@
                 "properties": {
                   "limit": {
                     "type": "integer",
-                    "description": "Number of polygons to return (must be <= 1000)"
+                    "description": "Number of polygons to return (must be <= 1000)",
+                    "example": 30
                   },
                   "geojsonPolygon": {
                     "type": "object",
@@ -2970,7 +4763,22 @@
                             -104.8,
                             39.1
                           ],
-                          "..."
+                          [
+                            -104.3,
+                            39.1
+                          ],
+                          [
+                            -104.3,
+                            39.6
+                          ],
+                          [
+                            -104.8,
+                            39.6
+                          ],
+                          [
+                            -104.8,
+                            39.1
+                          ]
                         ]
                       ]
                     }
@@ -2995,13 +4803,749 @@
         },
         "responses": {
           "200": {
-            "description": "A successful response with a collection of random geographical polygons."
+            "description": "A successful response with a collection of geographical polygons and properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "Polygon"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number",
+                                      "example": [
+                                        -101.278818,
+                                        40.816337
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Metadata associated with the polygon",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "polygon_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Polygon A"
+                              },
+                              "area": {
+                                "type": "number",
+                                "description": "Calculated area of the polygon in square kilometers",
+                                "example": 12.5
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-12-01T16:00:00Z"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "A detailed description of the polygon."
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox"
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/featureCollection/polygons/random": {
+      "get": {
+        "tags": [
+          "Polygons featureCollection"
+        ],
+        "summary": "Returns a collection of random geographical polygons",
+        "description": "Retrieves a collection of 30 random geographical polygons. Each polygon is represented as a GeoJSON Feature with a geometry of type \"Polygon\". This endpoint does not require any input parameters and will generate random polygons that conform to valid GeoJSON standards. The polygons are randomly distributed within a predefined bounding area.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of random geographical polygons.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "Polygon"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number",
+                                      "example": [
+                                        -101.278818,
+                                        40.816337
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Metadata associated with the polygon",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "random_polygon_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Random Polygon"
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-12-01T16:00:00Z"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "A randomly generated polygon."
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Polygons featureCollection"
+        ],
+        "summary": "Retrieve a limited number of random geographical polygons within a bounding box or GeoJSON polygon",
+        "description": "This endpoint allows clients to retrieve a collection of random geographical polygons. The polygons are randomly distributed within a specified GeoJSON Polygon or bounding box. Clients can limit the number of polygons returned (up to a maximum of 1000). If no GeoJSON Polygon or bounding box is provided, the polygons will be generated within a default bounding area.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Maximum number of polygons to return. Must be a positive integer less than or equal to 1000.",
+                    "example": 50
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "A GeoJSON Polygon defining the area within which random polygons should be generated.",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.8,
+                            39.1
+                          ],
+                          [
+                            -104.8,
+                            39.5
+                          ],
+                          [
+                            -104.2,
+                            39.5
+                          ],
+                          [
+                            -104.2,
+                            39.1
+                          ],
+                          [
+                            -104.8,
+                            39.1
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "A bounding box in the format [minX, minY, maxX, maxY] to define the area for polygon generation.",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.8,
+                      31.3,
+                      -84.3,
+                      43.9
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of random geographical polygons.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "description": "Array of GeoJSON Feature objects, each representing a polygon.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "Polygon"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number",
+                                      "example": [
+                                        -101.278818,
+                                        40.816337
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Metadata associated with the polygon",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "random_polygon_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Random Polygon"
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-12-01T16:00:00Z"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "A randomly generated polygon within the specified area."
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid input for `limit`, `geojsonPolygon`, or `bbox`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input. Limit must be <= 1000, and geojsonPolygon or bbox must be valid."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An unexpected error occurred while generating polygons."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/featureCollection/polygons/random/properties": {
+      "get": {
+        "tags": [
+          "Polygons featureCollection"
+        ],
+        "summary": "Returns a collection of random geographical polygons with additional properties",
+        "description": "Retrieves a collection of 30 random geographical polygons. Each polygon is represented as a GeoJSON Feature with a geometry of type \"Polygon\" and includes additional metadata properties. This endpoint does not require any input parameters and will generate random polygons and associated properties, ensuring valid GeoJSON standards are maintained. The polygons are randomly distributed within a predefined bounding area.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of random geographical polygons and their properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "Polygon"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number",
+                                      "example": [
+                                        -101.278818,
+                                        40.816337
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Metadata associated with the polygon",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "random_polygon_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Random Polygon"
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-12-01T16:00:00Z"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "A randomly generated polygon with associated metadata."
+                              },
+                              "area": {
+                                "type": "number",
+                                "description": "The calculated area of the polygon",
+                                "example": 150.5
+                              },
+                              "perimeter": {
+                                "type": "number",
+                                "description": "The calculated perimeter of the polygon",
+                                "example": 55.2
+                              },
+                              "centroid": {
+                                "type": "array",
+                                "description": "The centroid of the polygon",
+                                "items": {
+                                  "type": "number"
+                                },
+                                "example": [
+                                  -101.278,
+                                  40.816
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Polygons featureCollection"
+        ],
+        "summary": "Retrieve a limited number of random geographical polygons with additional metadata within a bounding box or GeoJSON polygon",
+        "description": "This endpoint retrieves a collection of random geographical polygons along with additional properties. The polygons are randomly distributed within a specified GeoJSON Polygon or bounding box. Clients can limit the number of polygons returned (up to a maximum of 1000). If no GeoJSON Polygon or bounding box is provided, the polygons will be generated within a default bounding area.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Maximum number of polygons to return. Must be a positive integer less than or equal to 1000.",
+                    "example": 50
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "A GeoJSON Polygon defining the area within which random polygons should be generated.",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.8,
+                            39.1
+                          ],
+                          [
+                            -104.8,
+                            39.5
+                          ],
+                          [
+                            -104.2,
+                            39.5
+                          ],
+                          [
+                            -104.2,
+                            39.1
+                          ],
+                          [
+                            -104.8,
+                            39.1
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "A bounding box in the format [minX, minY, maxX, maxY] to define the area for polygon generation.",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.8,
+                      31.3,
+                      -84.3,
+                      43.9
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of random geographical polygons and their properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "description": "Array of GeoJSON Feature objects, each representing a polygon with additional properties.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "Polygon"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number",
+                                      "example": [
+                                        -101.278818,
+                                        40.816337
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Metadata associated with the polygon",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "random_polygon_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Random Polygon"
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-12-01T16:00:00Z"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "A randomly generated polygon within the specified area."
+                              },
+                              "area": {
+                                "type": "number",
+                                "description": "The area of the polygon in square kilometers.",
+                                "example": 12.34
+                              },
+                              "perimeter": {
+                                "type": "number",
+                                "description": "The perimeter of the polygon in kilometers.",
+                                "example": 5.67
+                              },
+                              "random_property": {
+                                "type": "string",
+                                "description": "A randomly assigned property for the polygon.",
+                                "example": "Random Value 123"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid input for `limit`, `geojsonPolygon`, or `bbox`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input. Limit must be <= 1000, and geojsonPolygon or bbox must be valid."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An unexpected error occurred while generating polygons."
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -3214,6 +5758,223 @@
         }
       }
     },
+    "/feature/line/properties": {
+      "get": {
+        "tags": [
+          "Line feature"
+        ],
+        "summary": "Returns a line geojson Feature with properties",
+        "description": "Generates a geographical line with additional random properties.",
+        "responses": {
+          "200": {
+            "description": "A successful response containing the line feature with properties",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "LineString"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          },
+                          "example": [
+                            [
+                              -98.46358188123595,
+                              38.16839367133355
+                            ],
+                            [
+                              -98.0095425039122,
+                              38.6109019399903
+                            ],
+                            [
+                              -97.5063234325582,
+                              38.192492088530855
+                            ],
+                            [
+                              -96.76369691515532,
+                              38.668456803745556
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "properties": {
+                      "type": "object",
+                      "additionalProperties": true,
+                      "example": {
+                        "name": "Random Line",
+                        "description": "This line was generated with random properties.",
+                        "length": 123.45,
+                        "timestamp": "2024-11-28T10:00:00Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Line feature"
+        ],
+        "summary": "Returns a line GeoJSON feature with additional properties within a GeoJSON polygon or bbox",
+        "description": "Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a line within it, enriched with user-defined properties.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to return a line within it",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.35959912130382,
+                            40.186854567133594
+                          ],
+                          [
+                            -99.75483802782351,
+                            36.870115044295346
+                          ],
+                          [
+                            -97.427541041584,
+                            36.43876305758806
+                          ],
+                          [
+                            -94.44354178155926,
+                            38.13171162987652
+                          ],
+                          [
+                            -99.30047105952276,
+                            41.94545202484386
+                          ],
+                          [
+                            -104.35959912130382,
+                            40.186854567133594
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to return a line within it",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.35959912130382,
+                      36.870115044295346,
+                      -94.44354178155926,
+                      41.94545202484386
+                    ]
+                  },
+                  "properties": {
+                    "type": "object",
+                    "description": "Additional properties to enrich the line feature",
+                    "example": {
+                      "name": "Example Line",
+                      "tags": [
+                        "geojson",
+                        "test"
+                      ],
+                      "createdBy": "user123"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with additional properties",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "LineString"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          },
+                          "example": [
+                            [
+                              -99.40157045143154,
+                              39.19210754121596
+                            ],
+                            [
+                              -96.78364279952356,
+                              39.99810774123456
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "properties": {
+                      "type": "object",
+                      "additionalProperties": true,
+                      "example": {
+                        "name": "Example Line",
+                        "tags": [
+                          "geojson",
+                          "test"
+                        ],
+                        "createdBy": "user123",
+                        "generatedAt": "2024-11-28T10:45:00Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/feature/line/random": {
       "get": {
         "tags": [
@@ -3412,6 +6173,225 @@
                             ]
                           ]
                         }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feature/line/random/properties": {
+      "get": {
+        "tags": [
+          "Line feature"
+        ],
+        "summary": "Returns a random line geojson Feature with properties",
+        "description": "Generates a random geographical line with additional random properties.",
+        "responses": {
+          "200": {
+            "description": "A successful response containing the random line feature with properties",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "LineString"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          },
+                          "example": [
+                            [
+                              -98.46358188123595,
+                              38.16839367133355
+                            ],
+                            [
+                              -98.0095425039122,
+                              38.6109019399903
+                            ],
+                            [
+                              -97.5063234325582,
+                              38.192492088530855
+                            ],
+                            [
+                              -96.76369691515532,
+                              38.668456803745556
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "properties": {
+                      "type": "object",
+                      "additionalProperties": true,
+                      "example": {
+                        "name": "Randomized Line",
+                        "category": "Exploratory",
+                        "details": {
+                          "importance": "high",
+                          "validated": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Line feature"
+        ],
+        "summary": "Returns a random line GeoJSON feature with additional properties within a GeoJSON polygon or bbox",
+        "description": "Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a random line within it, enriched with user-defined properties.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to return a random line within it",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.35959912130382,
+                            40.186854567133594
+                          ],
+                          [
+                            -99.75483802782351,
+                            36.870115044295346
+                          ],
+                          [
+                            -97.427541041584,
+                            36.43876305758806
+                          ],
+                          [
+                            -94.44354178155926,
+                            38.13171162987652
+                          ],
+                          [
+                            -99.30047105952276,
+                            41.94545202484386
+                          ],
+                          [
+                            -104.35959912130382,
+                            40.186854567133594
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to return a random line within it",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.35959912130382,
+                      36.870115044295346,
+                      -94.44354178155926,
+                      41.94545202484386
+                    ]
+                  },
+                  "properties": {
+                    "type": "object",
+                    "description": "Additional properties to enrich the random line feature",
+                    "example": {
+                      "name": "Random Line",
+                      "tags": [
+                        "random",
+                        "geojson"
+                      ],
+                      "createdBy": "user456"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with additional properties",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "LineString"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          },
+                          "example": [
+                            [
+                              -99.78456978142837,
+                              38.12398745125468
+                            ],
+                            [
+                              -97.14569845123457,
+                              37.45612398745136
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "properties": {
+                      "type": "object",
+                      "additionalProperties": true,
+                      "example": {
+                        "name": "Random Line",
+                        "tags": [
+                          "random",
+                          "geojson"
+                        ],
+                        "createdBy": "user456",
+                        "generatedAt": "2024-11-28T12:15:00Z"
                       }
                     }
                   }
@@ -3648,6 +6628,310 @@
         }
       }
     },
+    "/feature/multiline/properties": {
+      "get": {
+        "tags": [
+          "MultiLine feature"
+        ],
+        "summary": "Returns a multi-line GeoJSON Feature with properties",
+        "description": "Generates a geographical MultiLineString feature with additional properties describing the feature.",
+        "responses": {
+          "200": {
+            "description": "A successful response containing the multi-line feature with properties",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "MultiLineString"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              }
+                            }
+                          },
+                          "example": [
+                            [
+                              [
+                                -98.46358188123595,
+                                38.16839367133355
+                              ],
+                              [
+                                -98.0095425039122,
+                                38.6109019399903
+                              ]
+                            ],
+                            [
+                              [
+                                -97.5063234325582,
+                                38.192492088530855
+                              ],
+                              [
+                                -96.76369691515532,
+                                38.668456803745556
+                              ]
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "properties": {
+                      "type": "object",
+                      "description": "Additional metadata associated with the MultiLineString feature",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "multiline_feature_001"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "MultiLine Feature Example"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "A randomly generated multi-line geographical feature."
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-11-28T12:00:00Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MultiLine feature"
+        ],
+        "summary": "Returns a multi-line geojson feature with properties within a GeoJSON polygon or bbox",
+        "description": "Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a multi-line within it along with additional metadata properties.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to return a multi-line within it",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.3,
+                            40.1
+                          ],
+                          [
+                            -99.7,
+                            36.8
+                          ],
+                          [
+                            -94.4,
+                            38.1
+                          ],
+                          [
+                            -99.3,
+                            41.9
+                          ],
+                          [
+                            -104.3,
+                            40.1
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box [minX, minY, maxX, maxY] to return a multi-line within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.3,
+                      36.8,
+                      -94.4,
+                      41.9
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "MultiLineString"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              }
+                            }
+                          },
+                          "example": [
+                            [
+                              [
+                                -99.4,
+                                39.1
+                              ],
+                              [
+                                -96.7,
+                                39.9
+                              ]
+                            ],
+                            [
+                              [
+                                -97.4,
+                                38.4
+                              ],
+                              [
+                                -94.5,
+                                37.9
+                              ]
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "properties": {
+                      "type": "object",
+                      "description": "Additional metadata associated with the MultiLineString feature",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "multiline_within_001"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "MultiLine within bounds"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "A multi-line feature within the specified bounds with metadata."
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-12-01T15:00:00Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/feature/multiline/random": {
       "get": {
         "tags": [
@@ -3874,6 +7158,310 @@
         }
       }
     },
+    "/feature/multiline/random/properties": {
+      "get": {
+        "tags": [
+          "MultiLine feature"
+        ],
+        "summary": "Returns a random multi-line GeoJSON Feature with properties",
+        "description": "Generates a random geographical MultiLineString feature with associated metadata properties.",
+        "responses": {
+          "200": {
+            "description": "A successful response containing the random multi-line feature with properties",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "MultiLineString"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              }
+                            }
+                          },
+                          "example": [
+                            [
+                              [
+                                -100.12345,
+                                39.98765
+                              ],
+                              [
+                                -99.54321,
+                                40.12345
+                              ]
+                            ],
+                            [
+                              [
+                                -97.56789,
+                                38.87654
+                              ],
+                              [
+                                -96.6789,
+                                39.45678
+                              ]
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "properties": {
+                      "type": "object",
+                      "description": "Additional metadata associated with the MultiLineString feature",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "random_multiline_001"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Random MultiLine Feature"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "A randomly generated multi-line geographical feature with metadata."
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-12-01T15:00:00Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MultiLine feature"
+        ],
+        "summary": "Returns a random multi-line geojson feature with properties within a GeoJSON polygon or bbox",
+        "description": "Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a random multi-line within it along with additional metadata properties.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to return a random multi-line within it",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.3,
+                            40.1
+                          ],
+                          [
+                            -99.7,
+                            36.8
+                          ],
+                          [
+                            -94.4,
+                            38.1
+                          ],
+                          [
+                            -99.3,
+                            41.9
+                          ],
+                          [
+                            -104.3,
+                            40.1
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box [minX, minY, maxX, maxY] to return a random multi-line within",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.3,
+                      36.8,
+                      -94.4,
+                      41.9
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "MultiLineString"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              }
+                            }
+                          },
+                          "example": [
+                            [
+                              [
+                                -99.4,
+                                39.1
+                              ],
+                              [
+                                -96.7,
+                                39.9
+                              ]
+                            ],
+                            [
+                              [
+                                -97.4,
+                                38.4
+                              ],
+                              [
+                                -94.5,
+                                37.9
+                              ]
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "properties": {
+                      "type": "object",
+                      "description": "Additional metadata associated with the MultiLineString feature",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "random_multiline_001"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Random MultiLine with Properties"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "A random multi-line feature with associated metadata."
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-12-01T15:00:00Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/feature/multipoint": {
       "get": {
         "tags": [
@@ -4007,6 +7595,153 @@
         }
       }
     },
+    "/feature/multipoint/properties": {
+      "get": {
+        "tags": [
+          "MultiPoint feature"
+        ],
+        "summary": "Returns a multipoint geojson Feature with properties",
+        "description": "Generates a geographical multipoint with additional properties.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "example": {
+                        "name": "Sample Point",
+                        "category": "example"
+                      }
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "MultiPoint"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          },
+                          "example": [
+                            [
+                              -101.278818,
+                              40.816337
+                            ],
+                            [
+                              -99.40157045143154,
+                              39.19210754121596
+                            ]
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MultiPoint feature"
+        ],
+        "summary": "Returns a multipoint geojson Feature within a GeoJSON polygon or bbox with properties",
+        "description": "Accepts a GeoJSON Polygon or a bounding box (bbox) and returns multipoints within it with additional properties.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to return multipoints within it"
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to return multipoints within it",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "example": {
+                        "region": "example",
+                        "density": "high"
+                      }
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "MultiPoint"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/feature/multipoint/random": {
       "get": {
         "tags": [
@@ -4107,6 +7842,153 @@
                     "type": {
                       "type": "string",
                       "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "MultiPoint"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/feature/multipoint/random/properties": {
+      "get": {
+        "tags": [
+          "MultiPoint feature"
+        ],
+        "summary": "Returns a random multipoint geojson Feature with properties",
+        "description": "Generates a random geographical multipoint with additional properties.",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "example": {
+                        "id": "12345",
+                        "label": "Random Point"
+                      }
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "MultiPoint"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          },
+                          "example": [
+                            [
+                              -101.278818,
+                              40.816337
+                            ],
+                            [
+                              -99.40157045143154,
+                              39.19210754121596
+                            ]
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MultiPoint feature"
+        ],
+        "summary": "Returns a random multipoint geojson Feature within a GeoJSON polygon or bbox with properties",
+        "description": "Accepts a GeoJSON Polygon or a bounding box (bbox) and returns random multipoints within it with additional properties.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to return random multipoints within it"
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to return random multipoints within it",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "example": {
+                        "clusterId": "789",
+                        "user": "apiUser"
+                      }
                     },
                     "geometry": {
                       "type": "object",
@@ -5265,6 +9147,330 @@
         }
       }
     },
+    "/feature/polygon/properties": {
+      "get": {
+        "tags": [
+          "Polygon feature"
+        ],
+        "summary": "Returns a polygon GeoJSON Feature with metadata properties",
+        "description": "Generates a geographical polygon and includes additional metadata properties.",
+        "responses": {
+          "200": {
+            "description": "A successful response containing the polygon feature with metadata properties",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "Polygon"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          },
+                          "example": [
+                            [
+                              -98.41003457659247,
+                              39.4047785977163
+                            ],
+                            [
+                              -98.02900405028468,
+                              39.09917828895786
+                            ],
+                            [
+                              -96.96285807131997,
+                              39.33112358709519
+                            ],
+                            [
+                              -97.70240571181387,
+                              39.862404027619164
+                            ],
+                            [
+                              -97.89292169019507,
+                              39.56582676744193
+                            ],
+                            [
+                              -98.18773342170626,
+                              39.71250430627077
+                            ],
+                            [
+                              -98.41003457659247,
+                              39.4047785977163
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "properties": {
+                      "type": "object",
+                      "description": "Metadata associated with the polygon feature",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "polygon_feature_001"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Random Polygon"
+                        },
+                        "area": {
+                          "type": "number",
+                          "description": "Calculated area of the polygon in square kilometers",
+                          "example": 120.5
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "A randomly generated polygon with metadata."
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-12-01T15:00:00Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Polygon feature"
+        ],
+        "summary": "Returns a polygon GeoJSON Feature with properties within a GeoJSON polygon or bbox",
+        "description": "Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a polygon within it along with additional properties.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to return a polygon within it",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.35959912130382,
+                            40.186854567133594
+                          ],
+                          [
+                            -99.75483802782351,
+                            36.870115044295346
+                          ],
+                          [
+                            -97.427541041584,
+                            36.43876305758806
+                          ],
+                          [
+                            -94.44354178155926,
+                            38.13171162987652
+                          ],
+                          [
+                            -99.30047105952276,
+                            41.94545202484386
+                          ],
+                          [
+                            -104.35959912130382,
+                            40.186854567133594
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to return a polygon within it",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.35959912130382,
+                      36.870115044295346,
+                      -94.44354178155926,
+                      41.94545202484386
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "Polygon"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          },
+                          "example": [
+                            [
+                              -104.35959912130382,
+                              40.186854567133594
+                            ],
+                            [
+                              -99.75483802782351,
+                              36.870115044295346
+                            ],
+                            [
+                              -97.427541041584,
+                              36.43876305758806
+                            ],
+                            [
+                              -94.44354178155926,
+                              38.13171162987652
+                            ],
+                            [
+                              -99.30047105952276,
+                              41.94545202484386
+                            ],
+                            [
+                              -104.35959912130382,
+                              40.186854567133594
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "properties": {
+                      "type": "object",
+                      "description": "Metadata associated with the polygon feature",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "polygon_within_001"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Polygon Within Area"
+                        },
+                        "area": {
+                          "type": "number",
+                          "description": "Calculated area of the polygon in square kilometers",
+                          "example": 120.5
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "A polygon generated within the provided area."
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-12-01T15:00:00Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/feature/polygon/random": {
       "get": {
         "tags": [
@@ -5489,6 +9695,330 @@
                               40.186854567133594
                             ]
                           ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feature/polygon/random/properties": {
+      "get": {
+        "tags": [
+          "Polygon feature"
+        ],
+        "summary": "Returns a random polygon GeoJSON Feature with metadata properties",
+        "description": "Generates a geographical random polygon and includes additional metadata properties.",
+        "responses": {
+          "200": {
+            "description": "A successful response containing the random polygon feature with metadata properties",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "Polygon"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          },
+                          "example": [
+                            [
+                              -98.41003457659247,
+                              39.4047785977163
+                            ],
+                            [
+                              -98.02900405028468,
+                              39.09917828895786
+                            ],
+                            [
+                              -96.96285807131997,
+                              39.33112358709519
+                            ],
+                            [
+                              -97.70240571181387,
+                              39.862404027619164
+                            ],
+                            [
+                              -97.89292169019507,
+                              39.56582676744193
+                            ],
+                            [
+                              -98.18773342170626,
+                              39.71250430627077
+                            ],
+                            [
+                              -98.41003457659247,
+                              39.4047785977163
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "properties": {
+                      "type": "object",
+                      "description": "Metadata associated with the random polygon feature",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "random_polygon_001"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Random Polygon"
+                        },
+                        "area": {
+                          "type": "number",
+                          "description": "Calculated area of the polygon in square kilometers",
+                          "example": 85.7
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "A randomly generated polygon with metadata."
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-12-01T15:00:00Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Polygon feature"
+        ],
+        "summary": "Returns a random polygon GeoJSON Feature with properties within a GeoJSON polygon or bbox",
+        "description": "Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a random polygon within it along with additional properties.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to return a random polygon within it",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.35959912130382,
+                            40.186854567133594
+                          ],
+                          [
+                            -99.75483802782351,
+                            36.870115044295346
+                          ],
+                          [
+                            -97.427541041584,
+                            36.43876305758806
+                          ],
+                          [
+                            -94.44354178155926,
+                            38.13171162987652
+                          ],
+                          [
+                            -99.30047105952276,
+                            41.94545202484386
+                          ],
+                          [
+                            -104.35959912130382,
+                            40.186854567133594
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to return a random polygon within it",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.35959912130382,
+                      36.870115044295346,
+                      -94.44354178155926,
+                      41.94545202484386
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "Polygon"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          },
+                          "example": [
+                            [
+                              -104.35959912130382,
+                              40.186854567133594
+                            ],
+                            [
+                              -99.75483802782351,
+                              36.870115044295346
+                            ],
+                            [
+                              -97.427541041584,
+                              36.43876305758806
+                            ],
+                            [
+                              -94.44354178155926,
+                              38.13171162987652
+                            ],
+                            [
+                              -99.30047105952276,
+                              41.94545202484386
+                            ],
+                            [
+                              -104.35959912130382,
+                              40.186854567133594
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "properties": {
+                      "type": "object",
+                      "description": "Metadata associated with the random polygon feature",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "random_polygon_001"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Random Polygon"
+                        },
+                        "area": {
+                          "type": "number",
+                          "description": "Calculated area of the polygon in square kilometers",
+                          "example": 85.2
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "A randomly generated polygon within the provided area."
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-12-01T16:00:00Z"
                         }
                       }
                     }

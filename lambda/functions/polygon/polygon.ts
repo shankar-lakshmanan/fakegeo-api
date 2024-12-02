@@ -1,52 +1,83 @@
 import * as turf from "@turf/turf";
 import { Feature, Geometry, Point, FeatureCollection } from "geojson";
 import { APIGatewayProxyResult } from "aws-lambda";
-import { GetBadRequestErrorResponse, GetInternalServerErrorResponse, GetOkResponse, OkResponse } from "../../util/stringify";
+import { BadRequestErrorResponse, GetBadRequestErrorResponse, GetInternalServerErrorResponse, GetOkResponse, OkResponse } from "../../util/stringify";
 import { thousandPolygons } from "./thousandPolygons";
+import { populateGeoJsonFeatureCollectionWithProperties, populateGeoJsonFeatureWithProperties } from "../properties/properties";
+
+function PolygonOrPolygonWithProperties(withProperties: boolean) {
+  const polygon = turf.polygon(
+    [
+      [
+        [
+          -98.41003457659247,
+          39.4047785977163
+        ],
+        [
+          -98.02900405028468,
+          39.09917828895786
+        ],
+        [
+          -96.96285807131997,
+          39.33112358709519
+        ],
+        [
+          -97.70240571181387,
+          39.862404027619164
+        ],
+        [
+          -97.89292169019507,
+          39.56582676744193
+        ],
+        [
+          -98.18773342170626,
+          39.71250430627077
+        ],
+        [
+          -98.41003457659247,
+          39.4047785977163
+        ]
+      ]
+    ]
+  );
+
+  if (withProperties) {
+    const polygonWithProperties = populateGeoJsonFeatureWithProperties(polygon);
+    return polygonWithProperties;
+  }
+  return polygon;
+}
 
 export function Polygon(
   ): OkResponse {
-    const polygon = turf.polygon(
-      [
-        [
-          [
-            -98.41003457659247,
-            39.4047785977163
-          ],
-          [
-            -98.02900405028468,
-            39.09917828895786
-          ],
-          [
-            -96.96285807131997,
-            39.33112358709519
-          ],
-          [
-            -97.70240571181387,
-            39.862404027619164
-          ],
-          [
-            -97.89292169019507,
-            39.56582676744193
-          ],
-          [
-            -98.18773342170626,
-            39.71250430627077
-          ],
-          [
-            -98.41003457659247,
-            39.4047785977163
-          ]
-        ]
-      ]
-    );
-    return GetOkResponse(polygon);
+    
+    return GetOkResponse(PolygonOrPolygonWithProperties(false));
+  }
+
+  export function PolygonWithProperties(
+  ): OkResponse {
+    
+    return GetOkResponse(PolygonOrPolygonWithProperties(true));
+  }
+
+  function RandomPolygonOrRandomPolygonWithProperties(withProperties: boolean) {
+    const polygon = turf.randomPolygon(1, { bbox: [-180, -90, 180, 90] }).features[0];
+
+    if (withProperties) {
+      const polygonWithProperties = populateGeoJsonFeatureWithProperties(polygon);
+      return polygonWithProperties;
+    }
+    return polygon;
   }
 
   export function RandomPolygon(
   ): OkResponse {
-    const polygon = turf.randomPolygon(1, { bbox: [-180, -90, 180, 90] });
-    return GetOkResponse(polygon.features[0]);
+    return GetOkResponse(RandomPolygonOrRandomPolygonWithProperties(false));
+  }
+
+  export function RandomPolygonWithProperties(
+  ): OkResponse {
+    return GetOkResponse(RandomPolygonOrRandomPolygonWithProperties(true));
   }
 
   
@@ -68,86 +99,123 @@ export function isValidBBox(bbox: any): boolean {
   );
 }
 
+function WithinPolygonOrWithinPolygonWithProperties(
+  body: any,
+  withProperties: boolean
+) {
+  let polygon;
+  const { geojsonPolygon, bbox } = body;
+
+  // Check if geojsonPolygon is valid
+  if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
+
+    // Create a bounding box based on the polygon and get its center
+    const bboxPolygon = turf.bboxPolygon(turf.bbox(geojsonPolygon));
+    const bboxCenter = turf.center(bboxPolygon);
+
+    // Calculate 6 points around the center point at different angles to form a polygon
+    const point1 = turf.destination(bboxCenter, 0.1, 0);    // 0 degrees
+    const point2 = turf.destination(bboxCenter, 0.1, 60);   // 60 degrees
+    const point3 = turf.destination(bboxCenter, 0.1, 120);  // 120 degrees
+    const point4 = turf.destination(bboxCenter, 0.1, 180);  // 180 degrees
+    const point5 = turf.destination(bboxCenter, 0.1, 240);  // 240 degrees
+    const point6 = turf.destination(bboxCenter, 0.1, 300);  // 300 degrees
+
+    // Create a polygon from these 6 points and close the loop by repeating the first point
+    polygon = turf.polygon([[
+      point1.geometry.coordinates,
+      point2.geometry.coordinates,
+      point3.geometry.coordinates,
+      point4.geometry.coordinates,
+      point5.geometry.coordinates,
+      point6.geometry.coordinates,
+      point1.geometry.coordinates  // Close the polygon
+    ]]);
+  }
+  // Check if bbox is valid
+  else if (bbox && isValidBBox(bbox)) {
+    const bboxPolygon = turf.bboxPolygon(bbox);
+    const bboxCenter = turf.center(bboxPolygon);
+
+    // Calculate 6 points around the center point at different angles to form a polygon
+    const point1 = turf.destination(bboxCenter, 0.1, 0);    // 0 degrees
+    const point2 = turf.destination(bboxCenter, 0.1, 60);   // 60 degrees
+    const point3 = turf.destination(bboxCenter, 0.1, 120);  // 120 degrees
+    const point4 = turf.destination(bboxCenter, 0.1, 180);  // 180 degrees
+    const point5 = turf.destination(bboxCenter, 0.1, 240);  // 240 degrees
+    const point6 = turf.destination(bboxCenter, 0.1, 300);  // 300 degrees
+
+    // Create a polygon from these 6 points and close the loop by repeating the first point
+    polygon = turf.polygon([[
+      point1.geometry.coordinates,
+      point2.geometry.coordinates,
+      point3.geometry.coordinates,
+      point4.geometry.coordinates,
+      point5.geometry.coordinates,
+      point6.geometry.coordinates,
+      point1.geometry.coordinates  // Close the polygon
+    ]]);
+  } else {
+    return GetBadRequestErrorResponse("Invalid input. Provide either a valid GeoJSON polygon or a bbox.");
+  }
+
+  if (withProperties) {
+    const polygonWithProperties = populateGeoJsonFeatureWithProperties(polygon);
+    return polygonWithProperties;
+  }
+
+  return polygon;
+
+}
+
 /**
  * Validates the input and returns a Polygon at the center of a GeoJSON polygon or bbox.
  */
 export function WithinPolygon(event: any): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
-
-  let polygon;
-
   try {
-    const { geojsonPolygon, bbox } = body;
-
-    // Check if geojsonPolygon is valid
-    if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
-
-      // Create a bounding box based on the polygon and get its center
-      const bboxPolygon = turf.bboxPolygon(turf.bbox(geojsonPolygon));
-      const bboxCenter = turf.center(bboxPolygon);
-
-      // Calculate 6 points around the center point at different angles to form a polygon
-      const point1 = turf.destination(bboxCenter, 0.1, 0);    // 0 degrees
-      const point2 = turf.destination(bboxCenter, 0.1, 60);   // 60 degrees
-      const point3 = turf.destination(bboxCenter, 0.1, 120);  // 120 degrees
-      const point4 = turf.destination(bboxCenter, 0.1, 180);  // 180 degrees
-      const point5 = turf.destination(bboxCenter, 0.1, 240);  // 240 degrees
-      const point6 = turf.destination(bboxCenter, 0.1, 300);  // 300 degrees
-
-      // Create a polygon from these 6 points and close the loop by repeating the first point
-      polygon = turf.polygon([[
-        point1.geometry.coordinates,
-        point2.geometry.coordinates,
-        point3.geometry.coordinates,
-        point4.geometry.coordinates,
-        point5.geometry.coordinates,
-        point6.geometry.coordinates,
-        point1.geometry.coordinates  // Close the polygon
-      ]]);
-    }
-    // Check if bbox is valid
-    else if (bbox && isValidBBox(bbox)) {
-      const bboxPolygon = turf.bboxPolygon(bbox);
-      const bboxCenter = turf.center(bboxPolygon);
-
-      // Calculate 6 points around the center point at different angles to form a polygon
-      const point1 = turf.destination(bboxCenter, 0.1, 0);    // 0 degrees
-      const point2 = turf.destination(bboxCenter, 0.1, 60);   // 60 degrees
-      const point3 = turf.destination(bboxCenter, 0.1, 120);  // 120 degrees
-      const point4 = turf.destination(bboxCenter, 0.1, 180);  // 180 degrees
-      const point5 = turf.destination(bboxCenter, 0.1, 240);  // 240 degrees
-      const point6 = turf.destination(bboxCenter, 0.1, 300);  // 300 degrees
-
-      // Create a polygon from these 6 points and close the loop by repeating the first point
-      polygon = turf.polygon([[
-        point1.geometry.coordinates,
-        point2.geometry.coordinates,
-        point3.geometry.coordinates,
-        point4.geometry.coordinates,
-        point5.geometry.coordinates,
-        point6.geometry.coordinates,
-        point1.geometry.coordinates  // Close the polygon
-      ]]);
+    const result = WithinPolygonOrWithinPolygonWithProperties(
+      body,
+      false
+    );
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
     } else {
-      return GetBadRequestErrorResponse("Invalid input. Provide either a valid GeoJSON polygon or a bbox.");
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
     }
-
-    return GetOkResponse(polygon);
   } catch (error: any) {
     return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
   }
 }
 
-/**
- * Validates the input and returns a random Polygon at the center of a GeoJSON polygon or bbox.
- */
-export function WithinRandomPolygon(event: any): APIGatewayProxyResult {
+export function WithinPolygonWithProperties(event: any): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
+  try {
+    const result = WithinPolygonOrWithinPolygonWithProperties(
+      body,
+      true
+    );
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
+    }
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
+  }
+}
+
+function WithinRandomPolygonOrWithinRandomPolygonWithProperties(
+  body: any,
+  withProperties: boolean
+) {
 
   let polygon;
-
-  try {
-    const { geojsonPolygon, bbox } = body;
+  const { geojsonPolygon, bbox } = body;
 
     // Check if geojsonPolygon is valid
     if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
@@ -215,31 +283,88 @@ export function WithinRandomPolygon(event: any): APIGatewayProxyResult {
       return GetBadRequestErrorResponse("Invalid input. Provide either a valid GeoJSON polygon or a bbox.");
     }
 
-    return GetOkResponse(polygon);
+    if (withProperties) {
+      const polygonWithProperties = populateGeoJsonFeatureWithProperties(polygon);
+      return polygonWithProperties;
+    }
+  
+    return polygon;
+
+}
+
+/**
+ * Validates the input and returns a random Polygon at the center of a GeoJSON polygon or bbox.
+ */
+export function WithinRandomPolygon(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+
+  try {
+    
+    const result = WithinRandomPolygonOrWithinRandomPolygonWithProperties(
+      body,
+      false
+    );
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
+    }
   } catch (error: any) {
     return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
   }
 }
 
+export function WithinRandomPolygonWithProperties(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+
+  try {
+    
+    const result = WithinRandomPolygonOrWithinRandomPolygonWithProperties(
+      body,
+      true
+    );
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
+    }
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
+  }
+}
+
+function PolygonsOrPolygonsWithProperties(withProperties: boolean) {
+  const allPolygons = thousandPolygons;
+  const last30Polygons = turf.featureCollection(allPolygons.features.slice(-30)); // Get only the last 30 polygons
+
+  if (withProperties) {
+    const polygonsWithProperties = populateGeoJsonFeatureCollectionWithProperties(last30Polygons);
+    return polygonsWithProperties;
+  }
+  return last30Polygons;
+}
 
 /**
  * Polygons() - Returns a collection of polygons, limited to the last 30 polygons.
  */
 export function Polygons(): OkResponse {
-  const allPolygons = thousandPolygons;
-  const last30Polygons = allPolygons.features.slice(-30); // Get only the last 30 polygons
-
-  return GetOkResponse(turf.featureCollection(last30Polygons));
+  return GetOkResponse(PolygonsOrPolygonsWithProperties(false));
 }
 
-/**
- * PolygonsLimitAndWithin() - Filters and limits polygons based on a GeoJSON polygon or bbox.
- */
-export function PolygonsLimitAndWithin(event: any): APIGatewayProxyResult {
-  const body = JSON.parse(event.body || "{}");
+export function PolygonsWithProperties(): OkResponse {
+  return GetOkResponse(PolygonsOrPolygonsWithProperties(true));
+}
 
-  try {
-    const { limit, geojsonPolygon, bbox } = body;
+function PolygonsLimitAndWithinOrPolygonsLimitAndWithinWithProperties(
+  body: any,
+  withProperties: boolean
+) {
+
+  const { limit, geojsonPolygon, bbox } = body;
 
     let polygons: FeatureCollection = thousandPolygons;
     let finalPolygons: FeatureCollection;
@@ -275,37 +400,98 @@ export function PolygonsLimitAndWithin(event: any): APIGatewayProxyResult {
       finalPolygons = polygons;
     }
 
-    return GetOkResponse(finalPolygons);
+  if (withProperties) {
+    const polygonsWithProperties = populateGeoJsonFeatureCollectionWithProperties(finalPolygons);
+    return polygonsWithProperties;
+  }
+
+  return finalPolygons;
+}
+
+/**
+ * PolygonsLimitAndWithin() - Filters and limits polygons based on a GeoJSON polygon or bbox.
+ */
+export function PolygonsLimitAndWithin(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+
+  try {
+    const result = PolygonsLimitAndWithinOrPolygonsLimitAndWithinWithProperties(
+      body,
+      false
+    );
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
+    }
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
+  }
+}
+
+export function PolygonsLimitAndWithinWithProperties(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+
+  try {
+    const result = PolygonsLimitAndWithinOrPolygonsLimitAndWithinWithProperties(
+      body,
+      true
+    );
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
+    }
   } catch (error: any) {
     return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
   }
 }
 
 
-/**
- * RandomPolygons() - Returns 30 random polygons within a global bounding box.
- */
-export function RandomPolygons(): OkResponse {
+function RandomPolygonsOrRandomPolygonsWithProperties(withProperties: boolean) {
   const globalBbox: [number, number, number, number] = [-180, -90, 180, 90];
-  const randomPolygons = [];
+  let randomPolygons = [];
+
+  let polygons;
 
   for (let i = 0; i < 30; i++) {
     const polygon = turf.randomPolygon(1, { bbox: globalBbox });
     randomPolygons.push(polygon.features[0]);
   }
+  polygons = turf.featureCollection(randomPolygons)
 
-  return GetOkResponse(turf.featureCollection(randomPolygons));
+  if (withProperties) {
+    const polygonsWithProperties = populateGeoJsonFeatureCollectionWithProperties(polygons);
+    return polygonsWithProperties;
+  }
+  return polygons;
 }
 
 /**
- * RandomPolygonsLimitAndWithin() - Filters and limits random polygons based on a GeoJSON polygon or bbox.
+ * RandomPolygons() - Returns 30 random polygons within a global bounding box.
  */
-export function RandomPolygonsLimitAndWithin(event: any): APIGatewayProxyResult {
-  const body = JSON.parse(event.body || "{}");
+export function RandomPolygons(): OkResponse {
+  return GetOkResponse(RandomPolygonsOrRandomPolygonsWithProperties(false));
+}
+
+export function RandomPolygonsWithProperties(): OkResponse {
+  return GetOkResponse(RandomPolygonsOrRandomPolygonsWithProperties(true));
+}
+
+function RandomPolygonsLimitAndWithinOrRandomPolygonsLimitAndWithinWithProperties(
+  body: any,
+  withProperties: boolean
+) {
+
   const { geojsonPolygon, bbox, limit } = body;
 
   const globalBbox: [number, number, number, number] = [-180, -90, 180, 90];
   const randomPolygons = [];
+  let finalPolygons;
 
   for (let i = 0; i < 100; i++) { // Generate more than needed for filtering purposes
     const polygon = turf.randomPolygon(1, { bbox: globalBbox });
@@ -331,5 +517,55 @@ export function RandomPolygonsLimitAndWithin(event: any): APIGatewayProxyResult 
   }
 
   const limitedPolygons = filteredPolygons.slice(0, limit || 30); // Limit to specified number or default to 30
-  return GetOkResponse(turf.featureCollection(limitedPolygons));
+  finalPolygons = turf.featureCollection(limitedPolygons);
+
+  if (withProperties) {
+    const polygonsWithProperties = populateGeoJsonFeatureCollectionWithProperties(finalPolygons);
+    return polygonsWithProperties;
+  }
+
+  return finalPolygons;
+}
+
+/**
+ * RandomPolygonsLimitAndWithin() - Filters and limits random polygons based on a GeoJSON polygon or bbox.
+ */
+export function RandomPolygonsLimitAndWithin(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+  
+  try {
+    const result = RandomPolygonsLimitAndWithinOrRandomPolygonsLimitAndWithinWithProperties(
+      body,
+      false
+    );
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
+    }
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
+  }
+}
+
+export function RandomPolygonsLimitAndWithinWithProperties(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+  
+  try {
+    const result = RandomPolygonsLimitAndWithinOrRandomPolygonsLimitAndWithinWithProperties(
+      body,
+      true
+    );
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
+    }
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
+  }
 }
