@@ -124,9 +124,12 @@ export class FakegeoApiStack extends cdk.Stack {
 
     const featureCollectionMultiLinesResource = featureCollectionResource.addResource("multilines");
     const featureCollectionMultiLinesRandomResource = featureCollectionMultiLinesResource.addResource('random');
+    const featureCollectionMultiLinesPropertiesResource = featureCollectionMultiLinesResource.addResource('properties');
+
     featureCollectionMultiLinesResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featureCollectionMultiLinesResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
     featureCollectionMultiLinesRandomResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
+    featureCollectionMultiLinesPropertiesResource.addMethod("POST", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
 
     const featureCollectionPolygonsResource = featureCollectionResource.addResource("polygons");
     const featureCollectionPolygonsRandomResource = featureCollectionPolygonsResource.addResource('random');

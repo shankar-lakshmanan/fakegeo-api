@@ -1,12 +1,13 @@
 import * as turf from "@turf/turf";
 import { BBox, Feature, FeatureCollection, Geometry, LineString, MultiLineString, Point } from "geojson";
 import { APIGatewayProxyResult } from "aws-lambda";
-import { GetBadRequestErrorResponse, GetInternalServerErrorResponse, GetOkResponse, OkResponse } from "../../util/stringify";
+import { BadRequestErrorResponse, GetBadRequestErrorResponse, GetInternalServerErrorResponse, GetOkResponse, OkResponse } from "../../util/stringify";
 import { thousandLines } from "./thousandLines";
 import { booleanWithin } from "@turf/turf";
 import { isGeoJSONPolygon, isValidBBox } from "./line";
+import { populateGeoJsonFeatureCollectionWithProperties, populateGeoJsonFeatureWithProperties } from "../properties/properties";
 
-export function MultiLine(): OkResponse {
+function MultiLineOrMultiLineWithProperties(withProperties: boolean) {
     
   const multiLine = turf.multiLineString([
     [
@@ -22,25 +23,49 @@ export function MultiLine(): OkResponse {
       [-98.76369691515532, 38.668456803745556]
     ]
   ]);
-  return GetOkResponse(multiLine);
+  
+  if (withProperties) {
+    const multiLineWithProperties = populateGeoJsonFeatureWithProperties(multiLine);
+    return multiLineWithProperties;
+  }
+  return multiLine;
+}
+
+export function MultiLine(): OkResponse {
+  return GetOkResponse(MultiLineOrMultiLineWithProperties(false));
+}
+
+export function MultiLineWithProperties(): OkResponse {
+  return GetOkResponse(MultiLineOrMultiLineWithProperties(true));
+}
+
+function RandomMultiLineOrRandomMultiLineWithProperties(withProperties: boolean) {
+    
+  const multiLine = turf.randomLineString(2, { bbox: [-180, -90, 180, 90] });
+  const multiLineString = turf.multiLineString(multiLine.features.map(f => f.geometry.coordinates));
+  
+  if (withProperties) {
+    const multiLineWithProperties = populateGeoJsonFeatureWithProperties(multiLineString);
+    return multiLineWithProperties;
+  }
+  return multiLineString;
 }
 
 export function RandomMultiLine(): OkResponse {
-  const multiLine = turf.randomLineString(2, { bbox: [-180, -90, 180, 90] });
-  const multiLineString = turf.multiLineString(multiLine.features.map(f => f.geometry.coordinates));
-  return GetOkResponse(multiLineString);
+  return GetOkResponse(RandomMultiLineOrRandomMultiLineWithProperties(false));
 }
 
-/**
- * Validates the input and returns a MultiLineString at the center of a GeoJSON polygon or bbox.
- */
-export function WithinMultiLine(event: any): APIGatewayProxyResult {
-  const body = JSON.parse(event.body || "{}");
+export function RandomMultiLineWithProperties(): OkResponse {
+  return GetOkResponse(RandomMultiLineOrRandomMultiLineWithProperties(true));
+}
+
+function WithinMultiLineOrWithinMultiLineWithProperties(
+  body: any,
+  withProperties: boolean
+) {
 
   let multiLineString;
-
-  try {
-    const { geojsonPolygon, bbox } = body;
+  const { geojsonPolygon, bbox } = body;
 
     if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
       const bboxPolygon = turf.bboxPolygon(turf.bbox(geojsonPolygon));
@@ -66,99 +91,172 @@ export function WithinMultiLine(event: any): APIGatewayProxyResult {
       return GetBadRequestErrorResponse("Invalid input. Provide either a valid GeoJSON polygon or a bbox.");
     }
 
-    return GetOkResponse(multiLineString);
+
+  if (withProperties) {
+    const multiLineWithProperties = populateGeoJsonFeatureWithProperties(multiLineString);
+    return multiLineWithProperties;
+  }
+
+  return multiLineString;
+}
+
+/**
+ * Validates the input and returns a MultiLineString at the center of a GeoJSON polygon or bbox.
+ */
+export function WithinMultiLine(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+  try {
+    const result = WithinMultiLineOrWithinMultiLineWithProperties(body, false);
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      return GetOkResponse(result);
+    }
   } catch (error: any) {
     return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
   }
+}
+
+export function WithinMultiLineWithProperties(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+  try {
+    const result = WithinMultiLineOrWithinMultiLineWithProperties(body, true);
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      return GetOkResponse(result);
+    }
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
+  }
+}
+
+function WithinRandomMultiLineOrWithinRandomMultiLineWithProperties(
+  body: any,
+  withProperties: boolean
+) {
+
+  let multiLineString;
+  
+  const { geojsonPolygon, bbox } = body;
+
+  if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
+    const randomPointsOfBboxOfPolygon = turf.randomPoint(50, { bbox: turf.bbox(geojsonPolygon) });
+
+    let bboxRandomPoint: Feature<Point> = {
+      type: "Feature",
+      geometry: {
+        coordinates: [],
+        type: "Point",
+      },
+      properties: {},
+    };
+    randomPointsOfBboxOfPolygon.features.forEach((point: Feature<Point>) => {
+      if (turf.booleanWithin(point, geojsonPolygon)) {
+        bboxRandomPoint = point;
+        return;
+      }
+    });
+
+    // Generate multiple line segments around the center point.
+    const lines = Array.from({ length: 5 }, (_, i) => {
+      const angle = i * 72; // Spread points at equal angles (5 lines around 360 degrees)
+      const start = turf.destination(bboxRandomPoint, 0.1, angle - 45); // Left
+      const end = turf.destination(bboxRandomPoint, 0.1, angle + 45); // Right
+      return [
+        start.geometry.coordinates,
+        bboxRandomPoint.geometry.coordinates,
+        end.geometry.coordinates,
+      ];
+    });
+
+    multiLineString = {
+      type: "Feature",
+      geometry: {
+        type: "MultiLineString",
+        coordinates: lines,
+      },
+      properties: {},
+    };
+  } else if (bbox && isValidBBox(bbox)) {
+    const point = turf.randomPoint(1, { bbox }).features[0];
+
+    const lines = Array.from({ length: 5 }, (_, i) => {
+      const angle = i * 72;
+      const start = turf.destination(point, 0.1, angle - 45); // Left
+      const end = turf.destination(point, 0.1, angle + 45); // Right
+      return [
+        start.geometry.coordinates,
+        point.geometry.coordinates,
+        end.geometry.coordinates,
+      ];
+    });
+
+    multiLineString = {
+      type: "Feature",
+      geometry: {
+        type: "MultiLineString",
+        coordinates: lines,
+      },
+      properties: {},
+    };
+  } else {
+    return GetBadRequestErrorResponse("Invalid input. Provide either a valid GeoJSON polygon or a bbox.");
+  }
+
+
+  if (withProperties) {
+    const multiLineWithProperties = populateGeoJsonFeatureWithProperties(multiLineString as Feature);
+    return multiLineWithProperties;
+  }
+
+  return multiLineString;
 }
 
 export function WithinRandomMultiLine(event: any): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
 
-  let multiLineString: Feature<MultiLineString>;
+  try {
+   
+    const result = WithinRandomMultiLineOrWithinRandomMultiLineWithProperties(body, false);
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      return GetOkResponse(result);
+    }
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
+  }
+}
+
+export function WithinRandomMultiLineWithProperties(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
 
   try {
-    const { geojsonPolygon, bbox } = body;
-
-    if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
-      const randomPointsOfBboxOfPolygon = turf.randomPoint(50, { bbox: turf.bbox(geojsonPolygon) });
-
-      let bboxRandomPoint: Feature<Point> = {
-        type: "Feature",
-        geometry: {
-          coordinates: [],
-          type: "Point",
-        },
-        properties: {},
-      };
-      randomPointsOfBboxOfPolygon.features.forEach((point: Feature<Point>) => {
-        if (turf.booleanWithin(point, geojsonPolygon)) {
-          bboxRandomPoint = point;
-          return;
-        }
-      });
-
-      // Generate multiple line segments around the center point.
-      const lines = Array.from({ length: 5 }, (_, i) => {
-        const angle = i * 72; // Spread points at equal angles (5 lines around 360 degrees)
-        const start = turf.destination(bboxRandomPoint, 0.1, angle - 45); // Left
-        const end = turf.destination(bboxRandomPoint, 0.1, angle + 45); // Right
-        return [
-          start.geometry.coordinates,
-          bboxRandomPoint.geometry.coordinates,
-          end.geometry.coordinates,
-        ];
-      });
-
-      multiLineString = {
-        type: "Feature",
-        geometry: {
-          type: "MultiLineString",
-          coordinates: lines,
-        },
-        properties: {},
-      };
-    } else if (bbox && isValidBBox(bbox)) {
-      const point = turf.randomPoint(1, { bbox }).features[0];
-
-      const lines = Array.from({ length: 5 }, (_, i) => {
-        const angle = i * 72;
-        const start = turf.destination(point, 0.1, angle - 45); // Left
-        const end = turf.destination(point, 0.1, angle + 45); // Right
-        return [
-          start.geometry.coordinates,
-          point.geometry.coordinates,
-          end.geometry.coordinates,
-        ];
-      });
-
-      multiLineString = {
-        type: "Feature",
-        geometry: {
-          type: "MultiLineString",
-          coordinates: lines,
-        },
-        properties: {},
-      };
+   
+    const result = WithinRandomMultiLineOrWithinRandomMultiLineWithProperties(body, true);
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
     } else {
-      return GetBadRequestErrorResponse("Invalid input. Provide either a valid GeoJSON polygon or a bbox.");
+      return GetOkResponse(result);
     }
-
-    return GetOkResponse(multiLineString);
   } catch (error: any) {
     return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
   }
 }
 
 
-/**
- * Generate a random MultiLineString within a bounding box or the bbox of a GeoJSON polygon.
- */
-export function RandomMultiLinesLimitAndWithin(event: any): APIGatewayProxyResult {
-    const body = JSON.parse(event.body || "{}");
-  
-    try {
-      const { limit, geojsonPolygon, bbox } = body;
+
+function RandomMultiLinesLimitAndWithinOrRandomMultiLinesLimitAndWithinWithProperties(
+  body: any,
+  withProperties: boolean
+) {
+
+  const { limit, geojsonPolygon, bbox } = body;
   
       let multiLineStrings: FeatureCollection<MultiLineString> = {
         type: "FeatureCollection",
@@ -183,8 +281,47 @@ export function RandomMultiLinesLimitAndWithin(event: any): APIGatewayProxyResul
   
       const multiLineFeature = toMultiLineString(lineStrings);
       multiLineStrings.features.push(multiLineFeature);
+
+
+  if (withProperties) {
+    const multiLinesWithProperties = populateGeoJsonFeatureCollectionWithProperties(multiLineStrings);
+    return multiLinesWithProperties;
+  }
+
+  return multiLineStrings;
+}
+
+
+/**
+ * Generate a random MultiLineString within a bounding box or the bbox of a GeoJSON polygon.
+ */
+export function RandomMultiLinesLimitAndWithin(event: any): APIGatewayProxyResult {
+    const body = JSON.parse(event.body || "{}");
   
-      return GetOkResponse(multiLineStrings);
+    try {
+      const result = RandomMultiLinesLimitAndWithinOrRandomMultiLinesLimitAndWithinWithProperties(body, false);
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      return GetOkResponse(result);
+    }
+    } catch (error: any) {
+      return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
+    }
+  }
+
+  export function RandomMultiLinesLimitAndWithinWithProperties(event: any): APIGatewayProxyResult {
+    const body = JSON.parse(event.body || "{}");
+  
+    try {
+      const result = RandomMultiLinesLimitAndWithinOrRandomMultiLinesLimitAndWithinWithProperties(body, true);
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      return GetOkResponse(result);
+    }
     } catch (error: any) {
       return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
     }
@@ -204,8 +341,9 @@ function toMultiLineString(lineStrings: Feature<LineString>[]): Feature<MultiLin
       properties: {}
     };
   }
-  
-  export function MultiLines(): OkResponse {
+
+  function MultiLinesOrMultiLinesWithProperties(withProperties: boolean) {
+    
     const lines: FeatureCollection = thousandLines;  // Assuming thousandLines is defined elsewhere
     const thirtyLines = lines.features.slice(970);
   
@@ -235,16 +373,28 @@ function toMultiLineString(lineStrings: Feature<LineString>[]): Feature<MultiLin
         }
       }),
     };
+    
+    if (withProperties) {
+      const multiLinesWithProperties = populateGeoJsonFeatureCollectionWithProperties(reducedMultiLines);
+      return multiLinesWithProperties;
+    }
+    return reducedMultiLines;
+  }
   
-    return GetOkResponse(reducedMultiLines);
+  export function MultiLines(): OkResponse {
+    return GetOkResponse(MultiLinesOrMultiLinesWithProperties(false));
   }
 
+  export function MultiLinesWithProperties(): OkResponse {
+    return GetOkResponse(MultiLinesOrMultiLinesWithProperties(true));
+  }
 
-  export function MultiLinesLimitAndWithin(event: any): APIGatewayProxyResult {
-    const body = JSON.parse(event.body || "{}");
-  
-    try {
-      const { limit, geojsonPolygon, bbox } = body;
+  function MultiLinesLimitAndWithinOrMultiLinesLimitAndWithinWithProperties(
+    body: any,
+    withProperties: boolean
+  ) {
+
+    const { limit, geojsonPolygon, bbox } = body;
   
       let lines: FeatureCollection = thousandLines;
       let finalLines: FeatureCollection<MultiLineString>;
@@ -285,13 +435,49 @@ function toMultiLineString(lineStrings: Feature<LineString>[]): Feature<MultiLin
         finalLines = turf.featureCollection(multiLineFeatures) as FeatureCollection<MultiLineString>;
       }
   
-      return GetOkResponse(finalLines);
+      if (withProperties) {
+        const multiLinesWithProperties = populateGeoJsonFeatureCollectionWithProperties(finalLines);
+        return multiLinesWithProperties;
+      }
+    
+      return finalLines;
+  }
+
+
+  export function MultiLinesLimitAndWithin(event: any): APIGatewayProxyResult {
+    const body = JSON.parse(event.body || "{}");
+  
+    try {
+      const result = MultiLinesLimitAndWithinOrMultiLinesLimitAndWithinWithProperties(body, false);
+      if ("error" in result) {
+        // result is a BadRequestErrorResponse
+        return result as BadRequestErrorResponse;
+      } else {
+        return GetOkResponse(result);
+      }
+    } catch (error: any) {
+      return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
+    }
+  }
+
+  export function MultiLinesLimitAndWithinWithProperties(event: any): APIGatewayProxyResult {
+    const body = JSON.parse(event.body || "{}");
+  
+    try {
+      const result = MultiLinesLimitAndWithinOrMultiLinesLimitAndWithinWithProperties(body, true);
+      if ("error" in result) {
+        // result is a BadRequestErrorResponse
+        return result as BadRequestErrorResponse;
+      } else {
+        return GetOkResponse(result);
+      }
     } catch (error: any) {
       return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
     }
   }
   
-  export function RandomMultiLines(): OkResponse {
+  function RandomMultiLinesOrRandomMultiLinesWithProperties(withProperties: boolean) {
+  
     // Generate 30 random LineStrings within the specified bbox
     const randomLineStrings: FeatureCollection = turf.randomLineString(30, { bbox: [-180, -90, 180, 90] });
   
@@ -307,6 +493,19 @@ function toMultiLineString(lineStrings: Feature<LineString>[]): Feature<MultiLin
   
     // Create a FeatureCollection of MultiLineString features
     const multiLineFeatureCollection = turf.featureCollection(multiLineFeatures) as FeatureCollection<MultiLineString>;
-  
-    return GetOkResponse(multiLineFeatureCollection);
+
+    if (withProperties) {
+      const multiLinesWithProperties = populateGeoJsonFeatureCollectionWithProperties(multiLineFeatureCollection);
+      return multiLinesWithProperties;
+    }
+    return multiLineFeatureCollection;
+  }
+
+  export function RandomMultiLines(): OkResponse {
+    
+    return GetOkResponse(RandomMultiLinesOrRandomMultiLinesWithProperties(false));
+  }
+  export function RandomMultiLinesWithProperties(): OkResponse {
+    
+    return GetOkResponse(RandomMultiLinesOrRandomMultiLinesWithProperties(true));
   }
