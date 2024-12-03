@@ -1,14 +1,13 @@
 import * as turf from "@turf/turf";
 import { Feature, Geometry, Point, FeatureCollection, Polygon, GeoJsonProperties } from "geojson";
 import { APIGatewayProxyResult } from "aws-lambda";
-import { GetBadRequestErrorResponse, GetInternalServerErrorResponse, GetOkResponse, OkResponse } from "../../util/stringify";
+import { BadRequestErrorResponse, GetBadRequestErrorResponse, GetInternalServerErrorResponse, GetOkResponse, OkResponse } from "../../util/stringify";
 import { thousandPolygons } from "./thousandPolygons";
 import { isGeoJSONPolygon, isValidBBox } from "./polygon";
+import { populateGeoJsonFeatureCollectionWithProperties, populateGeoJsonFeatureWithProperties } from "../properties/properties";
 
-/**
- * Single MultiPolygon based on specified coordinates.
- */
-export function MultiPolygon(): OkResponse {
+
+function MultiPolygonOrMultiPolygonWithProperties(withProperties: boolean) {
   const multiPolygon = turf.multiPolygon([
     [
       [
@@ -22,17 +21,46 @@ export function MultiPolygon(): OkResponse {
       ]
     ]
   ]);
-  return GetOkResponse(multiPolygon);
+
+  if (withProperties) {
+    const multiPolygonWithProperties = populateGeoJsonFeatureWithProperties(multiPolygon);
+    return multiPolygonWithProperties;
+  }
+  return multiPolygon;
+}
+
+/**
+ * Single MultiPolygon based on specified coordinates.
+ */
+export function MultiPolygon(): OkResponse {
+  return GetOkResponse(MultiPolygonOrMultiPolygonWithProperties(false));
+}
+
+export function MultiPolygonWithProperties(): OkResponse {
+  return GetOkResponse(MultiPolygonOrMultiPolygonWithProperties(true));
+}
+
+function RandomMultiPolygonOrRandomMultiPolygonWithProperties(withProperties: boolean) {
+  const multiPolygon = turf.multiPolygon(
+    Array.from({ length: 5 }, () => turf.randomPolygon(1, { bbox: [-180, -90, 180, 90] }).features[0].geometry.coordinates)
+  );
+
+  if (withProperties) {
+    const multiPolygonWithProperties = populateGeoJsonFeatureWithProperties(multiPolygon);
+    return multiPolygonWithProperties;
+  }
+  return multiPolygon;
 }
 
 /**
  * Random MultiPolygon generation within the global bbox.
  */
 export function RandomMultiPolygon(): OkResponse {
-  const multiPolygon = turf.multiPolygon(
-    Array.from({ length: 5 }, () => turf.randomPolygon(1, { bbox: [-180, -90, 180, 90] }).features[0].geometry.coordinates)
-  );
-  return GetOkResponse(multiPolygon);
+  return GetOkResponse(RandomMultiPolygonOrRandomMultiPolygonWithProperties(false));
+}
+
+export function RandomMultiPolygonWithProperties(): OkResponse {
+  return GetOkResponse(RandomMultiPolygonOrRandomMultiPolygonWithProperties(true));
 }
 
 /**
@@ -42,55 +70,148 @@ export function isGeoJSONMultiPolygon(geojson: Feature): boolean {
   return geojson.type === "Feature" && geojson.geometry && geojson.geometry.type === "MultiPolygon";
 }
 
+
+function WithinMultiPolygonOrWithinMultiPolygonWithProperties(
+  body: any,
+  withProperties: boolean
+) {
+
+  let multiPolygon;
+
+  const { geojsonPolygon, bbox } = body;
+
+  if (geojsonPolygon && (isGeoJSONPolygon(geojsonPolygon) || isGeoJSONMultiPolygon(geojsonPolygon))) {
+    const bboxCenter = turf.center(turf.bboxPolygon(turf.bbox(geojsonPolygon)));
+    const coordinates = Array.from({ length: 3 }, () => {
+      return [
+        turf.destination(bboxCenter, 0.1, 0).geometry.coordinates,
+        turf.destination(bboxCenter, 0.1, 60).geometry.coordinates,
+        turf.destination(bboxCenter, 0.1, 120).geometry.coordinates,
+        turf.destination(bboxCenter, 0.1, 180).geometry.coordinates,
+        turf.destination(bboxCenter, 0.1, 240).geometry.coordinates,
+        turf.destination(bboxCenter, 0.1, 300).geometry.coordinates,
+        turf.destination(bboxCenter, 0.1, 0).geometry.coordinates
+      ];
+    });
+
+    multiPolygon = turf.multiPolygon([coordinates]);
+  } else if (bbox && isValidBBox(bbox)) {
+    const bboxCenter = turf.center(turf.bboxPolygon(bbox));
+    const coordinates = Array.from({ length: 3 }, () => {
+      return [
+        turf.destination(bboxCenter, 0.1, 0).geometry.coordinates,
+        turf.destination(bboxCenter, 0.1, 60).geometry.coordinates,
+        turf.destination(bboxCenter, 0.1, 120).geometry.coordinates,
+        turf.destination(bboxCenter, 0.1, 180).geometry.coordinates,
+        turf.destination(bboxCenter, 0.1, 240).geometry.coordinates,
+        turf.destination(bboxCenter, 0.1, 300).geometry.coordinates,
+        turf.destination(bboxCenter, 0.1, 0).geometry.coordinates
+      ];
+    });
+
+    multiPolygon = turf.multiPolygon([coordinates]);
+  } else {
+    return GetBadRequestErrorResponse("Invalid input. Provide either a valid GeoJSON polygon or a bbox.");
+  }
+
+  if (withProperties) {
+    const multiPolygonWithProperties = populateGeoJsonFeatureWithProperties(multiPolygon);
+    return multiPolygonWithProperties;
+  }
+
+  return multiPolygon;
+
+}
 /**
  * MultiPolygon within or around a center point, based on GeoJSON polygon or bbox.
  */
 export function WithinMultiPolygon(event: any): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
 
-  let multiPolygon;
-
   try {
-    const { geojsonPolygon, bbox } = body;
-
-    if (geojsonPolygon && (isGeoJSONPolygon(geojsonPolygon) || isGeoJSONMultiPolygon(geojsonPolygon))) {
-      const bboxCenter = turf.center(turf.bboxPolygon(turf.bbox(geojsonPolygon)));
-      const coordinates = Array.from({ length: 3 }, () => {
-        return [
-          turf.destination(bboxCenter, 0.1, 0).geometry.coordinates,
-          turf.destination(bboxCenter, 0.1, 60).geometry.coordinates,
-          turf.destination(bboxCenter, 0.1, 120).geometry.coordinates,
-          turf.destination(bboxCenter, 0.1, 180).geometry.coordinates,
-          turf.destination(bboxCenter, 0.1, 240).geometry.coordinates,
-          turf.destination(bboxCenter, 0.1, 300).geometry.coordinates,
-          turf.destination(bboxCenter, 0.1, 0).geometry.coordinates
-        ];
-      });
-
-      multiPolygon = turf.multiPolygon([coordinates]);
-    } else if (bbox && isValidBBox(bbox)) {
-      const bboxCenter = turf.center(turf.bboxPolygon(bbox));
-      const coordinates = Array.from({ length: 3 }, () => {
-        return [
-          turf.destination(bboxCenter, 0.1, 0).geometry.coordinates,
-          turf.destination(bboxCenter, 0.1, 60).geometry.coordinates,
-          turf.destination(bboxCenter, 0.1, 120).geometry.coordinates,
-          turf.destination(bboxCenter, 0.1, 180).geometry.coordinates,
-          turf.destination(bboxCenter, 0.1, 240).geometry.coordinates,
-          turf.destination(bboxCenter, 0.1, 300).geometry.coordinates,
-          turf.destination(bboxCenter, 0.1, 0).geometry.coordinates
-        ];
-      });
-
-      multiPolygon = turf.multiPolygon([coordinates]);
+    const result = WithinMultiPolygonOrWithinMultiPolygonWithProperties(
+      body,
+      false
+    );
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
     } else {
-      return GetBadRequestErrorResponse("Invalid input. Provide either a valid GeoJSON polygon or a bbox.");
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
     }
-
-    return GetOkResponse(multiPolygon);
   } catch (error: any) {
     return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
   }
+}
+
+export function WithinMultiPolygonWithProperties(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+
+  try {
+    const result = WithinMultiPolygonOrWithinMultiPolygonWithProperties(
+      body,
+      true
+    );
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
+    }
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
+  }
+}
+
+function WithinRandomMultiPolygonOrWithinRandomMultiPolygonWithProperties(
+  body: any,
+  withProperties: boolean
+) {
+
+  let multiPolygon;
+
+  const { geojsonPolygon, bbox } = body;
+
+  if (geojsonPolygon && (isGeoJSONPolygon(geojsonPolygon) || isGeoJSONMultiPolygon(geojsonPolygon))) {
+    const randomPoints = turf.randomPoint(50, { bbox: turf.bbox(geojsonPolygon) }).features;
+    const selectedPoints = randomPoints.filter(point => turf.booleanWithin(point, geojsonPolygon));
+
+    const coordinates = selectedPoints.slice(0, 3).map((point) => [
+      turf.destination(point, 0.1, 0).geometry.coordinates,
+      turf.destination(point, 0.1, 60).geometry.coordinates,
+      turf.destination(point, 0.1, 120).geometry.coordinates,
+      turf.destination(point, 0.1, 180).geometry.coordinates,
+      turf.destination(point, 0.1, 240).geometry.coordinates,
+      turf.destination(point, 0.1, 300).geometry.coordinates,
+      turf.destination(point, 0.1, 0).geometry.coordinates
+    ]);
+
+    multiPolygon = turf.multiPolygon([coordinates]);
+  } else if (bbox && isValidBBox(bbox)) {
+    const randomPoint = turf.randomPoint(1, { bbox: bbox }).features[0];
+    const coordinates = [
+      turf.destination(randomPoint, 0.1, 0).geometry.coordinates,
+      turf.destination(randomPoint, 0.1, 60).geometry.coordinates,
+      turf.destination(randomPoint, 0.1, 120).geometry.coordinates,
+      turf.destination(randomPoint, 0.1, 180).geometry.coordinates,
+      turf.destination(randomPoint, 0.1, 240).geometry.coordinates,
+      turf.destination(randomPoint, 0.1, 300).geometry.coordinates,
+      turf.destination(randomPoint, 0.1, 0).geometry.coordinates
+    ];
+
+    multiPolygon = turf.multiPolygon([[coordinates]]);
+  } else {
+    return GetBadRequestErrorResponse("Invalid input. Provide either a valid GeoJSON polygon or a bbox.");
+  }
+
+  if (withProperties) {
+    const multiPolygonWithProperties = populateGeoJsonFeatureWithProperties(multiPolygon);
+    return multiPolygonWithProperties;
+  }
+
+  return multiPolygon; 
 }
 
 /**
@@ -99,66 +220,73 @@ export function WithinMultiPolygon(event: any): APIGatewayProxyResult {
 export function WithinRandomMultiPolygon(event: any): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
 
-  let multiPolygon;
-
   try {
-    const { geojsonPolygon, bbox } = body;
-
-    if (geojsonPolygon && (isGeoJSONPolygon(geojsonPolygon) || isGeoJSONMultiPolygon(geojsonPolygon))) {
-      const randomPoints = turf.randomPoint(50, { bbox: turf.bbox(geojsonPolygon) }).features;
-      const selectedPoints = randomPoints.filter(point => turf.booleanWithin(point, geojsonPolygon));
-
-      const coordinates = selectedPoints.slice(0, 3).map((point) => [
-        turf.destination(point, 0.1, 0).geometry.coordinates,
-        turf.destination(point, 0.1, 60).geometry.coordinates,
-        turf.destination(point, 0.1, 120).geometry.coordinates,
-        turf.destination(point, 0.1, 180).geometry.coordinates,
-        turf.destination(point, 0.1, 240).geometry.coordinates,
-        turf.destination(point, 0.1, 300).geometry.coordinates,
-        turf.destination(point, 0.1, 0).geometry.coordinates
-      ]);
-
-      multiPolygon = turf.multiPolygon([coordinates]);
-    } else if (bbox && isValidBBox(bbox)) {
-      const randomPoint = turf.randomPoint(1, { bbox: bbox }).features[0];
-      const coordinates = [
-        turf.destination(randomPoint, 0.1, 0).geometry.coordinates,
-        turf.destination(randomPoint, 0.1, 60).geometry.coordinates,
-        turf.destination(randomPoint, 0.1, 120).geometry.coordinates,
-        turf.destination(randomPoint, 0.1, 180).geometry.coordinates,
-        turf.destination(randomPoint, 0.1, 240).geometry.coordinates,
-        turf.destination(randomPoint, 0.1, 300).geometry.coordinates,
-        turf.destination(randomPoint, 0.1, 0).geometry.coordinates
-      ];
-
-      multiPolygon = turf.multiPolygon([[coordinates]]);
+    
+    const result = WithinRandomMultiPolygonOrWithinRandomMultiPolygonWithProperties(
+      body,
+      false
+    );
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
     } else {
-      return GetBadRequestErrorResponse("Invalid input. Provide either a valid GeoJSON polygon or a bbox.");
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
     }
-
-    return GetOkResponse(multiPolygon);
   } catch (error: any) {
     return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
   }
+}
+
+export function WithinRandomMultiPolygonWithProperties(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+
+  try {
+    
+    const result = WithinRandomMultiPolygonOrWithinRandomMultiPolygonWithProperties(
+      body,
+      true
+    );
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
+    }
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
+  }
+}
+
+function MultiPolygonsOrMultiPolygonsWithProperties(withProperties: boolean) {
+  const thousandPolygonsFeatureCollection = thousandPolygons as FeatureCollection<Polygon, GeoJsonProperties>
+  const allPolygons = turf.featureCollection(thousandPolygonsFeatureCollection.features.slice(-30).map(feature => turf.multiPolygon([feature.geometry.coordinates])));
+
+  if (withProperties) {
+    const multiPolygonsWithProperties = populateGeoJsonFeatureCollectionWithProperties(allPolygons);
+    return multiPolygonsWithProperties;
+  }
+  return allPolygons;
 }
 
 /**
  * MultiPolygons() - Returns a collection of the last 30 MultiPolygons.
  */
 export function MultiPolygons(): OkResponse {
-  const thousandPolygonsFeatureCollection = thousandPolygons as FeatureCollection<Polygon, GeoJsonProperties>
-  const allPolygons = thousandPolygonsFeatureCollection.features.slice(-30).map(feature => turf.multiPolygon([feature.geometry.coordinates]));
-  return GetOkResponse(turf.featureCollection(allPolygons));
+  return GetOkResponse(MultiPolygonsOrMultiPolygonsWithProperties(false));
 }
 
-/**
- * MultiPolygonsLimitAndWithin() - Filters and limits multi polygons based on a GeoJSON polygon or bbox.
- */
-export function MultiPolygonsLimitAndWithin(event: any): APIGatewayProxyResult {
-    const body = JSON.parse(event.body || "{}");
-  
-    try {
-      const { limit, geojsonPolygon, bbox } = body;
+export function MultiPolygonsWithProperties(): OkResponse {
+  return GetOkResponse(MultiPolygonsOrMultiPolygonsWithProperties(true));
+}
+
+function MultiPolygonsLimitAndWithinOrMultiPolygonsLimitAndWithinWithProperties(
+  body: any,
+  withProperties: boolean
+) {
+
+  const { limit, geojsonPolygon, bbox } = body;
   
       let polygons: FeatureCollection = thousandPolygons;
       let finalPolygons: FeatureCollection;
@@ -203,16 +331,59 @@ export function MultiPolygonsLimitAndWithin(event: any): APIGatewayProxyResult {
         finalPolygons = polygons;
       }
   
-      return GetOkResponse(finalPolygons);
+
+  if (withProperties) {
+    const multiPolygonsWithProperties = populateGeoJsonFeatureCollectionWithProperties(finalPolygons);
+    return multiPolygonsWithProperties;
+  }
+
+  return finalPolygons;
+}
+
+/**
+ * MultiPolygonsLimitAndWithin() - Filters and limits multi polygons based on a GeoJSON polygon or bbox.
+ */
+export function MultiPolygonsLimitAndWithin(event: any): APIGatewayProxyResult {
+    const body = JSON.parse(event.body || "{}");
+    
+    try {
+      const result = MultiPolygonsLimitAndWithinOrMultiPolygonsLimitAndWithinWithProperties(
+        body,
+        false
+      );
+      if ("error" in result) {
+        // result is a BadRequestErrorResponse
+        return result as BadRequestErrorResponse;
+      } else {
+        // result is a Feature<LineString, GeoJsonProperties>
+        return GetOkResponse(result);
+      }
     } catch (error: any) {
       return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
     }
   }
 
-  /**
- * RandomMultiPolygons() - Returns 30 random polygons as MultiPolygon geometries within a global bounding box.
- */
-export function RandomMultiPolygons(): OkResponse {
+  export function MultiPolygonsLimitAndWithinWithProperties(event: any): APIGatewayProxyResult {
+    const body = JSON.parse(event.body || "{}");
+    
+    try {
+      const result = MultiPolygonsLimitAndWithinOrMultiPolygonsLimitAndWithinWithProperties(
+        body,
+        true
+      );
+      if ("error" in result) {
+        // result is a BadRequestErrorResponse
+        return result as BadRequestErrorResponse;
+      } else {
+        // result is a Feature<LineString, GeoJsonProperties>
+        return GetOkResponse(result);
+      }
+    } catch (error: any) {
+      return GetInternalServerErrorResponse(`Error processing input: ${error.message}`);
+    }
+  }
+
+  function RandomMultiPolygonsOrRandomMultiPolygonsWithProperties(withProperties: boolean) {
     const globalBbox: [number, number, number, number] = [-180, -90, 180, 90];
     const randomPolygons = [];
   
@@ -221,18 +392,34 @@ export function RandomMultiPolygons(): OkResponse {
       const multiPolygon = turf.multiPolygon([polygon.features[0].geometry.coordinates]);
       randomPolygons.push(multiPolygon);
     }
+
+    const randomPolygonsCollection = turf.featureCollection(randomPolygons);
   
-    return GetOkResponse(turf.featureCollection(randomPolygons));
+    if (withProperties) {
+      const multiPolygonsWithProperties = populateGeoJsonFeatureCollectionWithProperties(randomPolygonsCollection);
+      return multiPolygonsWithProperties;
+    }
+    return randomPolygonsCollection;
+  }
+
+  /**
+ * RandomMultiPolygons() - Returns 30 random polygons as MultiPolygon geometries within a global bounding box.
+ */
+export function RandomMultiPolygons(): OkResponse {
+    return GetOkResponse(RandomMultiPolygonsOrRandomMultiPolygonsWithProperties(false));
+  }
+
+  export function RandomMultiPolygonsWithProperties(): OkResponse {
+    return GetOkResponse(RandomMultiPolygonsOrRandomMultiPolygonsWithProperties(true));
   }
   
   
+  function RandomMultiPolygonsLimitAndWithinOrRandomMultiPolygonsLimitAndWithinWithProperties(
+    body: any,
+    withProperties: boolean
+  ) {
 
-/**
- * Random MultiPolygons with limit and within a polygon or bbox.
- */
-export function RandomMultiPolygonsLimitAndWithin(event: any): APIGatewayProxyResult {
-  const body = JSON.parse(event.body || "{}");
-  const { geojsonPolygon, bbox, limit = 30 } = body;
+    const { geojsonPolygon, bbox, limit = 30 } = body;
 
   const globalBbox: [number, number, number, number] = [-180, -90, 180, 90];
   const randomPolygons = Array.from({ length: 100 }, () => turf.randomPolygon(1, { bbox: globalBbox }).features[0]);
@@ -248,6 +435,46 @@ export function RandomMultiPolygonsLimitAndWithin(event: any): APIGatewayProxyRe
     return GetBadRequestErrorResponse("Invalid input. Provide either a valid GeoJSON polygon or bbox.");
   }
 
-  const multiPolygons = filteredPolygons.slice(0, limit).map(polygon => turf.multiPolygon([polygon.geometry.coordinates]));
-  return GetOkResponse(turf.featureCollection(multiPolygons));
+  const multiPolygons = turf.featureCollection(filteredPolygons.slice(0, limit).map(polygon => turf.multiPolygon([polygon.geometry.coordinates])));
+
+    if (withProperties) {
+      const multiPolygonsWithProperties = populateGeoJsonFeatureCollectionWithProperties(multiPolygons);
+      return multiPolygonsWithProperties;
+    }
+  
+    return multiPolygons;
+  }
+/**
+ * Random MultiPolygons with limit and within a polygon or bbox.
+ */
+export function RandomMultiPolygonsLimitAndWithin(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+  
+  const result = RandomMultiPolygonsLimitAndWithinOrRandomMultiPolygonsLimitAndWithinWithProperties(
+    body,
+    false
+  );
+  if ("error" in result) {
+    // result is a BadRequestErrorResponse
+    return result as BadRequestErrorResponse;
+  } else {
+    // result is a Feature<LineString, GeoJsonProperties>
+    return GetOkResponse(result);
+  }
+}
+
+export function RandomMultiPolygonsLimitAndWithinWithProperties(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+  
+  const result = RandomMultiPolygonsLimitAndWithinOrRandomMultiPolygonsLimitAndWithinWithProperties(
+    body,
+    true
+  );
+  if ("error" in result) {
+    // result is a BadRequestErrorResponse
+    return result as BadRequestErrorResponse;
+  } else {
+    // result is a Feature<LineString, GeoJsonProperties>
+    return GetOkResponse(result);
+  }
 }

@@ -3375,22 +3375,367 @@
         }
       }
     },
-    "/featureCollection/multipolygons/random": {
+    "/featureCollection/multipolygons/properties": {
       "get": {
         "tags": [
           "MultiPolygons featureCollection"
         ],
-        "summary": "Returns a collection of random geographical multipolygons",
-        "description": "Retrieves a collection of 30 random geographical multipolygons.",
+        "summary": "Returns a collection of geographical multipolygons with properties",
+        "description": "Retrieves a collection of 30 geographical multipolygons, each with associated properties.",
         "responses": {
           "200": {
-            "description": "A successful response with a collection of geographical multipolygons."
+            "description": "A successful response with a collection of geographical multipolygons with properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "MultiPolygon"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "number",
+                                        "example": [
+                                          -101.278818,
+                                          40.816337
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "multipolygon_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Example Multipolygon"
+                              },
+                              "area": {
+                                "type": "number",
+                                "description": "Area of the multipolygon in square kilometers.",
+                                "example": 150.25
+                              },
+                              "perimeter": {
+                                "type": "number",
+                                "description": "Perimeter of the multipolygon in kilometers.",
+                                "example": 50.75
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-12-01T16:00:00Z"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "A sample multipolygon with metadata."
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad request - Invalid data"
           },
           "500": {
             "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MultiPolygons featureCollection"
+        ],
+        "summary": "Returns a limited number of geographical multipolygons with properties within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of geographical multipolygons with associated properties. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of multipolygons to return (must be <= 1000)",
+                    "example": 50
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter multipolygons within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.8,
+                            39.1
+                          ],
+                          [
+                            -104.9,
+                            39.2
+                          ],
+                          [
+                            -104.7,
+                            39.3
+                          ],
+                          [
+                            -104.8,
+                            39.1
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY]",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.8,
+                      31.3,
+                      -84.3,
+                      43.9
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of geographical multipolygons and their properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "example": "MultiPolygon"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "multipolygon_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "Filtered Multipolygon"
+                              },
+                              "area": {
+                                "type": "number",
+                                "description": "Area of the multipolygon in square kilometers",
+                                "example": 125.78
+                              },
+                              "perimeter": {
+                                "type": "number",
+                                "description": "Perimeter of the multipolygon in kilometers",
+                                "example": 45.67
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2024-12-01T16:00:00Z"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "A multipolygon filtered by the provided constraints."
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/featureCollection/multipolygons/random": {
+      "get": {
+        "tags": [
+          "MultiPolygons featureCollection"
+        ],
+        "summary": "Returns a collection of random geographical multipolygons",
+        "description": "Retrieves a collection of 30 random geographical multipolygons. Each multipolygon is generated randomly and adheres to basic geographical constraints.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of random geographical multipolygons.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "description": "Array of multipolygon features",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "description": "Indicates the feature type",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "description": "The geometry object defining the multipolygon",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "description": "The type of geometry",
+                                "example": "MultiPolygon"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "description": "The coordinates defining the multipolygon geometry",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "number",
+                                        "description": "A latitude or longitude value",
+                                        "example": -101.278818
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid request data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Description of the error",
+                      "example": "Invalid data format provided."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Description of the error",
+                      "example": "An unexpected error occurred while generating multipolygons."
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -3454,6 +3799,331 @@
           },
           "500": {
             "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/featureCollection/multipolygons/random/properties": {
+      "get": {
+        "tags": [
+          "MultiPolygons featureCollection"
+        ],
+        "summary": "Returns a collection of random geographical multipolygons with additional properties",
+        "description": "Retrieves a collection of 30 random geographical multipolygons. Each multipolygon includes additional metadata properties such as area, perimeter, and a unique identifier.",
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of random geographical multipolygons and their properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "description": "Array of multipolygon features with detailed properties",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "description": "Indicates the feature type",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "description": "The geometry object defining the multipolygon",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "description": "The type of geometry",
+                                "example": "MultiPolygon"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "description": "The coordinates defining the multipolygon geometry",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "number",
+                                        "description": "A latitude or longitude value",
+                                        "example": -101.278818
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Additional metadata associated with the multipolygon",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "A unique identifier for the multipolygon feature",
+                                "example": "random_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "The name of the multipolygon",
+                                "example": "Random Multipolygon"
+                              },
+                              "description": {
+                                "type": "string",
+                                "description": "A brief description of the multipolygon",
+                                "example": "A randomly generated multipolygon feature."
+                              },
+                              "area": {
+                                "type": "number",
+                                "description": "The calculated area of the multipolygon in square kilometers",
+                                "example": 145.67
+                              },
+                              "perimeter": {
+                                "type": "number",
+                                "description": "The perimeter of the multipolygon in kilometers",
+                                "example": 52.45
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid request data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Description of the error",
+                      "example": "Invalid data format provided."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Description of the error",
+                      "example": "An unexpected error occurred while generating multipolygons."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MultiPolygons featureCollection"
+        ],
+        "summary": "Returns a limited number of random geographical multipolygons with additional properties within a bounding box or GeoJSON polygon",
+        "description": "Accepts a limit and optionally a GeoJSON Polygon or bounding box (bbox) to filter a collection of random geographical multipolygons with additional metadata properties. The limit must be less than or equal to 1000.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "description": "Number of multipolygons to return (must be <= 1000)",
+                    "example": 30
+                  },
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to filter multipolygons within",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.8,
+                            39.1
+                          ],
+                          [
+                            -104.9,
+                            39
+                          ],
+                          [
+                            -104.7,
+                            39
+                          ],
+                          [
+                            -104.8,
+                            39.1
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY]",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.8,
+                      31.3,
+                      -84.3,
+                      43.9
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response with a collection of random geographical multipolygons and their properties.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "FeatureCollection"
+                    },
+                    "features": {
+                      "type": "array",
+                      "description": "Array of multipolygon features with detailed properties",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "description": "Indicates the feature type",
+                            "example": "Feature"
+                          },
+                          "geometry": {
+                            "type": "object",
+                            "description": "The geometry object defining the multipolygon",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "description": "The type of geometry",
+                                "example": "MultiPolygon"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "description": "The coordinates defining the multipolygon geometry",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "number",
+                                        "description": "A latitude or longitude value",
+                                        "example": -101.278818
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "Additional metadata associated with the multipolygon",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "A unique identifier for the multipolygon feature",
+                                "example": "random_001"
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "The name of the multipolygon",
+                                "example": "Random Multipolygon"
+                              },
+                              "description": {
+                                "type": "string",
+                                "description": "A brief description of the multipolygon",
+                                "example": "A randomly generated multipolygon feature."
+                              },
+                              "area": {
+                                "type": "number",
+                                "description": "The calculated area of the multipolygon in square kilometers",
+                                "example": 145.67
+                              },
+                              "perimeter": {
+                                "type": "number",
+                                "description": "The perimeter of the multipolygon in kilometers",
+                                "example": 52.45
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid limit value, GeoJSON Polygon, or BBox",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Description of the error",
+                      "example": "Invalid limit value provided."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Description of the error",
+                      "example": "An unexpected error occurred while generating multipolygons."
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -8158,6 +8828,340 @@
         }
       }
     },
+    "/feature/multipolygon/properties": {
+      "get": {
+        "tags": [
+          "MultiPolygon feature"
+        ],
+        "summary": "Returns a multipolygon geojson Feature with additional properties",
+        "description": "Generates a geographical multipolygon with associated metadata and properties.",
+        "responses": {
+          "200": {
+            "description": "A successful response containing the multipolygon feature with properties",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "MultiPolygon"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "type": "array",
+                                "items": {
+                                  "type": "number"
+                                }
+                              }
+                            }
+                          },
+                          "example": [
+                            [
+                              [
+                                [
+                                  -98.41003457659247,
+                                  39.4047785977163
+                                ],
+                                [
+                                  -98.02900405028468,
+                                  39.09917828895786
+                                ],
+                                [
+                                  -96.96285807131997,
+                                  39.33112358709519
+                                ],
+                                [
+                                  -97.70240571181387,
+                                  39.862404027619164
+                                ],
+                                [
+                                  -98.41003457659247,
+                                  39.4047785977163
+                                ]
+                              ]
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "properties": {
+                      "type": "object",
+                      "description": "Additional metadata associated with the multipolygon",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "multipolygon_001"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Example MultiPolygon"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-12-01T16:00:00Z"
+                        },
+                        "area": {
+                          "type": "number",
+                          "description": "The total area of the multipolygon in square kilometers.",
+                          "example": 123.45
+                        },
+                        "perimeter": {
+                          "type": "number",
+                          "description": "The total perimeter of the multipolygon in kilometers.",
+                          "example": 67.89
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "A multipolygon representing an example geographical region."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request data."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An unexpected error occurred while generating the multipolygon."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MultiPolygon feature"
+        ],
+        "summary": "Returns a multipolygon geojson Feature with properties within a GeoJSON polygon or bbox",
+        "description": "Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a multipolygon within it with associated properties.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to return a multipolygon within it",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.35,
+                            36.87
+                          ],
+                          [
+                            -104.35,
+                            41.94
+                          ],
+                          [
+                            -94.44,
+                            41.94
+                          ],
+                          [
+                            -94.44,
+                            36.87
+                          ],
+                          [
+                            -104.35,
+                            36.87
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to return a multipolygon within it",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.35,
+                      36.87,
+                      -94.44,
+                      41.94
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response containing the multipolygon feature with properties",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "MultiPolygon"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "type": "array",
+                                "items": {
+                                  "type": "number"
+                                }
+                              }
+                            }
+                          },
+                          "example": [
+                            [
+                              [
+                                [
+                                  -104.34,
+                                  37.12
+                                ],
+                                [
+                                  -104.1,
+                                  37.25
+                                ],
+                                [
+                                  -103.92,
+                                  37.11
+                                ],
+                                [
+                                  -104.34,
+                                  37.12
+                                ]
+                              ]
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "properties": {
+                      "type": "object",
+                      "description": "Additional metadata associated with the multipolygon",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "multipolygon_within_001"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Multipolygon Within Area"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-12-01T16:00:00Z"
+                        },
+                        "area": {
+                          "type": "number",
+                          "description": "The area of the multipolygon in square kilometers.",
+                          "example": 325.45
+                        },
+                        "perimeter": {
+                          "type": "number",
+                          "description": "The perimeter of the multipolygon in kilometers.",
+                          "example": 240.12
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "A multipolygon generated within the provided area with additional metadata."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid GeoJSON Polygon or bounding box provided."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An unexpected error occurred while generating the multipolygon."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/feature/multipolygon/random": {
       "get": {
         "tags": [
@@ -8264,6 +9268,336 @@
           },
           "500": {
             "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/feature/multipolygon/random/properties": {
+      "get": {
+        "tags": [
+          "MultiPolygon feature"
+        ],
+        "summary": "Returns a random multipolygon geojson Feature with additional properties",
+        "description": "Generates a geographical random multipolygon with associated metadata and properties.",
+        "responses": {
+          "200": {
+            "description": "A successful response containing the random multipolygon feature with properties",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "MultiPolygon"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "type": "array",
+                                "items": {
+                                  "type": "number"
+                                }
+                              }
+                            }
+                          },
+                          "example": [
+                            [
+                              [
+                                [
+                                  -99.1234,
+                                  38.5678
+                                ],
+                                [
+                                  -99.4567,
+                                  38.6789
+                                ],
+                                [
+                                  -99.789,
+                                  38.789
+                                ],
+                                [
+                                  -99.1234,
+                                  38.5678
+                                ]
+                              ]
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "properties": {
+                      "type": "object",
+                      "description": "Additional metadata associated with the random multipolygon",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "random_multipolygon_001"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Random MultiPolygon"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-12-01T16:00:00Z"
+                        },
+                        "area": {
+                          "type": "number",
+                          "description": "The total area of the multipolygon in square kilometers.",
+                          "example": 245.67
+                        },
+                        "perimeter": {
+                          "type": "number",
+                          "description": "The total perimeter of the multipolygon in kilometers.",
+                          "example": 150.32
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "A randomly generated multipolygon with associated properties."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request data."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An unexpected error occurred while generating the random multipolygon."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MultiPolygon feature"
+        ],
+        "summary": "Returns a random multipolygon geojson Feature with properties within a GeoJSON polygon or bbox",
+        "description": "Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a random multipolygon within it, along with associated properties.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "geojsonPolygon": {
+                    "type": "object",
+                    "description": "GeoJSON Polygon to return a random multipolygon within it",
+                    "example": {
+                      "type": "Polygon",
+                      "coordinates": [
+                        [
+                          [
+                            -104.35,
+                            36.87
+                          ],
+                          [
+                            -104.35,
+                            41.94
+                          ],
+                          [
+                            -94.44,
+                            41.94
+                          ],
+                          [
+                            -94.44,
+                            36.87
+                          ],
+                          [
+                            -104.35,
+                            36.87
+                          ]
+                        ]
+                      ]
+                    }
+                  },
+                  "bbox": {
+                    "type": "array",
+                    "description": "Bounding box in the format [minX, minY, maxX, maxY] to return a random multipolygon within it",
+                    "items": {
+                      "type": "number"
+                    },
+                    "example": [
+                      -104.35,
+                      36.87,
+                      -94.44,
+                      41.94
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A successful response containing the random multipolygon feature with properties",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "Feature"
+                    },
+                    "geometry": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "MultiPolygon"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "type": "array",
+                                "items": {
+                                  "type": "number"
+                                }
+                              }
+                            }
+                          },
+                          "example": [
+                            [
+                              [
+                                [
+                                  -104.22,
+                                  37.01
+                                ],
+                                [
+                                  -104.11,
+                                  37.12
+                                ],
+                                [
+                                  -104.35,
+                                  37.25
+                                ],
+                                [
+                                  -104.22,
+                                  37.01
+                                ]
+                              ]
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "properties": {
+                      "type": "object",
+                      "description": "Additional metadata associated with the random multipolygon",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "random_multipolygon_001"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Random Multipolygon"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-12-01T16:00:00Z"
+                        },
+                        "area": {
+                          "type": "number",
+                          "description": "The area of the random multipolygon in square kilometers.",
+                          "example": 421.75
+                        },
+                        "perimeter": {
+                          "type": "number",
+                          "description": "The perimeter of the random multipolygon in kilometers.",
+                          "example": 315.62
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "A random multipolygon generated within the provided area with additional metadata."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid GeoJSON Polygon or bounding box provided."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "An unexpected error occurred while generating the random multipolygon."
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
