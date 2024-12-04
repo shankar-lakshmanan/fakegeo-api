@@ -144,7 +144,17 @@ function WithinLineOrWithinLineWithProperties(
 export function WithinLine(event: any): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
   try {
-    return GetOkResponse(WithinLineOrWithinLineWithProperties(body, false));
+    const result = WithinLineOrWithinLineWithProperties(
+      body,
+      false
+    );
+    if (result && "error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
+    }
   } catch (error: any) {
     return GetInternalServerErrorResponse(
       `Error processing input: ${error.message}`
@@ -155,7 +165,17 @@ export function WithinLine(event: any): APIGatewayProxyResult {
 export function WithinLineWithProperties(event: any): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
   try {
-    return GetOkResponse(WithinLineOrWithinLineWithProperties(body, true));
+    const result = WithinLineOrWithinLineWithProperties(
+      body,
+      true
+    );
+    if (result && "error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
+    }
   } catch (error: any) {
     return GetInternalServerErrorResponse(
       `Error processing input: ${error.message}`
