@@ -5,6 +5,104 @@
     "version": "1.0.0",
     "description": "Documentation for FakeGeo API"
   },
+  "tags": [
+    {
+      "name": "feature/point",
+      "description": "Operations related to point geojson feature"
+    },
+    {
+      "name": "feature/point - with properties",
+      "description": "Operations related to point geojson feature"
+    },
+    {
+      "name": "feature/multipoint",
+      "description": "Operations related to multipoint geojson feature"
+    },
+    {
+      "name": "feature/multipoint - with properties",
+      "description": "Operations related to multipoint geojson feature"
+    },
+    {
+      "name": "featureCollection/points",
+      "description": "Operations related to points geojson feature collection"
+    },
+    {
+      "name": "featureCollection/points - with properties",
+      "description": "Operations related to points geojson feature collection"
+    },
+    {
+      "name": "featureCollection/multipoints",
+      "description": "Operations related to multipoints geojson feature collection"
+    },
+    {
+      "name": "featureCollection/multipoints - with properties",
+      "description": "Operations related to multipoints geojson feature collection"
+    },
+    {
+      "name": "feature/line",
+      "description": "Operations related to line geojson feature"
+    },
+    {
+      "name": "feature/line - with properties",
+      "description": "Operations related to line geojson feature"
+    },
+    {
+      "name": "feature/multiline",
+      "description": "Operations related to multiline geojson feature"
+    },
+    {
+      "name": "feature/multiline - with properties",
+      "description": "Operations related to multiline geojson feature"
+    },
+    {
+      "name": "featureCollection/lines",
+      "description": "Operations related to lines geojson feature collection"
+    },
+    {
+      "name": "featureCollection/lines - with properties",
+      "description": "Operations related to lines geojson feature collection"
+    },
+    {
+      "name": "featureCollection/multilines",
+      "description": "Operations related to multilines geojson feature collection"
+    },
+    {
+      "name": "featureCollection/multilines - with properties",
+      "description": "Operations related to multilines geojson feature collection"
+    },
+    {
+      "name": "feature/polygon",
+      "description": "Operations related to polygon geojson feature"
+    },
+    {
+      "name": "feature/polygon - with properties",
+      "description": "Operations related to polygon geojson feature"
+    },
+    {
+      "name": "feature/multipolygon",
+      "description": "Operations related to multipolygon geojson feature"
+    },
+    {
+      "name": "feature/multipolygon - with properties",
+      "description": "Operations related to multipolygon geojson feature"
+    },
+    {
+      "name": "featureCollection/polygons",
+      "description": "Operations related to polygons geojson feature collection"
+    },
+    {
+      "name": "featureCollection/polygons - with properties",
+      "description": "Operations related to polygons geojson feature collection"
+    },
+    {
+      "name": "featureCollection/multipolygons",
+      "description": "Operations related to multipolygons geojson feature collection"
+    },
+    {
+      "name": "featureCollection/multipolygons - with properties",
+      "description": "Operations related to multipolygons geojson feature collection"
+    }
+  ],
   "paths": {
     "/featureCollection/lines": {
       "get": {
@@ -11331,6 +11429,5 @@
       }
     }
   },
-  "components": {},
-  "tags": []
+  "components": {}
 }
