@@ -15,7 +15,7 @@ export const featureMultiPolygonRoutes: Record<string, Function> = {
    * /feature/multipolygon:
    *   get:
    *     tags:
-   *       - MultiPolygon feature
+   *       - feature/multipolygon
    *     summary: Returns a multipolygon geojson Feature
    *     description: Generates a geographical multipolygon.
    *     responses:
@@ -68,7 +68,7 @@ export const featureMultiPolygonRoutes: Record<string, Function> = {
    * /feature/multipolygon/properties:
    *   get:
    *     tags:
-   *       - MultiPolygon feature
+   *       - feature/multipolygon - with properties
    *     summary: Returns a multipolygon geojson Feature with additional properties
    *     description: Generates a geographical multipolygon with associated metadata and properties.
    *     responses:
@@ -162,7 +162,7 @@ export const featureMultiPolygonRoutes: Record<string, Function> = {
    * /feature/multipolygon/random:
    *   get:
    *     tags:
-   *       - MultiPolygon feature
+   *       - feature/multipolygon
    *     summary: Returns a random multipolygon geojson Feature
    *     description: Generates a geographical random multipolygon.
    *     responses:
@@ -204,7 +204,7 @@ export const featureMultiPolygonRoutes: Record<string, Function> = {
    * /feature/multipolygon/random/properties:
    *   get:
    *     tags:
-   *       - MultiPolygon feature
+   *       - feature/multipolygon - with properties
    *     summary: Returns a random multipolygon geojson Feature with additional properties
    *     description: Generates a geographical random multipolygon with associated metadata and properties.
    *     responses:
@@ -298,7 +298,7 @@ export const featureMultiPolygonRoutes: Record<string, Function> = {
    * /feature/multipolygon:
    *   post:
    *     tags:
-   *       - MultiPolygon feature
+   *       - feature/multipolygon
    *     summary: Returns a multipolygon geojson Feature within a GeoJSON polygon or bbox
    *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a multipolygon within it.
    *     requestBody:
@@ -335,7 +335,7 @@ export const featureMultiPolygonRoutes: Record<string, Function> = {
    * /feature/multipolygon/properties:
    *   post:
    *     tags:
-   *       - MultiPolygon feature
+   *       - feature/multipolygon - with properties
    *     summary: Returns a multipolygon geojson Feature with properties within a GeoJSON polygon or bbox
    *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a multipolygon within it with associated properties.
    *     requestBody:
@@ -455,7 +455,7 @@ export const featureMultiPolygonRoutes: Record<string, Function> = {
    * /feature/multipolygon/random:
    *   post:
    *     tags:
-   *       - MultiPolygon feature
+   *       - feature/multipolygon
    *     summary: Returns a random multipolygon geojson Feature within a GeoJSON polygon or bbox
    *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a random multipolygon within it.
    *     requestBody:
@@ -492,7 +492,7 @@ export const featureMultiPolygonRoutes: Record<string, Function> = {
    * /feature/multipolygon/random/properties:
    *   post:
    *     tags:
-   *       - MultiPolygon feature
+   *       - feature/multipolygon - with properties
    *     summary: Returns a random multipolygon geojson Feature with properties within a GeoJSON polygon or bbox
    *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a random multipolygon within it, along with associated properties.
    *     requestBody:

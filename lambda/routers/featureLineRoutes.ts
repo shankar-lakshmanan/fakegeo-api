@@ -15,7 +15,7 @@ export const featureLineRoutes: Record<string, Function> = {
    * /feature/line:
    *   get:
    *     tags:
-   *       - Line feature
+   *       - feature/line
    *     summary: Returns a line geojson Feature
    *     description: Generates a geographical line.
    *     responses:
@@ -76,7 +76,7 @@ export const featureLineRoutes: Record<string, Function> = {
    * /feature/line/properties:
    *   get:
    *     tags:
-   *       - Line feature
+   *       - feature/line - with properties
    *     summary: Returns a line geojson Feature with properties
    *     description: Generates a geographical line with additional random properties.
    *     responses:
@@ -128,7 +128,7 @@ export const featureLineRoutes: Record<string, Function> = {
    * /feature/line/random:
    *   get:
    *     tags:
-   *       - Line feature
+   *       - feature/line
    *     summary: Returns a random line geojson Feature
    *     description: Generates a random geographical LineString.
    *     responses:
@@ -188,7 +188,7 @@ export const featureLineRoutes: Record<string, Function> = {
    * /feature/line/random/properties:
    *   get:
    *     tags:
-   *       - Line feature
+   *       - feature/line - with properties
    *     summary: Returns a random line geojson Feature with properties
    *     description: Generates a random geographical line with additional random properties.
    *     responses:
@@ -241,7 +241,7 @@ export const featureLineRoutes: Record<string, Function> = {
    * /feature/line:
    *   post:
    *     tags:
-   *       - Line feature
+   *       - feature/line
    *     summary: Returns a line geojson feature within a GeoJSON polygon or bbox
    *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a line within it.
    *     requestBody:
@@ -311,7 +311,7 @@ export const featureLineRoutes: Record<string, Function> = {
    * /feature/line/properties:
    *   post:
    *     tags:
-   *       - Line feature
+   *       - feature/line - with properties
    *     summary: Returns a line GeoJSON feature with additional properties within a GeoJSON polygon or bbox
    *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a line within it, enriched with user-defined properties.
    *     requestBody:
@@ -395,7 +395,7 @@ export const featureLineRoutes: Record<string, Function> = {
    * /feature/line/random:
    *   post:
    *     tags:
-   *       - Line feature
+   *       - feature/line
    *     summary: Returns a random line geojson feature within a GeoJSON polygon or bbox
    *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a random line within it.
    *     requestBody:
@@ -464,7 +464,7 @@ export const featureLineRoutes: Record<string, Function> = {
    * /feature/line/random/properties:
    *   post:
    *     tags:
-   *       - Line feature
+   *       - feature/line - with properties
    *     summary: Returns a random line GeoJSON feature with additional properties within a GeoJSON polygon or bbox
    *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a random line within it, enriched with user-defined properties.
    *     requestBody:

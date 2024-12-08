@@ -1,6 +1,5 @@
 // router.ts
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { fakeGeoRoutes } from "./fakeGeoRoutes";
 import { featurePointRoutes } from "./featurePointRoutes";
 import { featureLineRoutes } from "./featureLineRoutes";
 import { featurePolygonRoutes } from "./featurePolygonRoutes";
@@ -15,7 +14,6 @@ import { featureMultiPolygonRoutes } from "./featureMultiPolygonRoutes";
 import { featureCollectionMultiPolygonsRoutes } from "./featureCollectionMultiPolygonsRoutes";
 
 const routes: Record<string, Function> = {
-  ...fakeGeoRoutes,
   ...featurePointRoutes,
   ...featureLineRoutes,
   ...featurePolygonRoutes,

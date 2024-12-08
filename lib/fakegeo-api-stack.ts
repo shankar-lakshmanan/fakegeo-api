@@ -44,10 +44,6 @@ export class FakegeoApiStack extends cdk.Stack {
       apiKeyRequired: true,
     }
 
-    // Define the '/fakegeo' hello world resource with a GET method
-    const fakegeoResource = api.root.addResource("fakegeo");
-    fakegeoResource.addMethod("GET", new apigateway.LambdaIntegration(fakeGeoFunction), methodOptions);
-
     const featureResource = api.root.addResource("feature");
     const featurePointResource = featureResource.addResource("point");
     // const featurePointPropertiesResource = featureResource.addResource("properties");

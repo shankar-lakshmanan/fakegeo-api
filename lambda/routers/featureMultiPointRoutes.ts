@@ -15,7 +15,7 @@ export const featureMultiPointRoutes: Record<string, Function> = {
    * /feature/multipoint:
    *   get:
    *     tags:
-   *       - MultiPoint feature
+   *       - feature/multipoint
    *     summary: Returns a multipoint geojson Feature
    *     description: Generates a geographical multipoint.
    *     responses:
@@ -54,7 +54,7 @@ export const featureMultiPointRoutes: Record<string, Function> = {
    * /feature/multipoint/properties:
    *   get:
    *     tags:
-   *       - MultiPoint feature
+   *       - feature/multipoint - with properties
    *     summary: Returns a multipoint geojson Feature with properties
    *     description: Generates a geographical multipoint with additional properties.
    *     responses:
@@ -96,7 +96,7 @@ export const featureMultiPointRoutes: Record<string, Function> = {
    * /feature/multipoint/random:
    *   get:
    *     tags:
-   *       - MultiPoint feature
+   *       - feature/multipoint
    *     summary: Returns a random multipoint geojson Feature
    *     description: Generates a random geographical multipoint.
    *     responses:
@@ -135,7 +135,7 @@ export const featureMultiPointRoutes: Record<string, Function> = {
    * /feature/multipoint/random/properties:
    *   get:
    *     tags:
-   *       - MultiPoint feature
+   *       - feature/multipoint - with properties
    *     summary: Returns a random multipoint geojson Feature with properties
    *     description: Generates a random geographical multipoint with additional properties.
    *     responses:
@@ -177,7 +177,7 @@ export const featureMultiPointRoutes: Record<string, Function> = {
    * /feature/multipoint:
    *   post:
    *     tags:
-   *       - MultiPoint feature
+   *       - feature/multipoint
    *     summary: Returns a multipoint geojson Feature within a GeoJSON polygon or bbox
    *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns multipoints within it.
    *     requestBody:
@@ -230,7 +230,7 @@ export const featureMultiPointRoutes: Record<string, Function> = {
    * /feature/multipoint/properties:
    *   post:
    *     tags:
-   *       - MultiPoint feature
+   *       - feature/multipoint - with properties
    *     summary: Returns a multipoint geojson Feature within a GeoJSON polygon or bbox with properties
    *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns multipoints within it with additional properties.
    *     requestBody:
@@ -286,7 +286,7 @@ export const featureMultiPointRoutes: Record<string, Function> = {
    * /feature/multipoint/random:
    *   post:
    *     tags:
-   *       - MultiPoint feature
+   *       - feature/multipoint
    *     summary: Returns a random multipoint geojson Feature within a GeoJSON polygon or bbox
    *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns random multipoints within it.
    *     requestBody:
@@ -339,7 +339,7 @@ export const featureMultiPointRoutes: Record<string, Function> = {
    * /feature/multipoint/random/properties:
    *   post:
    *     tags:
-   *       - MultiPoint feature
+   *       - feature/multipoint - with properties
    *     summary: Returns a random multipoint geojson Feature within a GeoJSON polygon or bbox with properties
    *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns random multipoints within it with additional properties.
    *     requestBody:
@@ -388,5 +388,6 @@ export const featureMultiPointRoutes: Record<string, Function> = {
    *       500:
    *         description: Internal server error
    */
-  "POST /feature/multipoint/random/properties": WithinRandomMultiPointWithProperties,
+  "POST /feature/multipoint/random/properties":
+    WithinRandomMultiPointWithProperties,
 };

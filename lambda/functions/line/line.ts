@@ -144,10 +144,7 @@ function WithinLineOrWithinLineWithProperties(
 export function WithinLine(event: any): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
   try {
-    const result = WithinLineOrWithinLineWithProperties(
-      body,
-      false
-    );
+    const result = WithinLineOrWithinLineWithProperties(body, false);
     if (result && "error" in result) {
       // result is a BadRequestErrorResponse
       return result as BadRequestErrorResponse;
@@ -165,10 +162,7 @@ export function WithinLine(event: any): APIGatewayProxyResult {
 export function WithinLineWithProperties(event: any): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
   try {
-    const result = WithinLineOrWithinLineWithProperties(
-      body,
-      true
-    );
+    const result = WithinLineOrWithinLineWithProperties(body, true);
     if (result && "error" in result) {
       // result is a BadRequestErrorResponse
       return result as BadRequestErrorResponse;

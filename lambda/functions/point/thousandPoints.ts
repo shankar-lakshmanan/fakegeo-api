@@ -1,4 +1,4 @@
-import {FeatureCollection} from "geojson";
+import { FeatureCollection } from "geojson";
 export const thousandPoints: FeatureCollection = {
   type: "FeatureCollection",
   features: [

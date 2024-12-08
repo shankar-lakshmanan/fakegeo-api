@@ -15,7 +15,7 @@ export const featureMultiLineRoutes: Record<string, Function> = {
    * /feature/multiline:
    *   get:
    *     tags:
-   *       - MultiLine feature
+   *       - feature/multiline
    *     summary: Returns a multi-line geojson Feature
    *     description: Generates a geographical MultiLineString.
    *     responses:
@@ -76,7 +76,7 @@ export const featureMultiLineRoutes: Record<string, Function> = {
    * /feature/multiline/properties:
    *   get:
    *     tags:
-   *       - MultiLine feature
+   *       - feature/multiline - with properties
    *     summary: Returns a multi-line GeoJSON Feature with properties
    *     description: Generates a geographical MultiLineString feature with additional properties describing the feature.
    *     responses:
@@ -154,7 +154,7 @@ export const featureMultiLineRoutes: Record<string, Function> = {
    * /feature/multiline/random:
    *   get:
    *     tags:
-   *       - MultiLine feature
+   *       - feature/multiline
    *     summary: Returns a random multi-line geojson Feature
    *     description: Generates a random geographical MultiLineString.
    *     responses:
@@ -214,7 +214,7 @@ export const featureMultiLineRoutes: Record<string, Function> = {
    * /feature/multiline/random/properties:
    *   get:
    *     tags:
-   *       - MultiLine feature
+   *       - feature/multiline - with properties
    *     summary: Returns a random multi-line GeoJSON Feature with properties
    *     description: Generates a random geographical MultiLineString feature with associated metadata properties.
    *     responses:
@@ -292,7 +292,7 @@ export const featureMultiLineRoutes: Record<string, Function> = {
    * /feature/multiline:
    *   post:
    *     tags:
-   *       - MultiLine feature
+   *       - feature/multiline
    *     summary: Returns a multi-line geojson feature within a GeoJSON polygon or bbox
    *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a multi-line within it.
    *     requestBody:
@@ -352,7 +352,7 @@ export const featureMultiLineRoutes: Record<string, Function> = {
    * /feature/multiline/properties:
    *   post:
    *     tags:
-   *       - MultiLine feature
+   *       - feature/multiline - with properties
    *     summary: Returns a multi-line geojson feature with properties within a GeoJSON polygon or bbox
    *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a multi-line within it along with additional metadata properties.
    *     requestBody:
@@ -449,7 +449,7 @@ export const featureMultiLineRoutes: Record<string, Function> = {
    * /feature/multiline/random:
    *   post:
    *     tags:
-   *       - MultiLine feature
+   *       - feature/multiline
    *     summary: Returns a random multi-line geojson feature within a GeoJSON polygon or bbox
    *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a random multi-line within it.
    *     requestBody:
@@ -509,7 +509,7 @@ export const featureMultiLineRoutes: Record<string, Function> = {
    * /feature/multiline/random/properties:
    *   post:
    *     tags:
-   *       - MultiLine feature
+   *       - feature/multiline - with properties
    *     summary: Returns a random multi-line geojson feature with properties within a GeoJSON polygon or bbox
    *     description: Accepts a GeoJSON Polygon or a bounding box (bbox) and returns a random multi-line within it along with additional metadata properties.
    *     requestBody:

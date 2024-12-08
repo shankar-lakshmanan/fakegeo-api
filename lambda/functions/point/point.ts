@@ -10,8 +10,10 @@ import {
 } from "../../util/stringify";
 import { thousandPoints } from "./thousandPoints";
 import { booleanPointInPolygon } from "@turf/turf";
-import { populateGeoJsonFeatureCollectionWithProperties, populateGeoJsonFeatureWithProperties } from "../properties/properties";
-
+import {
+  populateGeoJsonFeatureCollectionWithProperties,
+  populateGeoJsonFeatureWithProperties,
+} from "../properties/properties";
 
 function PointOrPointWithProperties(withProperties: boolean) {
   const point = turf.point([-101.278818, 40.816337]);
@@ -75,7 +77,6 @@ function WithinPointOrWithinPointWithProperties(
   body: any,
   withProperties: boolean
 ) {
-
   let point;
 
   const { geojsonPolygon, bbox } = body;
@@ -111,10 +112,7 @@ export function WithinPoint(event: any): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
 
   try {
-    const result = WithinPointOrWithinPointWithProperties(
-      body,
-      false
-    );
+    const result = WithinPointOrWithinPointWithProperties(body, false);
     if ("error" in result) {
       // result is a BadRequestErrorResponse
       return result as BadRequestErrorResponse;
@@ -133,10 +131,7 @@ export function WithinPointWithProperties(event: any): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
 
   try {
-    const result = WithinPointOrWithinPointWithProperties(
-      body,
-      true
-    );
+    const result = WithinPointOrWithinPointWithProperties(body, true);
     if ("error" in result) {
       // result is a BadRequestErrorResponse
       return result as BadRequestErrorResponse;
@@ -159,33 +154,33 @@ function WithinRandomPointOrWithinRandomPointWithProperties(
 
   const { geojsonPolygon, bbox } = body;
 
-    // Check if geojsonPolygon is valid
-    if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
-      const bboxOfPolygon = turf.bbox(geojsonPolygon);
-      const randomPointsOfBboxOfPolygon = turf.randomPoint(50, {
-        bbox: bboxOfPolygon,
-      });
+  // Check if geojsonPolygon is valid
+  if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
+    const bboxOfPolygon = turf.bbox(geojsonPolygon);
+    const randomPointsOfBboxOfPolygon = turf.randomPoint(50, {
+      bbox: bboxOfPolygon,
+    });
 
-      let randomPoint;
-      randomPointsOfBboxOfPolygon.features.forEach((point) => {
-        if (turf.booleanWithin(point, geojsonPolygon)) {
-          randomPoint = point;
-          return;
-        }
-      });
+    let randomPoint;
+    randomPointsOfBboxOfPolygon.features.forEach((point) => {
+      if (turf.booleanWithin(point, geojsonPolygon)) {
+        randomPoint = point;
+        return;
+      }
+    });
 
-      // Return the center which is always within the polygon
-      point = randomPoint;
-    }
-    // Check if bbox is valid
-    else if (bbox && isValidBBox(bbox)) {
-      // Return the center which is always within the polygon
-      point = turf.randomPoint(1, { bbox: bbox }).features[0];
-    } else {
-      return GetBadRequestErrorResponse(
-        "Invalid input. Provide either a valid GeoJSON polygon or a bbox."
-      );
-    }
+    // Return the center which is always within the polygon
+    point = randomPoint;
+  }
+  // Check if bbox is valid
+  else if (bbox && isValidBBox(bbox)) {
+    // Return the center which is always within the polygon
+    point = turf.randomPoint(1, { bbox: bbox }).features[0];
+  } else {
+    return GetBadRequestErrorResponse(
+      "Invalid input. Provide either a valid GeoJSON polygon or a bbox."
+    );
+  }
 
   if (point && withProperties) {
     const pointWithProperties = populateGeoJsonFeatureWithProperties(point);
@@ -220,7 +215,9 @@ export function WithinRandomPoint(event: any): APIGatewayProxyResult {
   }
 }
 
-export function WithinRandomPointWithProperties(event: any): APIGatewayProxyResult {
+export function WithinRandomPointWithProperties(
+  event: any
+): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
 
   try {
@@ -251,7 +248,8 @@ function PointsOrPointsWithProperties(withProperties: boolean) {
   };
 
   if (withProperties) {
-    const pointsWithProperties = populateGeoJsonFeatureCollectionWithProperties(reducedPoints);
+    const pointsWithProperties =
+      populateGeoJsonFeatureCollectionWithProperties(reducedPoints);
     return pointsWithProperties;
   }
   return reducedPoints;
@@ -269,67 +267,64 @@ function PointsLimitAndWithinOrPointsLimitAndWithinWithProperties(
   body: any,
   withProperties: boolean
 ) {
-
   const { limit, geojsonPolygon, bbox } = body;
 
-    let points: FeatureCollection = thousandPoints;
-    let finalPoints: FeatureCollection;
-    // Check if geojsonPolygon is valid
-    if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
-      const filteredPoints = points.features.filter((feature) => {
-        // Check if the feature is a point and within the bbox polygon
-        return (
-          feature.geometry.type === "Point" &&
-          booleanPointInPolygon(feature.geometry.coordinates, geojsonPolygon)
-        );
-      });
+  let points: FeatureCollection = thousandPoints;
+  let finalPoints: FeatureCollection;
+  // Check if geojsonPolygon is valid
+  if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
+    const filteredPoints = points.features.filter((feature) => {
+      // Check if the feature is a point and within the bbox polygon
+      return (
+        feature.geometry.type === "Point" &&
+        booleanPointInPolygon(feature.geometry.coordinates, geojsonPolygon)
+      );
+    });
 
-      // Wrap the filtered points back into a FeatureCollection
-      points = turf.featureCollection(filteredPoints);
-    } else if (bbox && isValidBBox(bbox)) {
-      const bboxPolygonGeometry = turf.bboxPolygon(bbox); // Create a polygon from the bbox
+    // Wrap the filtered points back into a FeatureCollection
+    points = turf.featureCollection(filteredPoints);
+  } else if (bbox && isValidBBox(bbox)) {
+    const bboxPolygonGeometry = turf.bboxPolygon(bbox); // Create a polygon from the bbox
 
-      const filteredPoints = points.features.filter((feature) => {
-        // Check if the feature is a point and within the bbox polygon
-        return (
-          feature.geometry.type === "Point" &&
-          booleanPointInPolygon(
-            feature.geometry.coordinates,
-            bboxPolygonGeometry
-          )
-        );
-      });
+    const filteredPoints = points.features.filter((feature) => {
+      // Check if the feature is a point and within the bbox polygon
+      return (
+        feature.geometry.type === "Point" &&
+        booleanPointInPolygon(feature.geometry.coordinates, bboxPolygonGeometry)
+      );
+    });
 
-      // Wrap the filtered points back into a FeatureCollection
-      points = turf.featureCollection(filteredPoints);
-    }
+    // Wrap the filtered points back into a FeatureCollection
+    points = turf.featureCollection(filteredPoints);
+  }
 
-    if (limit) {
-      if (points.features.length <= limit) {
-        // If there are fewer or equal points than the limit, return all points
-        finalPoints = points;
-      } else if (limit < 1000) {
-        // If limit is less than 1000, return the specified number of points
-        const limitedPoints = points.features.slice(0, limit);
-        finalPoints = {
-          ...points,
-          features: limitedPoints,
-        };
-      } else if (limit > 1000) {
-        // If limit is greater than 1000, return all points
-        finalPoints = points;
-      } else {
-        return GetBadRequestErrorResponse(
-          "Invalid input. Provide a valid limit number"
-        );
-      }
-    } else {
-      // If no limit is specified, return all points
+  if (limit) {
+    if (points.features.length <= limit) {
+      // If there are fewer or equal points than the limit, return all points
       finalPoints = points;
+    } else if (limit < 1000) {
+      // If limit is less than 1000, return the specified number of points
+      const limitedPoints = points.features.slice(0, limit);
+      finalPoints = {
+        ...points,
+        features: limitedPoints,
+      };
+    } else if (limit > 1000) {
+      // If limit is greater than 1000, return all points
+      finalPoints = points;
+    } else {
+      return GetBadRequestErrorResponse(
+        "Invalid input. Provide a valid limit number"
+      );
     }
+  } else {
+    // If no limit is specified, return all points
+    finalPoints = points;
+  }
 
   if (withProperties) {
-    const pointsWithProperties = populateGeoJsonFeatureCollectionWithProperties(finalPoints);
+    const pointsWithProperties =
+      populateGeoJsonFeatureCollectionWithProperties(finalPoints);
     return pointsWithProperties;
   }
 
@@ -358,7 +353,9 @@ export function PointsLimitAndWithin(event: any): APIGatewayProxyResult {
   }
 }
 
-export function PointsLimitAndWithinWithProperties(event: any): APIGatewayProxyResult {
+export function PointsLimitAndWithinWithProperties(
+  event: any
+): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
 
   try {
@@ -386,7 +383,8 @@ function RandomPointsOrRandomPointsWithProperties(withProperties: boolean) {
   });
 
   if (withProperties) {
-    const pointsWithProperties = populateGeoJsonFeatureCollectionWithProperties(thirtyPoints);
+    const pointsWithProperties =
+      populateGeoJsonFeatureCollectionWithProperties(thirtyPoints);
     return pointsWithProperties;
   }
   return thirtyPoints;
@@ -404,47 +402,47 @@ function RandomPointsLimitAndWithinOrRandomPointsLimitAndWithinWithProperties(
   body: any,
   withProperties: boolean
 ) {
-
   const { limit, geojsonPolygon, bbox } = body;
 
-    let points: FeatureCollection = { features: [], type: "FeatureCollection" };
-    let finalPoints: FeatureCollection;
-    // Check if geojsonPolygon is valid
-    if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
-      var bboxPoly = turf.bbox(geojsonPolygon);
-      points = turf.randomPoint(1000, { bbox: bboxPoly });
-    } else if (bbox && isValidBBox(bbox)) {
-      // Create a polygon from the bbox
+  let points: FeatureCollection = { features: [], type: "FeatureCollection" };
+  let finalPoints: FeatureCollection;
+  // Check if geojsonPolygon is valid
+  if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
+    var bboxPoly = turf.bbox(geojsonPolygon);
+    points = turf.randomPoint(1000, { bbox: bboxPoly });
+  } else if (bbox && isValidBBox(bbox)) {
+    // Create a polygon from the bbox
 
-      points = turf.randomPoint(1000, { bbox: bbox });
-    }
+    points = turf.randomPoint(1000, { bbox: bbox });
+  }
 
-    if (limit) {
-      if (points.features.length <= limit) {
-        // If there are fewer or equal points than the limit, return all points
-        finalPoints = points;
-      } else if (limit < 1000) {
-        // If limit is less than 1000, return the specified number of points
-        const limitedPoints = points.features.slice(0, limit);
-        finalPoints = {
-          ...points,
-          features: limitedPoints,
-        };
-      } else if (limit > 1000) {
-        // If limit is greater than 1000, return all points
-        finalPoints = points;
-      } else {
-        return GetBadRequestErrorResponse(
-          "Invalid input. Provide a valid limit number"
-        );
-      }
-    } else {
-      // If no limit is specified, return all points
+  if (limit) {
+    if (points.features.length <= limit) {
+      // If there are fewer or equal points than the limit, return all points
       finalPoints = points;
+    } else if (limit < 1000) {
+      // If limit is less than 1000, return the specified number of points
+      const limitedPoints = points.features.slice(0, limit);
+      finalPoints = {
+        ...points,
+        features: limitedPoints,
+      };
+    } else if (limit > 1000) {
+      // If limit is greater than 1000, return all points
+      finalPoints = points;
+    } else {
+      return GetBadRequestErrorResponse(
+        "Invalid input. Provide a valid limit number"
+      );
     }
+  } else {
+    // If no limit is specified, return all points
+    finalPoints = points;
+  }
 
   if (withProperties) {
-    const pointsWithProperties = populateGeoJsonFeatureCollectionWithProperties(finalPoints);
+    const pointsWithProperties =
+      populateGeoJsonFeatureCollectionWithProperties(finalPoints);
     return pointsWithProperties;
   }
 
@@ -455,10 +453,11 @@ export function RandomPointsLimitAndWithin(event: any): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
 
   try {
-    const result = RandomPointsLimitAndWithinOrRandomPointsLimitAndWithinWithProperties(
-      body,
-      false
-    );
+    const result =
+      RandomPointsLimitAndWithinOrRandomPointsLimitAndWithinWithProperties(
+        body,
+        false
+      );
     if (result && "error" in result) {
       // result is a BadRequestErrorResponse
       return result as BadRequestErrorResponse;
@@ -473,14 +472,17 @@ export function RandomPointsLimitAndWithin(event: any): APIGatewayProxyResult {
   }
 }
 
-export function RandomPointsLimitAndWithinWithProperties(event: any): APIGatewayProxyResult {
+export function RandomPointsLimitAndWithinWithProperties(
+  event: any
+): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
 
   try {
-    const result = RandomPointsLimitAndWithinOrRandomPointsLimitAndWithinWithProperties(
-      body,
-      true
-    );
+    const result =
+      RandomPointsLimitAndWithinOrRandomPointsLimitAndWithinWithProperties(
+        body,
+        true
+      );
     if (result && "error" in result) {
       // result is a BadRequestErrorResponse
       return result as BadRequestErrorResponse;
