@@ -7,7 +7,7 @@ import {
   RandomMultiPolygonWithProperties,
   WithinMultiPolygonWithProperties,
   WithinRandomMultiPolygonWithProperties,
-} from "../functions/polygon/multipolygon";
+} from "../functions/multipolygon/multipolygon";
 
 export const featureMultiPolygonRoutes: Record<string, Function> = {
   /**

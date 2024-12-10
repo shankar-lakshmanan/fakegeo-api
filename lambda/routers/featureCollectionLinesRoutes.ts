@@ -7,7 +7,7 @@ import {
   LinesLimitAndWithinWithProperties,
   RandomLinesWithProperties,
   RandomLinesLimitAndWithinWithProperties,
-} from "../functions/line/line";
+} from "../functions/lines/lines";
 
 export const featureCollectionLinesRoutes: Record<string, Function> = {
   /**

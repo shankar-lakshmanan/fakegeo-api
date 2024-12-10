@@ -5,7 +5,8 @@
     "fakegeo-api": "bin/fakegeo-api.js"
   },
   "scripts": {
-    "build": "tsc",
+    "clean": "tsc --build --clean",
+    "build": "tsc --build",
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",

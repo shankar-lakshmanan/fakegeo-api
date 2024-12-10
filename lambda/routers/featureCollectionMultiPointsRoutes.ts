@@ -7,7 +7,7 @@ import {
   MultiPointsLimitAndWithinWithProperties,
   RandomMultiPointsWithProperties,
   RandomMultiPointsLimitAndWithinWithProperties,
-} from "../functions/point/multipoint";
+} from "../functions/multipoints/multipoints";
 
 export const featureCollectionMultiPointsRoutes: Record<string, Function> = {
   /**

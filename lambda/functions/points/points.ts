@@ -6,79 +6,29 @@ import {
   OkResponse,
 } from "../../util/stringify";
 import {
-  PolygonOrPolygonWithProperties,
-  RandomPolygonOrRandomPolygonWithProperties,
-  WithinPolygonOrWithinPolygonWithProperties,
-  WithinRandomPolygonOrWithinRandomPolygonWithProperties,
-} from "./polygonHelper";
+  PointsLimitAndWithinOrPointsLimitAndWithinWithProperties,
+  PointsOrPointsWithProperties,
+  RandomPointsLimitAndWithinOrRandomPointsLimitAndWithinWithProperties,
+  RandomPointsOrRandomPointsWithProperties,
+} from "./pointsHelper";
 
-export function Polygon(): OkResponse {
-  return GetOkResponse(PolygonOrPolygonWithProperties(false));
+export function Points(): OkResponse {
+  return GetOkResponse(PointsOrPointsWithProperties(false));
 }
 
-export function PolygonWithProperties(): OkResponse {
-  return GetOkResponse(PolygonOrPolygonWithProperties(true));
+export function PointsWithProperties(): OkResponse {
+  return GetOkResponse(PointsOrPointsWithProperties(true));
 }
 
-export function RandomPolygon(): OkResponse {
-  return GetOkResponse(RandomPolygonOrRandomPolygonWithProperties(false));
-}
-
-export function RandomPolygonWithProperties(): OkResponse {
-  return GetOkResponse(RandomPolygonOrRandomPolygonWithProperties(true));
-}
-
-/**
- * Validates the input and returns a Polygon at the center of a GeoJSON polygon or bbox.
- */
-export function WithinPolygon(event: any): APIGatewayProxyResult {
-  const body = JSON.parse(event.body || "{}");
-  try {
-    const result = WithinPolygonOrWithinPolygonWithProperties(body, false);
-    if ("error" in result) {
-      // result is a BadRequestErrorResponse
-      return result as BadRequestErrorResponse;
-    } else {
-      // result is a Feature<LineString, GeoJsonProperties>
-      return GetOkResponse(result);
-    }
-  } catch (error: any) {
-    return GetInternalServerErrorResponse(
-      `Error processing input: ${error.message}`
-    );
-  }
-}
-
-export function WithinPolygonWithProperties(event: any): APIGatewayProxyResult {
-  const body = JSON.parse(event.body || "{}");
-  try {
-    const result = WithinPolygonOrWithinPolygonWithProperties(body, true);
-    if ("error" in result) {
-      // result is a BadRequestErrorResponse
-      return result as BadRequestErrorResponse;
-    } else {
-      // result is a Feature<LineString, GeoJsonProperties>
-      return GetOkResponse(result);
-    }
-  } catch (error: any) {
-    return GetInternalServerErrorResponse(
-      `Error processing input: ${error.message}`
-    );
-  }
-}
-
-/**
- * Validates the input and returns a random Polygon at the center of a GeoJSON polygon or bbox.
- */
-export function WithinRandomPolygon(event: any): APIGatewayProxyResult {
+export function PointsLimitAndWithin(event: any): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
 
   try {
-    const result = WithinRandomPolygonOrWithinRandomPolygonWithProperties(
+    const result = PointsLimitAndWithinOrPointsLimitAndWithinWithProperties(
       body,
       false
     );
-    if ("error" in result) {
+    if (result && "error" in result) {
       // result is a BadRequestErrorResponse
       return result as BadRequestErrorResponse;
     } else {
@@ -92,17 +42,73 @@ export function WithinRandomPolygon(event: any): APIGatewayProxyResult {
   }
 }
 
-export function WithinRandomPolygonWithProperties(
+export function PointsLimitAndWithinWithProperties(
   event: any
 ): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
 
   try {
-    const result = WithinRandomPolygonOrWithinRandomPolygonWithProperties(
+    const result = PointsLimitAndWithinOrPointsLimitAndWithinWithProperties(
       body,
       true
     );
-    if ("error" in result) {
+    if (result && "error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
+    }
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(
+      `Error processing input: ${error.message}`
+    );
+  }
+}
+
+export function RandomPoints(): OkResponse {
+  return GetOkResponse(RandomPointsOrRandomPointsWithProperties(false));
+}
+
+export function RandomPointsWithProperties(): OkResponse {
+  return GetOkResponse(RandomPointsOrRandomPointsWithProperties(true));
+}
+
+export function RandomPointsLimitAndWithin(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+
+  try {
+    const result =
+      RandomPointsLimitAndWithinOrRandomPointsLimitAndWithinWithProperties(
+        body,
+        false
+      );
+    if (result && "error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
+    }
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(
+      `Error processing input: ${error.message}`
+    );
+  }
+}
+
+export function RandomPointsLimitAndWithinWithProperties(
+  event: any
+): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+
+  try {
+    const result =
+      RandomPointsLimitAndWithinOrRandomPointsLimitAndWithinWithProperties(
+        body,
+        true
+      );
+    if (result && "error" in result) {
       // result is a BadRequestErrorResponse
       return result as BadRequestErrorResponse;
     } else {

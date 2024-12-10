@@ -6,75 +6,46 @@ import {
   OkResponse,
 } from "../../util/stringify";
 import {
-  PolygonOrPolygonWithProperties,
-  RandomPolygonOrRandomPolygonWithProperties,
-  WithinPolygonOrWithinPolygonWithProperties,
-  WithinRandomPolygonOrWithinRandomPolygonWithProperties,
-} from "./polygonHelper";
+  MultiPolygonOrMultiPolygonWithProperties,
+  RandomMultiPolygonOrRandomMultiPolygonWithProperties,
+  WithinMultiPolygonOrWithinMultiPolygonWithProperties,
+  WithinRandomMultiPolygonOrWithinRandomMultiPolygonWithProperties,
+} from "./multipolygonHelper";
 
-export function Polygon(): OkResponse {
-  return GetOkResponse(PolygonOrPolygonWithProperties(false));
+/**
+ * Single MultiPolygon based on specified coordinates.
+ */
+export function MultiPolygon(): OkResponse {
+  return GetOkResponse(MultiPolygonOrMultiPolygonWithProperties(false));
 }
 
-export function PolygonWithProperties(): OkResponse {
-  return GetOkResponse(PolygonOrPolygonWithProperties(true));
-}
-
-export function RandomPolygon(): OkResponse {
-  return GetOkResponse(RandomPolygonOrRandomPolygonWithProperties(false));
-}
-
-export function RandomPolygonWithProperties(): OkResponse {
-  return GetOkResponse(RandomPolygonOrRandomPolygonWithProperties(true));
+export function MultiPolygonWithProperties(): OkResponse {
+  return GetOkResponse(MultiPolygonOrMultiPolygonWithProperties(true));
 }
 
 /**
- * Validates the input and returns a Polygon at the center of a GeoJSON polygon or bbox.
+ * Random MultiPolygon generation within the global bbox.
  */
-export function WithinPolygon(event: any): APIGatewayProxyResult {
-  const body = JSON.parse(event.body || "{}");
-  try {
-    const result = WithinPolygonOrWithinPolygonWithProperties(body, false);
-    if ("error" in result) {
-      // result is a BadRequestErrorResponse
-      return result as BadRequestErrorResponse;
-    } else {
-      // result is a Feature<LineString, GeoJsonProperties>
-      return GetOkResponse(result);
-    }
-  } catch (error: any) {
-    return GetInternalServerErrorResponse(
-      `Error processing input: ${error.message}`
-    );
-  }
+export function RandomMultiPolygon(): OkResponse {
+  return GetOkResponse(
+    RandomMultiPolygonOrRandomMultiPolygonWithProperties(false)
+  );
 }
 
-export function WithinPolygonWithProperties(event: any): APIGatewayProxyResult {
-  const body = JSON.parse(event.body || "{}");
-  try {
-    const result = WithinPolygonOrWithinPolygonWithProperties(body, true);
-    if ("error" in result) {
-      // result is a BadRequestErrorResponse
-      return result as BadRequestErrorResponse;
-    } else {
-      // result is a Feature<LineString, GeoJsonProperties>
-      return GetOkResponse(result);
-    }
-  } catch (error: any) {
-    return GetInternalServerErrorResponse(
-      `Error processing input: ${error.message}`
-    );
-  }
+export function RandomMultiPolygonWithProperties(): OkResponse {
+  return GetOkResponse(
+    RandomMultiPolygonOrRandomMultiPolygonWithProperties(true)
+  );
 }
 
 /**
- * Validates the input and returns a random Polygon at the center of a GeoJSON polygon or bbox.
+ * MultiPolygon within or around a center point, based on GeoJSON polygon or bbox.
  */
-export function WithinRandomPolygon(event: any): APIGatewayProxyResult {
+export function WithinMultiPolygon(event: any): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
 
   try {
-    const result = WithinRandomPolygonOrWithinRandomPolygonWithProperties(
+    const result = WithinMultiPolygonOrWithinMultiPolygonWithProperties(
       body,
       false
     );
@@ -92,16 +63,67 @@ export function WithinRandomPolygon(event: any): APIGatewayProxyResult {
   }
 }
 
-export function WithinRandomPolygonWithProperties(
+export function WithinMultiPolygonWithProperties(
   event: any
 ): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
 
   try {
-    const result = WithinRandomPolygonOrWithinRandomPolygonWithProperties(
+    const result = WithinMultiPolygonOrWithinMultiPolygonWithProperties(
       body,
       true
     );
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
+    }
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(
+      `Error processing input: ${error.message}`
+    );
+  }
+}
+
+/**
+ * Random MultiPolygon within the bbox or a GeoJSON polygon.
+ */
+export function WithinRandomMultiPolygon(event: any): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+
+  try {
+    const result =
+      WithinRandomMultiPolygonOrWithinRandomMultiPolygonWithProperties(
+        body,
+        false
+      );
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
+    }
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(
+      `Error processing input: ${error.message}`
+    );
+  }
+}
+
+export function WithinRandomMultiPolygonWithProperties(
+  event: any
+): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+
+  try {
+    const result =
+      WithinRandomMultiPolygonOrWithinRandomMultiPolygonWithProperties(
+        body,
+        true
+      );
     if ("error" in result) {
       // result is a BadRequestErrorResponse
       return result as BadRequestErrorResponse;

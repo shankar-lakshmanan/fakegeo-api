@@ -7,7 +7,7 @@ import {
   PointsLimitAndWithinWithProperties,
   RandomPointsWithProperties,
   RandomPointsLimitAndWithinWithProperties,
-} from "../functions/point/point";
+} from "../functions/points/points";
 
 export const featureCollectionPointsRoutes: Record<string, Function> = {
   /**

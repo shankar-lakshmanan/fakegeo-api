@@ -6,75 +6,31 @@ import {
   OkResponse,
 } from "../../util/stringify";
 import {
-  PolygonOrPolygonWithProperties,
-  RandomPolygonOrRandomPolygonWithProperties,
-  WithinPolygonOrWithinPolygonWithProperties,
-  WithinRandomPolygonOrWithinRandomPolygonWithProperties,
-} from "./polygonHelper";
+  PolygonsLimitAndWithinOrPolygonsLimitAndWithinWithProperties,
+  PolygonsOrPolygonsWithProperties,
+  RandomPolygonsLimitAndWithinOrRandomPolygonsLimitAndWithinWithProperties,
+  RandomPolygonsOrRandomPolygonsWithProperties,
+} from "./polygonHelpers";
 
-export function Polygon(): OkResponse {
-  return GetOkResponse(PolygonOrPolygonWithProperties(false));
+/**
+ * Polygons() - Returns a collection of polygons, limited to the last 30 polygons.
+ */
+export function Polygons(): OkResponse {
+  return GetOkResponse(PolygonsOrPolygonsWithProperties(false));
 }
 
-export function PolygonWithProperties(): OkResponse {
-  return GetOkResponse(PolygonOrPolygonWithProperties(true));
-}
-
-export function RandomPolygon(): OkResponse {
-  return GetOkResponse(RandomPolygonOrRandomPolygonWithProperties(false));
-}
-
-export function RandomPolygonWithProperties(): OkResponse {
-  return GetOkResponse(RandomPolygonOrRandomPolygonWithProperties(true));
+export function PolygonsWithProperties(): OkResponse {
+  return GetOkResponse(PolygonsOrPolygonsWithProperties(true));
 }
 
 /**
- * Validates the input and returns a Polygon at the center of a GeoJSON polygon or bbox.
+ * PolygonsLimitAndWithin() - Filters and limits polygons based on a GeoJSON polygon or bbox.
  */
-export function WithinPolygon(event: any): APIGatewayProxyResult {
-  const body = JSON.parse(event.body || "{}");
-  try {
-    const result = WithinPolygonOrWithinPolygonWithProperties(body, false);
-    if ("error" in result) {
-      // result is a BadRequestErrorResponse
-      return result as BadRequestErrorResponse;
-    } else {
-      // result is a Feature<LineString, GeoJsonProperties>
-      return GetOkResponse(result);
-    }
-  } catch (error: any) {
-    return GetInternalServerErrorResponse(
-      `Error processing input: ${error.message}`
-    );
-  }
-}
-
-export function WithinPolygonWithProperties(event: any): APIGatewayProxyResult {
-  const body = JSON.parse(event.body || "{}");
-  try {
-    const result = WithinPolygonOrWithinPolygonWithProperties(body, true);
-    if ("error" in result) {
-      // result is a BadRequestErrorResponse
-      return result as BadRequestErrorResponse;
-    } else {
-      // result is a Feature<LineString, GeoJsonProperties>
-      return GetOkResponse(result);
-    }
-  } catch (error: any) {
-    return GetInternalServerErrorResponse(
-      `Error processing input: ${error.message}`
-    );
-  }
-}
-
-/**
- * Validates the input and returns a random Polygon at the center of a GeoJSON polygon or bbox.
- */
-export function WithinRandomPolygon(event: any): APIGatewayProxyResult {
+export function PolygonsLimitAndWithin(event: any): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
 
   try {
-    const result = WithinRandomPolygonOrWithinRandomPolygonWithProperties(
+    const result = PolygonsLimitAndWithinOrPolygonsLimitAndWithinWithProperties(
       body,
       false
     );
@@ -92,16 +48,80 @@ export function WithinRandomPolygon(event: any): APIGatewayProxyResult {
   }
 }
 
-export function WithinRandomPolygonWithProperties(
+export function PolygonsLimitAndWithinWithProperties(
   event: any
 ): APIGatewayProxyResult {
   const body = JSON.parse(event.body || "{}");
 
   try {
-    const result = WithinRandomPolygonOrWithinRandomPolygonWithProperties(
+    const result = PolygonsLimitAndWithinOrPolygonsLimitAndWithinWithProperties(
       body,
       true
     );
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
+    }
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(
+      `Error processing input: ${error.message}`
+    );
+  }
+}
+
+/**
+ * RandomPolygons() - Returns 30 random polygons within a global bounding box.
+ */
+export function RandomPolygons(): OkResponse {
+  return GetOkResponse(RandomPolygonsOrRandomPolygonsWithProperties(false));
+}
+
+export function RandomPolygonsWithProperties(): OkResponse {
+  return GetOkResponse(RandomPolygonsOrRandomPolygonsWithProperties(true));
+}
+
+/**
+ * RandomPolygonsLimitAndWithin() - Filters and limits random polygons based on a GeoJSON polygon or bbox.
+ */
+export function RandomPolygonsLimitAndWithin(
+  event: any
+): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+
+  try {
+    const result =
+      RandomPolygonsLimitAndWithinOrRandomPolygonsLimitAndWithinWithProperties(
+        body,
+        false
+      );
+    if ("error" in result) {
+      // result is a BadRequestErrorResponse
+      return result as BadRequestErrorResponse;
+    } else {
+      // result is a Feature<LineString, GeoJsonProperties>
+      return GetOkResponse(result);
+    }
+  } catch (error: any) {
+    return GetInternalServerErrorResponse(
+      `Error processing input: ${error.message}`
+    );
+  }
+}
+
+export function RandomPolygonsLimitAndWithinWithProperties(
+  event: any
+): APIGatewayProxyResult {
+  const body = JSON.parse(event.body || "{}");
+
+  try {
+    const result =
+      RandomPolygonsLimitAndWithinOrRandomPolygonsLimitAndWithinWithProperties(
+        body,
+        true
+      );
     if ("error" in result) {
       // result is a BadRequestErrorResponse
       return result as BadRequestErrorResponse;

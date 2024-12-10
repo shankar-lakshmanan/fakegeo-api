@@ -7,7 +7,7 @@ import {
   PolygonsLimitAndWithinWithProperties,
   RandomPolygonsWithProperties,
   RandomPolygonsLimitAndWithinWithProperties,
-} from "../functions/polygon/polygon";
+} from "../functions/polygons/polygons";
 
 export const featureCollectionPolygonsRoutes: Record<string, Function> = {
   /**

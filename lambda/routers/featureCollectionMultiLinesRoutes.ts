@@ -7,7 +7,7 @@ import {
   MultiLinesLimitAndWithinWithProperties,
   RandomMultiLinesWithProperties,
   RandomMultiLinesLimitAndWithinWithProperties,
-} from "../functions/line/multiline";
+} from "../functions/multilines/multilines";
 
 export const featureCollectionMultiLinesRoutes: Record<string, Function> = {
   /**
