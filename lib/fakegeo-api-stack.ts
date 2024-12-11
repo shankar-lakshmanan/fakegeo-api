@@ -29,9 +29,6 @@ export class FakegeoApiStack extends cdk.Stack {
         bundling: {
           externalModules: [], // Include all dependencies
         },
-        // environment: {
-        //   PATH: "/var/task/ffmpeg:" + process.env.PATH
-        // },
       },
     );
 
