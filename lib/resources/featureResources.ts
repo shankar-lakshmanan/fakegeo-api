@@ -12,6 +12,7 @@ export function addFeatureResources(api: apigateway.RestApi, fakeGeoFunction: IF
         resource.addMethod("POST", new LambdaIntegration(fakeGeoFunction), methodOptions);
 
         const randomResource = resource.addResource("random");
+        randomResource.addMethod("GET", new LambdaIntegration(fakeGeoFunction), methodOptions);
         randomResource.addMethod("POST", new LambdaIntegration(fakeGeoFunction), methodOptions);
     });
 }

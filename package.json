@@ -5,12 +5,12 @@
     "fakegeo-api": "bin/fakegeo-api.js"
   },
   "scripts": {
-    "clean": "tsc --build --clean",
+    "clean": "rimraf dist",
     "build": "tsc --build",
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "serve": "npm run build && cdk deploy --profile shankar-dev-profile",
+    "serve": "npm run clean && npm run build && cdk deploy --profile shankar-dev-profile",
     "login": "aws sso login --profile shankar-dev-profile",
     "local": "npm run build && cdk synth && sam local invoke FakeGeoFunction -t ./cdk.out/FakegeoApiStack.template.json --event %EVENT_FILE%",
     "api": "cdk synth && sam local start-api -t ./cdk.out/FakegeoApiStack.template.json",
@@ -33,6 +33,7 @@
     "aws-cdk-lib": "2.143.0",
     "constructs": "^10.0.0",
     "dotenv": "^16.4.5",
+    "rimraf": "^6.0.1",
     "source-map-support": "^0.5.21"
   }
 }

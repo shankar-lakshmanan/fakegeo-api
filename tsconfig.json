@@ -21,7 +21,6 @@
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "outDir": "./dist",
-    "composite": true,
     "typeRoots": [
       "./node_modules/@types"
     ]
