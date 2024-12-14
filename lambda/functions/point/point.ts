@@ -102,7 +102,7 @@ export function WithinRandomPointWithProperties(
   try {
     const result = WithinRandomPointOrWithinRandomPointWithProperties(
       body,
-      false
+      true
     );
     if (result && "error" in result) {
       // result is a BadRequestErrorResponse

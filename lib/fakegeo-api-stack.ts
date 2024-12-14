@@ -6,7 +6,8 @@ import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import path = require('path');
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import * as dotenv from "dotenv";
-import { addApiResources } from './resources/resources';
+import { addNestedResources } from './resources/addNestedResources';
+import { addPointResources } from './resources/addPointResources';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -15,34 +16,26 @@ export class FakegeoApiStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // Define the Lambda function resource
-    // Define the Lambda function resource
-    const fakeGeoFunction = new NodejsFunction(
-      this,
-      "FakeGeoFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_20_X,
-        entry: path.join(__dirname, "..", "lambda/handlers", "fakeGeoHandler.ts"),
-        handler: "handler",
-        // timeout: cdk.Duration.minutes(10),
-        // memorySize: 2048,
-        bundling: {
-          externalModules: [], // Include all dependencies
-        },
-      },
-    );
-
     // Define the API Gateway resource
-    const api = new apigateway.LambdaRestApi(this, "FakeGeoApi", {
-      handler: fakeGeoFunction,
-      proxy: false,
+    const api = new apigateway.RestApi(this, "FakeGeoApi", {
+      defaultCorsPreflightOptions: {
+        allowOrigins: ["*"],
+        allowMethods: ["GET", "POST"],
+      },
     });
 
     const methodOptions =  {
       apiKeyRequired: true,
     }
 
-    addApiResources(api, fakeGeoFunction, methodOptions);
+    const pointFunction = new NodejsFunction(this, "PointFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      entry: path.join(__dirname, "..", "lambda/handlers", "pointHandler.ts"),
+      handler: "handler",
+      bundling: { externalModules: [] },
+    });
+    addPointResources(api,methodOptions, pointFunction)
+
 
     const plan = new apigateway.UsagePlan(this, "UsagePlan", {
       name: "Easy",

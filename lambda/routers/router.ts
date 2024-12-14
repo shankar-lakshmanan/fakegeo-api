@@ -13,23 +13,24 @@ import { featureCollectionMultiLinesRoutes } from "./featureCollectionMultiLines
 import { featureMultiPolygonRoutes } from "./featureMultiPolygonRoutes";
 import { featureCollectionMultiPolygonsRoutes } from "./featureCollectionMultiPolygonsRoutes";
 
-const routes: Record<string, Function> = {
-  ...featurePointRoutes,
-  ...featureLineRoutes,
-  ...featurePolygonRoutes,
-  ...featureCollectionPointsRoutes,
-  ...featureCollectionLinesRoutes,
-  ...featureCollectionPolygonsRoutes,
-  ...featureMultiPointRoutes,
-  ...featureCollectionMultiPointsRoutes,
-  ...featureMultiLineRoutes,
-  ...featureCollectionMultiLinesRoutes,
-  ...featureMultiPolygonRoutes,
-  ...featureCollectionMultiPolygonsRoutes,
-};
+// const routes: Record<string, Function> = {
+//   ...featurePointRoutes,
+//   ...featureLineRoutes,
+//   ...featurePolygonRoutes,
+//   ...featureCollectionPointsRoutes,
+//   ...featureCollectionLinesRoutes,
+//   ...featureCollectionPolygonsRoutes,
+//   ...featureMultiPointRoutes,
+//   ...featureCollectionMultiPointsRoutes,
+//   ...featureMultiLineRoutes,
+//   ...featureCollectionMultiLinesRoutes,
+//   ...featureMultiPolygonRoutes,
+//   ...featureCollectionMultiPolygonsRoutes,
+// };
 
 export const router = async (
-  event: APIGatewayProxyEvent
+  event: APIGatewayProxyEvent,
+  routes: Record<string, Function>,
 ): Promise<APIGatewayProxyResult> => {
   const key = `${event.httpMethod} ${event.path}`;
   const route = routes[key];
