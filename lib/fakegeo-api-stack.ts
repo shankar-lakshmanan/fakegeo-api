@@ -11,6 +11,10 @@ import { addPointResources } from './resources/addPointResources';
 import { addPointsResources } from './resources/addPointsResources';
 import { addMultiPointResources } from './resources/addMultiPointResources';
 import { addMultiPointsResources } from './resources/addMultiPointsResources';
+import { addLineResources } from './resources/addLineResources';
+import { addLinesResources } from './resources/addLinesResources';
+import { addMultiLineResources } from './resources/addMultiLineResources';
+import { addMultiLinesResources } from './resources/addMultiLinesResources';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -64,6 +68,40 @@ export class FakegeoApiStack extends cdk.Stack {
       bundling: { externalModules: [] },
     });
     addMultiPointsResources(featureCollectionResource,methodOptions, multiPointsFunction)
+
+
+    const lineFunction = new NodejsFunction(this, "LineFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      entry: path.join(__dirname, "..", "lambda/handlers", "LineHandler.ts"),
+      handler: "handler",
+      bundling: { externalModules: [] },
+    });
+    addLineResources(featureResource,methodOptions, lineFunction)
+
+    const linesFunction = new NodejsFunction(this, "LinesFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      entry: path.join(__dirname, "..", "lambda/handlers", "linesHandler.ts"),
+      handler: "handler",
+      bundling: { externalModules: [] },
+    });
+    addLinesResources(featureCollectionResource,methodOptions, linesFunction)
+
+    const multiLineFunction = new NodejsFunction(this, "MultiLineFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      entry: path.join(__dirname, "..", "lambda/handlers", "multiLineHandler.ts"),
+      handler: "handler",
+      bundling: { externalModules: [] },
+    });
+    addMultiLineResources(featureResource,methodOptions, multiLineFunction)
+
+    const multiLinesFunction = new NodejsFunction(this, "MultiLinesFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      entry: path.join(__dirname, "..", "lambda/handlers", "multiLinesHandler.ts"),
+      handler: "handler",
+      bundling: { externalModules: [] },
+    });
+    addMultiLinesResources(featureCollectionResource,methodOptions, multiLinesFunction)
+
 
 
     const plan = new apigateway.UsagePlan(this, "UsagePlan", {
