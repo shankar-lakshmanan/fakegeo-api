@@ -7,18 +7,18 @@ import path = require('path');
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import * as dotenv from "dotenv";
 import { addNestedResources } from './resources/addNestedResources';
-import { addPointResources } from './resources/addPointResources';
-import { addPointsResources } from './resources/addPointsResources';
-import { addMultiPointResources } from './resources/addMultiPointResources';
-import { addMultiPointsResources } from './resources/addMultiPointsResources';
-import { addLineResources } from './resources/addLineResources';
-import { addLinesResources } from './resources/addLinesResources';
-import { addMultiLineResources } from './resources/addMultiLineResources';
-import { addMultiLinesResources } from './resources/addMultiLinesResources';
-import { addPolygonResources } from './resources/addPolygonResources';
-import { addPolygonsResources } from './resources/addPolygonsResources';
-import { addMultiPolygonResources } from './resources/addMultiPolygonResources';
-import { addMultiPolygonsResources } from './resources/addMultiPolygonsResources';
+import { addPointResources } from './resources/point/addPointResources';
+import { addPointsResources } from './resources/point/addPointsResources';
+import { addMultiPointResources } from './resources/multipoint/addMultiPointResources';
+import { addMultiPointsResources } from './resources/multipoint/addMultiPointsResources';
+import { addLineResources } from './resources/line/addLineResources';
+import { addLinesResources } from './resources/line/addLinesResources';
+import { addMultiLineResources } from './resources/multiline/addMultiLineResources';
+import { addMultiLinesResources } from './resources/multiline/addMultiLinesResources';
+import { addPolygonResources } from './resources/polygon/addPolygonResources';
+import { addPolygonsResources } from './resources/polygon/addPolygonsResources';
+import { addMultiPolygonResources } from './resources/multipolygon/addMultiPolygonResources';
+import { addMultiPolygonsResources } from './resources/multipolygon/addMultiPolygonsResources';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -41,7 +41,7 @@ export class FakegeoApiStack extends cdk.Stack {
 
     const pointFunction = new NodejsFunction(this, "PointFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      entry: path.join(__dirname, "..", "lambda/handlers", "pointHandler.ts"),
+      entry: path.join(__dirname, "..", "lambda/handlers/point", "pointHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
     });
@@ -51,7 +51,7 @@ export class FakegeoApiStack extends cdk.Stack {
     const featureCollectionResource = api.root.addResource("featureCollection");
     const pointsFunction = new NodejsFunction(this, "PointsFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      entry: path.join(__dirname, "..", "lambda/handlers", "pointsHandler.ts"),
+      entry: path.join(__dirname, "..", "lambda/handlers/point", "pointsHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
     });
@@ -59,7 +59,7 @@ export class FakegeoApiStack extends cdk.Stack {
 
     const multiPointFunction = new NodejsFunction(this, "MultiPointFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      entry: path.join(__dirname, "..", "lambda/handlers", "multiPointHandler.ts"),
+      entry: path.join(__dirname, "..", "lambda/handlers/multipoint", "multiPointHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
     });
@@ -67,7 +67,7 @@ export class FakegeoApiStack extends cdk.Stack {
 
     const multiPointsFunction = new NodejsFunction(this, "MultiPointsFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      entry: path.join(__dirname, "..", "lambda/handlers", "multiPointsHandler.ts"),
+      entry: path.join(__dirname, "..", "lambda/handlers/multipoint", "multiPointsHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
     });
@@ -75,7 +75,7 @@ export class FakegeoApiStack extends cdk.Stack {
 
     const lineFunction = new NodejsFunction(this, "LineFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      entry: path.join(__dirname, "..", "lambda/handlers", "LineHandler.ts"),
+      entry: path.join(__dirname, "..", "lambda/handlers/line", "LineHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
     });
@@ -83,7 +83,7 @@ export class FakegeoApiStack extends cdk.Stack {
 
     const linesFunction = new NodejsFunction(this, "LinesFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      entry: path.join(__dirname, "..", "lambda/handlers", "linesHandler.ts"),
+      entry: path.join(__dirname, "..", "lambda/handlers/line", "linesHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
     });
@@ -91,7 +91,7 @@ export class FakegeoApiStack extends cdk.Stack {
 
     const multiLineFunction = new NodejsFunction(this, "MultiLineFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      entry: path.join(__dirname, "..", "lambda/handlers", "multiLineHandler.ts"),
+      entry: path.join(__dirname, "..", "lambda/handlers/multiline", "multiLineHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
     });
@@ -99,7 +99,7 @@ export class FakegeoApiStack extends cdk.Stack {
 
     const multiLinesFunction = new NodejsFunction(this, "MultiLinesFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      entry: path.join(__dirname, "..", "lambda/handlers", "multiLinesHandler.ts"),
+      entry: path.join(__dirname, "..", "lambda/handlers/multiline", "multiLinesHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
     });
@@ -107,7 +107,7 @@ export class FakegeoApiStack extends cdk.Stack {
 
     const polygonFunction = new NodejsFunction(this, "PolygonFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      entry: path.join(__dirname, "..", "lambda/handlers", "PolygonHandler.ts"),
+      entry: path.join(__dirname, "..", "lambda/handlers/polygon", "PolygonHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
     });
@@ -115,7 +115,7 @@ export class FakegeoApiStack extends cdk.Stack {
 
     const polygonsFunction = new NodejsFunction(this, "PolygonsFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      entry: path.join(__dirname, "..", "lambda/handlers", "PolygonsHandler.ts"),
+      entry: path.join(__dirname, "..", "lambda/handlers/polygon", "PolygonsHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
     });
@@ -123,7 +123,7 @@ export class FakegeoApiStack extends cdk.Stack {
 
     const multiPolygonFunction = new NodejsFunction(this, "MultiPolygonFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      entry: path.join(__dirname, "..", "lambda/handlers", "multiPolygonHandler.ts"),
+      entry: path.join(__dirname, "..", "lambda/handlers/multipolygon", "multiPolygonHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
     });
@@ -131,7 +131,7 @@ export class FakegeoApiStack extends cdk.Stack {
 
     const multiPolygonsFunction = new NodejsFunction(this, "MultiPolygonsFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
-      entry: path.join(__dirname, "..", "lambda/handlers", "multiPolygonsHandler.ts"),
+      entry: path.join(__dirname, "..", "lambda/handlers/multipolygon", "multiPolygonsHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
     });
