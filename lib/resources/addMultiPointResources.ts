@@ -2,23 +2,23 @@ import * as cdk from "aws-cdk-lib";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import { addNestedResources } from "./addNestedResources";
 
-export function addPointResources(
+export function addMultiPointResources(
   featureResource:  cdk.aws_apigateway.Resource,
   methodOptions: {
     apiKeyRequired: boolean;
   },
-  pointFunction: cdk.aws_lambda_nodejs.NodejsFunction
+  multiPointFunction: cdk.aws_lambda_nodejs.NodejsFunction
 ) {
-  const pointResource = featureResource.addResource("point");
-  // Attach methods to the base `pointResource`
-  pointResource.addMethod(
+  const multiPointResource = featureResource.addResource("multipoint");
+  // Attach methods to the base `multiPointResource`
+  multiPointResource.addMethod(
     "GET",
-    new apigateway.LambdaIntegration(pointFunction),
+    new apigateway.LambdaIntegration(multiPointFunction),
     methodOptions
   );
-  pointResource.addMethod(
+  multiPointResource.addMethod(
     "POST",
-    new apigateway.LambdaIntegration(pointFunction),
+    new apigateway.LambdaIntegration(multiPointFunction),
     methodOptions
   );
 
@@ -27,6 +27,6 @@ export function addPointResources(
 
   // Attach methods to all the paths
   nestedPaths.forEach((path) => {
-    addNestedResources(pointResource, path, pointFunction, methodOptions);
+    addNestedResources(multiPointResource, path, multiPointFunction, methodOptions);
   });
 }

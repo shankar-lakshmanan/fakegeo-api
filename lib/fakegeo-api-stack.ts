@@ -8,6 +8,9 @@ import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import * as dotenv from "dotenv";
 import { addNestedResources } from './resources/addNestedResources';
 import { addPointResources } from './resources/addPointResources';
+import { addPointsResources } from './resources/addPointsResources';
+import { addMultiPointResources } from './resources/addMultiPointResources';
+import { addMultiPointsResources } from './resources/addMultiPointsResources';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -34,7 +37,33 @@ export class FakegeoApiStack extends cdk.Stack {
       handler: "handler",
       bundling: { externalModules: [] },
     });
-    addPointResources(api,methodOptions, pointFunction)
+    const featureResource = api.root.addResource("feature");
+    addPointResources(featureResource,methodOptions, pointFunction)
+
+    const featureCollectionResource = api.root.addResource("featureCollection");
+    const pointsFunction = new NodejsFunction(this, "PointsFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      entry: path.join(__dirname, "..", "lambda/handlers", "pointsHandler.ts"),
+      handler: "handler",
+      bundling: { externalModules: [] },
+    });
+    addPointsResources(featureCollectionResource,methodOptions, pointsFunction)
+
+    const multiPointFunction = new NodejsFunction(this, "MultiPointFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      entry: path.join(__dirname, "..", "lambda/handlers", "multiPointHandler.ts"),
+      handler: "handler",
+      bundling: { externalModules: [] },
+    });
+    addMultiPointResources(featureResource,methodOptions, multiPointFunction)
+
+    const multiPointsFunction = new NodejsFunction(this, "MultiPointsFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      entry: path.join(__dirname, "..", "lambda/handlers", "multiPointsHandler.ts"),
+      handler: "handler",
+      bundling: { externalModules: [] },
+    });
+    addMultiPointsResources(featureCollectionResource,methodOptions, multiPointsFunction)
 
 
     const plan = new apigateway.UsagePlan(this, "UsagePlan", {
