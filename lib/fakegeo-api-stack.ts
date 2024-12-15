@@ -15,6 +15,10 @@ import { addLineResources } from './resources/addLineResources';
 import { addLinesResources } from './resources/addLinesResources';
 import { addMultiLineResources } from './resources/addMultiLineResources';
 import { addMultiLinesResources } from './resources/addMultiLinesResources';
+import { addPolygonResources } from './resources/addPolygonResources';
+import { addPolygonsResources } from './resources/addPolygonsResources';
+import { addMultiPolygonResources } from './resources/addMultiPolygonResources';
+import { addMultiPolygonsResources } from './resources/addMultiPolygonsResources';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -69,7 +73,6 @@ export class FakegeoApiStack extends cdk.Stack {
     });
     addMultiPointsResources(featureCollectionResource,methodOptions, multiPointsFunction)
 
-
     const lineFunction = new NodejsFunction(this, "LineFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
       entry: path.join(__dirname, "..", "lambda/handlers", "LineHandler.ts"),
@@ -102,7 +105,37 @@ export class FakegeoApiStack extends cdk.Stack {
     });
     addMultiLinesResources(featureCollectionResource,methodOptions, multiLinesFunction)
 
+    const polygonFunction = new NodejsFunction(this, "PolygonFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      entry: path.join(__dirname, "..", "lambda/handlers", "PolygonHandler.ts"),
+      handler: "handler",
+      bundling: { externalModules: [] },
+    });
+    addPolygonResources(featureResource,methodOptions, polygonFunction)
 
+    const polygonsFunction = new NodejsFunction(this, "PolygonsFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      entry: path.join(__dirname, "..", "lambda/handlers", "PolygonsHandler.ts"),
+      handler: "handler",
+      bundling: { externalModules: [] },
+    });
+    addPolygonsResources(featureCollectionResource,methodOptions, polygonsFunction)
+
+    const multiPolygonFunction = new NodejsFunction(this, "MultiPolygonFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      entry: path.join(__dirname, "..", "lambda/handlers", "multiPolygonHandler.ts"),
+      handler: "handler",
+      bundling: { externalModules: [] },
+    });
+    addMultiPolygonResources(featureResource,methodOptions, multiPolygonFunction)
+
+    const multiPolygonsFunction = new NodejsFunction(this, "MultiPolygonsFunction", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      entry: path.join(__dirname, "..", "lambda/handlers", "multiPolygonsHandler.ts"),
+      handler: "handler",
+      bundling: { externalModules: [] },
+    });
+    addMultiPolygonsResources(featureCollectionResource,methodOptions, multiPolygonsFunction)
 
     const plan = new apigateway.UsagePlan(this, "UsagePlan", {
       name: "Easy",
