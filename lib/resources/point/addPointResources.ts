@@ -4,9 +4,7 @@ import { addNestedResources } from "../addNestedResources";
 
 export function addPointResources(
   featureResource:  cdk.aws_apigateway.Resource,
-  methodOptions: {
-    apiKeyRequired: boolean;
-  },
+  methodOptions: cdk.aws_apigateway.MethodOptions,
   pointFunction: cdk.aws_lambda_nodejs.NodejsFunction
 ) {
   const pointResource = featureResource.addResource("point");

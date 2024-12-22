@@ -31,12 +31,20 @@ export class FakegeoApiStack extends cdk.Stack {
     const api = new apigateway.RestApi(this, "FakeGeoApi", {
       defaultCorsPreflightOptions: {
         allowOrigins: ["*"],
-        allowMethods: ["GET", "POST"],
+        allowMethods: ["GET", "POST", "OPTIONS"],
       },
     });
 
-    const methodOptions =  {
+    const methodOptions: cdk.aws_apigateway.MethodOptions =  {
       apiKeyRequired: true,
+      methodResponses: [
+        {
+          statusCode: "200",
+          responseParameters: {
+            "method.response.header.Access-Control-Allow-Origin": true,
+          },
+        },
+      ],
     }
 
     const pointFunction = new NodejsFunction(this, "PointFunction", {

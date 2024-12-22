@@ -4,9 +4,7 @@ import { addNestedResources } from "../addNestedResources";
 
 export function addPolygonResources(
   featureResource:  cdk.aws_apigateway.Resource,
-  methodOptions: {
-    apiKeyRequired: boolean;
-  },
+  methodOptions: cdk.aws_apigateway.MethodOptions,
   polygonFunction: cdk.aws_lambda_nodejs.NodejsFunction
 ) {
   const polygonResource = featureResource.addResource("polygon");

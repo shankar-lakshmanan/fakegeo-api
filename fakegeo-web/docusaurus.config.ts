@@ -2,10 +2,11 @@ import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import type * as Redocusaurus from 'redocusaurus';
+import 'dotenv/config';
 
 const config: Config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
+  title: 'FakeGeo',
+  tagline: 'Generate abundant fake geospatial data for showcasing, developing, and testing maps.',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -21,6 +22,13 @@ const config: Config = {
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
+
+  customFields: {
+    fakegeoApiUrl: process.env.FAKEGEO_API_URL,
+    googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
+    xApiKey: process.env.X_API_KEY,
+    mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN
+  },
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -84,6 +92,7 @@ const config: Config = {
         //   // Change with your site colors
         //   primaryColor: '#1890ff',
         // },
+        //@ts-ignore
         config: {
           expandResponses: 'all', // Expand responses for status codes 200 and 201
           scrollYOffset: 60,          // Adjust scroll offset for fixed headers
@@ -98,9 +107,9 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
     navbar: {
-      title: 'My Site',
+      title: 'FakeGeo',
       logo: {
-        alt: 'My Site Logo',
+        alt: 'FakeGeo Logo',
         src: 'img/logo.svg',
       },
       items: [
@@ -113,7 +122,7 @@ const config: Config = {
         {to: '/blog', label: 'Blog', position: 'left'},
         {to: '/api', label: 'API', position: 'left'},
         {
-          href: 'https://github.com/facebook/docusaurus',
+          href: 'https://github.com/fakegeo',
           label: 'GitHub',
           position: 'right',
         },
@@ -127,7 +136,11 @@ const config: Config = {
           items: [
             {
               label: 'Tutorial',
-              to: '/docs/intro',
+              to: '/docs/introduction',
+            },
+            {
+              label: 'API',
+              to: '/api',
             },
           ],
         },
@@ -136,16 +149,8 @@ const config: Config = {
           items: [
             {
               label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
-            },
+              href: 'https://stackoverflow.com/questions/tagged/fakegeo',
+            }
           ],
         },
         {
@@ -157,12 +162,12 @@ const config: Config = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              href: 'https://github.com/fakegeo',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Demos Distributed LLC. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

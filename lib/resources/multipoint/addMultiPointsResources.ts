@@ -4,9 +4,7 @@ import { addNestedResources } from "../addNestedResources";
 
 export function addMultiPointsResources(
   featureCollectionResource: cdk.aws_apigateway.Resource,
-  methodOptions: {
-    apiKeyRequired: boolean;
-  },
+  methodOptions: cdk.aws_apigateway.MethodOptions,
   multiPointsFunction: cdk.aws_lambda_nodejs.NodejsFunction
 ) {
   const multiPointsResource = featureCollectionResource.addResource("multipoints");

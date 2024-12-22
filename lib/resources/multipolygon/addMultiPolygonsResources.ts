@@ -4,9 +4,7 @@ import { addNestedResources } from "../addNestedResources";
 
 export function addMultiPolygonsResources(
   featureCollectionResource: cdk.aws_apigateway.Resource,
-  methodOptions: {
-    apiKeyRequired: boolean;
-  },
+  methodOptions: cdk.aws_apigateway.MethodOptions,
   multiPolygonsFunction: cdk.aws_lambda_nodejs.NodejsFunction
 ) {
   const multiPolygonsResource = featureCollectionResource.addResource("multipolygons");

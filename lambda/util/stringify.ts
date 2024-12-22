@@ -9,7 +9,11 @@ export type OkResponse = {
 export function GetOkResponse(payload: any): OkResponse {
   const response = {
     statusCode: 200,
-    headers: { "Content-Type": "text/plain" },
+    headers: { 
+      "Access-Control-Allow-Origin": "*", // Allow all origins
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS", // Allow specific methods
+      "Access-Control-Allow-Headers": "Content-Type", // Allow specific headers
+      "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   };
   return response;
@@ -28,7 +32,11 @@ export function GetBadRequestErrorResponse(
 ): BadRequestErrorResponse {
   const response = {
     statusCode: 400,
-    headers: { "Content-Type": "text/plain" },
+    headers: { 
+      "Access-Control-Allow-Origin": "*", // Allow all origins
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS", // Allow specific methods
+      "Access-Control-Allow-Headers": "Content-Type", // Allow specific headers
+      "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   };
   return response;
@@ -47,7 +55,11 @@ export function GetInternalServerErrorResponse(
 ): InternalServerErrorResponse {
   const response = {
     statusCode: 500,
-    headers: { "Content-Type": "text/plain" },
+    headers: { 
+      "Access-Control-Allow-Origin": "*", // Allow all origins
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS", // Allow specific methods
+      "Access-Control-Allow-Headers": "Content-Type", // Allow specific headers
+      "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   };
   return response;

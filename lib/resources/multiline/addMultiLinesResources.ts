@@ -4,9 +4,7 @@ import { addNestedResources } from "../addNestedResources";
 
 export function addMultiLinesResources(
   featureCollectionResource: cdk.aws_apigateway.Resource,
-  methodOptions: {
-    apiKeyRequired: boolean;
-  },
+  methodOptions: cdk.aws_apigateway.MethodOptions,
   multiLinesFunction: cdk.aws_lambda_nodejs.NodejsFunction
 ) {
   const multiLinesResource = featureCollectionResource.addResource("multilines");

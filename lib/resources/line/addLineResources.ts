@@ -4,9 +4,7 @@ import { addNestedResources } from "../addNestedResources";
 
 export function addLineResources(
   featureResource:  cdk.aws_apigateway.Resource,
-  methodOptions: {
-    apiKeyRequired: boolean;
-  },
+  methodOptions: cdk.aws_apigateway.MethodOptions,
   lineFunction: cdk.aws_lambda_nodejs.NodejsFunction
 ) {
   const lineResource = featureResource.addResource("line");

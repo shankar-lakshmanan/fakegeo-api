@@ -10,32 +10,35 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
+    title: 'Easy to Use API',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Get started with simple API calls to generate realistic geospatial data in seconds.
+        Focus on showcasing your map designs without the hassle of stubbing or manual GeoJSON creation.
+        Effortlessly test, develop, and iterate with our reliable and ready-to-use endpoints!
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Flexible',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Tailor your geospatial data needs with ease. Generate as much or as little as required.
+        Specify any area to get data from and control them via simple API calls.
+        Optionally include random properties for map popup visualization or stick to pure geometries.
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Customizable Outputs',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Fine-tune your geospatial data to match your project needs.
+        Choose from a variety of geometry types such as points, lines, 
+        or polygons features or feature collections to fit your use case.
       </>
     ),
   },
