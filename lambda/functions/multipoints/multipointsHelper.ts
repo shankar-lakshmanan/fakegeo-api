@@ -146,7 +146,7 @@ export function RandomMultiPointsLimitAndWithinOrRandomMultiPointsLimitAndWithin
 ) {
   const { limit, geojsonPolygon, bbox } = body;
 
-  let points: FeatureCollection = { features: [], type: "FeatureCollection" };
+  let points: FeatureCollection = turf.randomPoint(1000);
   let finalMultiPoints: FeatureCollection;
 
   // Generate random points within the geojsonPolygon or bbox

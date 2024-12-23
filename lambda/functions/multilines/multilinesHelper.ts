@@ -9,7 +9,6 @@ import {
 import {
   isGeoJSONPolygon,
   isValidBBox,
-  toMultiLineString,
 } from "../../util/geojsonHelper";
 import { GetBadRequestErrorResponse } from "../../util/stringify";
 import { thousandLines } from "../geojsonData/thousandLines";
@@ -26,8 +25,9 @@ export function RandomMultiLinesLimitAndWithinOrRandomMultiLinesLimitAndWithinWi
     features: [],
   };
 
-  let lineStrings: Feature<LineString>[] = [];
+  let lineStrings: Feature<LineString>[] = turf.randomLineString(1000).features;
 
+  // Generate random line strings within the geojsonPolygon or bbox
   if (
     geojsonPolygon &&
     geojsonPolygon.type === "Feature" &&
@@ -37,19 +37,31 @@ export function RandomMultiLinesLimitAndWithinOrRandomMultiLinesLimitAndWithinWi
     lineStrings = turf.randomLineString(1000, { bbox: bboxPoly }).features;
   } else if (bbox && Array.isArray(bbox) && bbox.length === 4) {
     lineStrings = turf.randomLineString(1000, { bbox: bbox as BBox }).features;
-  } else {
+  } else if (!limit) {
     return GetBadRequestErrorResponse(
       "Invalid input. Provide either a valid GeoJSON polygon or a bbox."
     );
   }
 
+  // Apply limit if specified
   if (limit && limit < lineStrings.length) {
     lineStrings = lineStrings.slice(0, limit);
   }
 
-  const multiLineFeature = toMultiLineString(lineStrings);
-  multiLineStrings.features.push(multiLineFeature);
+  // Create a MultiLineString feature for each lineString feature up to the limit
+  lineStrings.forEach((line) => {
+    const multiLineFeature: Feature<MultiLineString> = {
+      type: "Feature",
+      geometry: {
+        type: "MultiLineString",
+        coordinates: [line.geometry.coordinates], // Wrap coordinates as MultiLineString
+      },
+      properties: {}, // Add properties if needed
+    };
+    multiLineStrings.features.push(multiLineFeature);
+  });
 
+  // Add properties if requested
   if (withProperties) {
     const multiLinesWithProperties =
       populateGeoJsonFeatureCollectionWithProperties(multiLineStrings);
@@ -58,6 +70,7 @@ export function RandomMultiLinesLimitAndWithinOrRandomMultiLinesLimitAndWithinWi
 
   return multiLineStrings;
 }
+
 
 export function MultiLinesOrMultiLinesWithProperties(withProperties: boolean) {
   const lines: FeatureCollection = thousandLines; // Assuming thousandLines is defined elsewhere

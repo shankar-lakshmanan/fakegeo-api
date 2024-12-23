@@ -102,46 +102,49 @@ export function RandomPolygonsLimitAndWithinOrRandomPolygonsLimitAndWithinWithPr
   body: any,
   withProperties: boolean
 ) {
-  const { geojsonPolygon, bbox, limit } = body;
 
-  const globalBbox: [number, number, number, number] = [-180, -90, 180, 90];
-  const randomPolygons = [];
-  let finalPolygons;
-
-  for (let i = 0; i < 100; i++) {
-    // Generate more than needed for filtering purposes
-    const polygon = turf.randomPolygon(1, { bbox: globalBbox });
-    randomPolygons.push(polygon.features[0]);
-  }
-
-  let filteredPolygons = randomPolygons;
-
-  // Apply GeoJSON polygon filter if provided
-  if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
-    filteredPolygons = filteredPolygons.filter((polygon) =>
-      turf.booleanIntersects(polygon, geojsonPolygon)
-    );
-  }
-  // Apply bbox filter if provided
-  else if (bbox && isValidBBox(bbox)) {
-    const bboxPolygon = turf.bboxPolygon(bbox);
-    filteredPolygons = filteredPolygons.filter((polygon) =>
-      turf.booleanIntersects(polygon, bboxPolygon)
-    );
-  } else {
-    return GetBadRequestErrorResponse(
-      "Invalid input. Provide either a valid GeoJSON polygon or bbox."
-    );
-  }
-
-  const limitedPolygons = filteredPolygons.slice(0, limit || 30); // Limit to specified number or default to 30
-  finalPolygons = turf.featureCollection(limitedPolygons);
-
-  if (withProperties) {
-    const polygonsWithProperties =
-      populateGeoJsonFeatureCollectionWithProperties(finalPolygons);
-    return polygonsWithProperties;
-  }
-
-  return finalPolygons;
+  const { limit, geojsonPolygon, bbox } = body;
+  
+    let polygons: FeatureCollection = turf.randomPolygon(1000);
+    let finalPolygons: FeatureCollection;
+    // Check if geojsonPolygon is valid
+    if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
+      var bboxPoly = turf.bbox(geojsonPolygon);
+      polygons = turf.randomPolygon(1000, { bbox: bboxPoly,max_radial_length:1 });
+    } else if (bbox && isValidBBox(bbox)) {
+      // Create a polygon from the bbox
+      polygons = turf.randomPolygon(1000, { bbox: bbox,max_radial_length:1 });
+    }
+  
+    if (limit) {
+      if (polygons.features.length <= limit) {
+        // If there are fewer or equal polygons than the limit, return all polygons
+        finalPolygons = polygons;
+      } else if (limit < 1000) {
+        // If limit is less than 1000, return the specified number of polygons
+        const limitedPolygons = polygons.features.slice(0, limit);
+        finalPolygons = {
+          ...polygons,
+          features: limitedPolygons,
+        };
+      } else if (limit > 1000) {
+        // If limit is greater than 1000, return all polygons
+        finalPolygons = polygons;
+      } else {
+        return GetBadRequestErrorResponse(
+          "Invalid input. Provide a valid limit number"
+        );
+      }
+    } else {
+      // If no limit is specified, return all polygons
+      finalPolygons = polygons;
+    }
+  
+    if (withProperties) {
+      const polygonsWithProperties =
+        populateGeoJsonFeatureCollectionWithProperties(finalPolygons);
+      return polygonsWithProperties;
+    }
+  
+    return finalPolygons;
 }

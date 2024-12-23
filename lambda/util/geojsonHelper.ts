@@ -23,26 +23,6 @@ export function isValidBBox(bbox: any): boolean {
   );
 }
 
-
-/**
- * Helper function to convert a collection of LineStrings into a MultiLineString feature.
- */
-export function toMultiLineString(
-  lineStrings: Feature<LineString>[]
-): Feature<MultiLineString> {
-  const multiLineCoordinates = lineStrings.map(
-    (line) => line.geometry.coordinates
-  );
-  return {
-    type: "Feature",
-    geometry: {
-      type: "MultiLineString",
-      coordinates: multiLineCoordinates,
-    },
-    properties: {},
-  };
-}
-
 /**
  * Validate if a GeoJSON object is a MultiPolygon feature.
  */

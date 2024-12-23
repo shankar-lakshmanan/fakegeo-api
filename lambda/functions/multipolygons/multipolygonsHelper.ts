@@ -1,5 +1,5 @@
 import * as turf from "@turf/turf";
-import { FeatureCollection, GeoJsonProperties, Polygon } from "geojson";
+import { BBox, Feature, FeatureCollection, GeoJsonProperties, MultiPolygon, Polygon } from "geojson";
 import {
   isGeoJSONMultiPolygon,
   isGeoJSONPolygon,
@@ -32,59 +32,62 @@ export function MultiPolygonsLimitAndWithinOrMultiPolygonsLimitAndWithinWithProp
   body: any,
   withProperties: boolean
 ) {
+
   const { limit, geojsonPolygon, bbox } = body;
 
   let polygons: FeatureCollection = thousandPolygons;
-  let finalPolygons: FeatureCollection;
+  let finalPolygons: FeatureCollection<MultiPolygon>;
 
   if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
     const filteredPolygons = polygons.features.filter((feature) => {
-      if (
-        feature.geometry.type === "Polygon" ||
-        feature.geometry.type === "MultiPolygon"
-      ) {
-        const geometry =
-          feature.geometry.type === "Polygon"
-            ? turf.multiPolygon([feature.geometry.coordinates]) // Convert Polygon to MultiPolygon
-            : feature;
-        return turf.booleanIntersects(geometry, geojsonPolygon);
-      }
-      return false;
+      return (
+        feature.geometry.type === "Polygon" &&
+        turf.booleanWithin(feature.geometry as Polygon, geojsonPolygon)
+      );
     });
     polygons = turf.featureCollection(filteredPolygons);
   } else if (bbox && isValidBBox(bbox)) {
     const bboxPolygonGeometry = turf.bboxPolygon(bbox);
     const filteredPolygons = polygons.features.filter((feature) => {
-      if (
-        feature.geometry.type === "Polygon" ||
-        feature.geometry.type === "MultiPolygon"
-      ) {
-        const geometry =
-          feature.geometry.type === "Polygon"
-            ? turf.multiPolygon([feature.geometry.coordinates]) // Convert Polygon to MultiPolygon
-            : feature;
-        return turf.booleanIntersects(geometry, bboxPolygonGeometry);
-      }
-      return false;
+      return (
+        feature.geometry.type === "Polygon" &&
+        turf.booleanWithin(feature.geometry as Polygon, bboxPolygonGeometry)
+      );
     });
     polygons = turf.featureCollection(filteredPolygons);
   }
 
+  const multiPolygonFeatures = polygons.features.map((feature) => ({
+    type: "Feature" as const, // Ensure type is the literal "Feature"
+    geometry: {
+      type: "MultiPolygon",
+      coordinates: [(feature.geometry as Polygon).coordinates],
+    },
+    properties: feature.properties,
+  })) as Feature<MultiPolygon>[];
+
   if (limit) {
-    if (polygons.features.length <= limit) {
-      finalPolygons = polygons;
+    if (multiPolygonFeatures.length <= limit) {
+      finalPolygons = turf.featureCollection(
+        multiPolygonFeatures
+      ) as FeatureCollection<MultiPolygon>;
     } else if (limit < 1000) {
-      const limitedPolygons = polygons.features.slice(0, limit);
-      finalPolygons = turf.featureCollection(limitedPolygons);
+      finalPolygons = turf.featureCollection(
+        multiPolygonFeatures.slice(0, limit)
+      ) as FeatureCollection<MultiPolygon>;
     } else if (limit > 1000) {
-      finalPolygons = polygons;
+      finalPolygons = turf.featureCollection(
+        multiPolygonFeatures
+      ) as FeatureCollection<MultiPolygon>;
     } else {
       return GetBadRequestErrorResponse(
         "Invalid input. Provide a valid limit number."
       );
     }
   } else {
-    finalPolygons = polygons;
+    finalPolygons = turf.featureCollection(
+      multiPolygonFeatures
+    ) as FeatureCollection<MultiPolygon>;
   }
 
   if (withProperties) {
@@ -124,45 +127,55 @@ export function RandomMultiPolygonsLimitAndWithinOrRandomMultiPolygonsLimitAndWi
   body: any,
   withProperties: boolean
 ) {
-  const { geojsonPolygon, bbox, limit = 30 } = body;
+  const { limit, geojsonPolygon, bbox } = body;
 
-  const globalBbox: [number, number, number, number] = [-180, -90, 180, 90];
-  const randomPolygons = Array.from(
-    { length: 100 },
-    () => turf.randomPolygon(1, { bbox: globalBbox }).features[0]
-  );
+  let multiPolygonStrings: FeatureCollection<MultiPolygon> = {
+    type: "FeatureCollection",
+    features: [],
+  };
 
-  let filteredPolygons = randomPolygons;
+  let polygonStrings: Feature<Polygon>[] = turf.randomPolygon(1000).features;
 
+  // Generate random polygon strings within the geojsonPolygon or bbox
   if (
     geojsonPolygon &&
-    (isGeoJSONPolygon(geojsonPolygon) || isGeoJSONMultiPolygon(geojsonPolygon))
+    geojsonPolygon.type === "Feature" &&
+    geojsonPolygon.geometry.type === "Polygon"
   ) {
-    filteredPolygons = filteredPolygons.filter((polygon) =>
-      turf.booleanIntersects(polygon, geojsonPolygon)
-    );
-  } else if (bbox && isValidBBox(bbox)) {
-    const bboxPolygon = turf.bboxPolygon(bbox);
-    filteredPolygons = filteredPolygons.filter((polygon) =>
-      turf.booleanIntersects(polygon, bboxPolygon)
-    );
-  } else {
+    const bboxPoly = turf.bbox(geojsonPolygon);
+    polygonStrings = turf.randomPolygon(1000, { bbox: bboxPoly }).features;
+  } else if (bbox && Array.isArray(bbox) && bbox.length === 4) {
+    polygonStrings = turf.randomPolygon(1000, { bbox: bbox as BBox }).features;
+  } else if (!limit) {
     return GetBadRequestErrorResponse(
-      "Invalid input. Provide either a valid GeoJSON polygon or bbox."
+      "Invalid input. Provide either a valid GeoJSON polygon or a bbox."
     );
   }
 
-  const multiPolygons = turf.featureCollection(
-    filteredPolygons
-      .slice(0, limit)
-      .map((polygon) => turf.multiPolygon([polygon.geometry.coordinates]))
-  );
+  // Apply limit if specified
+  if (limit && limit < polygonStrings.length) {
+    polygonStrings = polygonStrings.slice(0, limit);
+  }
 
+  // Create a MultiLineString feature for each lineString feature up to the limit
+  polygonStrings.forEach((polygon) => {
+    const multiPolygonFeature: Feature<MultiPolygon> = {
+      type: "Feature",
+      geometry: {
+        type: "MultiPolygon",
+        coordinates: [polygon.geometry.coordinates], // Wrap coordinates as MultiLineString
+      },
+      properties: {}, // Add properties if needed
+    };
+    multiPolygonStrings.features.push(multiPolygonFeature);
+  });
+
+  // Add properties if requested
   if (withProperties) {
     const multiPolygonsWithProperties =
-      populateGeoJsonFeatureCollectionWithProperties(multiPolygons);
+      populateGeoJsonFeatureCollectionWithProperties(multiPolygonStrings);
     return multiPolygonsWithProperties;
   }
 
-  return multiPolygons;
+  return multiPolygonStrings;
 }

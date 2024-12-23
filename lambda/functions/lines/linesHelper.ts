@@ -100,7 +100,7 @@ export function RandomLinesLimitAndWithinOrRandomLinesLimitAndWithinWithProperti
 ) {
   const { limit, geojsonPolygon, bbox } = body;
 
-  let lines: FeatureCollection = { features: [], type: "FeatureCollection" };
+  let lines: FeatureCollection = turf.randomLineString(1000);
   let finalLines: FeatureCollection;
 
   if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {

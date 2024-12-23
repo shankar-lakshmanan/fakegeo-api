@@ -111,7 +111,7 @@ export function RandomPointsLimitAndWithinOrRandomPointsLimitAndWithinWithProper
 ) {
   const { limit, geojsonPolygon, bbox } = body;
 
-  let points: FeatureCollection = { features: [], type: "FeatureCollection" };
+  let points: FeatureCollection = turf.randomPoint(1000);
   let finalPoints: FeatureCollection;
   // Check if geojsonPolygon is valid
   if (geojsonPolygon && isGeoJSONPolygon(geojsonPolygon)) {
@@ -119,7 +119,6 @@ export function RandomPointsLimitAndWithinOrRandomPointsLimitAndWithinWithProper
     points = turf.randomPoint(1000, { bbox: bboxPoly });
   } else if (bbox && isValidBBox(bbox)) {
     // Create a polygon from the bbox
-
     points = turf.randomPoint(1000, { bbox: bbox });
   }
 
