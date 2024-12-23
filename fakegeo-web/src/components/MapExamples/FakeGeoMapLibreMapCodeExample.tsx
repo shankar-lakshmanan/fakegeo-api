@@ -12,10 +12,12 @@ export const FakeGeoMapLibreMapCodeExample: React.FC = () => {
     <pre>
    <CodeBlock language="javascript">
 {`const response = await fetch("${fakegeoApiUrl}/featureCollection/lines", {
+  method: 'POST',
   headers: {
     'X-API-KEY': '${xApiKey}',
     'Content-Type': 'application/json',
   },
+  body: JSON.stringify({"limit": 20, "bbox": [-56.250000,-22.593726,43.769531,37.996163]})
 });
 const geoJsonData = await response.json();
 

@@ -11,7 +11,7 @@ export const FakeGeoLeafletMapExample: React.FC = () => {
   return (
     <pre>
    <CodeBlock language="javascript">
-{`const response = await fetch("${fakegeoApiUrl}/polygon/properties", {
+{`const response = await fetch("${fakegeoApiUrl}/polygon/random/properties", {
   headers: {
     'X-API-KEY': '${xApiKey}',
     'Content-Type': 'application/json',

@@ -12,10 +12,12 @@ export const FakeGeoOpenLayersCodeExample: React.FC = () => {
     <pre>
    <CodeBlock language="javascript">
 {`const response = await fetch("${fakegeoApiUrl}/featureCollection/points", {
+  method: 'POST',
   headers: {
     'X-API-KEY': '${xApiKey}',
     'Content-Type': 'application/json',
   },
+  body: JSON.stringify({"limit": 5})
 });
 const geoJsonData = await response.json();
 

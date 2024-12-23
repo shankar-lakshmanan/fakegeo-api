@@ -38,11 +38,13 @@ const FakeGeoMapLibreMap: React.FC = () => {
       try {
         // Fetch the GeoJSON FeatureCollection from your API
         const response = await fetch(`${customFields.fakegeoApiUrl}/prod/featureCollection/lines`, {
+          method: 'POST',
           headers: {
             //@ts-ignore
             "X-API-KEY": customFields?.xApiKey,
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({"limit": 20, "bbox": [-56.250000,-22.593726,43.769531,37.996163]})
         });
 
         const geoJsonData = await response.json();

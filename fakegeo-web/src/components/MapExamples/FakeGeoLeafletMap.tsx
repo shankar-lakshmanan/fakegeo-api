@@ -19,7 +19,7 @@ const FakeGeoLeafletMap: React.FC = () => {
     // Fetch GeoJSON data from FakeGeo API
     const fetchGeoJson = async () => {
       try {
-        const response = await fetch(`${customFields.fakegeoApiUrl}/prod/feature/polygon/properties`, {
+        const response = await fetch(`${customFields.fakegeoApiUrl}/prod/feature/polygon/random/properties`, {
           headers: {
             "X-API-KEY": customFields.xApiKey as string,
             "Content-Type": "application/json",
