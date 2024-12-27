@@ -88,10 +88,10 @@ const config: Config = {
           // },
         ],
         // Theme Options for modifying how redoc renders them
-        // theme: {
-        //   // Change with your site colors
-        //   primaryColor: '#1890ff',
-        // },
+        theme: {
+          // Change with your site colors
+          primaryColor: '#9b59b6',
+        },
         //@ts-ignore
         config: {
           expandResponses: 'all', // Expand responses for status codes 200 and 201
@@ -105,12 +105,12 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    // image: 'img/docusaurus-social-card.jpg',
     navbar: {
       title: 'FakeGeo',
       logo: {
         alt: 'FakeGeo Logo',
-        src: 'img/logo.svg',
+        src: 'img/FakeGeoLogo.png',
       },
       items: [
         {

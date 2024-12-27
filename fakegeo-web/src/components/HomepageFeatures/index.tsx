@@ -4,14 +4,16 @@ import styles from './styles.module.css';
 
 type FeatureItem = {
   title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
+  imageUrl?: string; 
+  // Svg: React.ComponentType<React.ComponentProps<'svg'>>;
   description: JSX.Element;
 };
 
 const FeatureList: FeatureItem[] = [
   {
     title: 'Easy to Use API',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    // Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    imageUrl: require('@site/static/img/EasyImage.png').default,
     description: (
       <>
         Get started with simple API calls to generate realistic geospatial data in seconds.
@@ -22,7 +24,8 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Flexible',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    // Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    imageUrl: require('@site/static/img/FlexibleImage.png').default,
     description: (
       <>
         Tailor your geospatial data needs with ease. Generate as much or as little as required.
@@ -33,7 +36,8 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Customizable Outputs',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    // Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    imageUrl: require('@site/static/img/CustomizableImage.png').default,
     description: (
       <>
         Fine-tune your geospatial data to match your project needs.
@@ -44,11 +48,12 @@ const FeatureList: FeatureItem[] = [
   },
 ];
 
-function Feature({title, Svg, description}: FeatureItem) {
+function Feature({ title, imageUrl, description }: FeatureItem) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
+        {/* Render the image using the imageUrl */}
+        <img src={imageUrl} alt={title} className={styles.featureImage} />
       </div>
       <div className="text--center padding-horiz--md">
         <Heading as="h3">{title}</Heading>
