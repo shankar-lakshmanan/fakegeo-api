@@ -36,7 +36,7 @@ export class FakegeoApiStack extends cdk.Stack {
     });
 
     const methodOptions: cdk.aws_apigateway.MethodOptions =  {
-      apiKeyRequired: true,
+      apiKeyRequired: false,
       methodResponses: [
         {
           statusCode: "200",
@@ -47,11 +47,16 @@ export class FakegeoApiStack extends cdk.Stack {
       ],
     }
 
+    const durationInSeconds = 10
     const pointFunction = new NodejsFunction(this, "PointFunction", {
       runtime: lambda.Runtime.NODEJS_20_X,
       entry: path.join(__dirname, "..", "lambda/handlers/point", "pointHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
+      environment: {
+        POSTHOG_API_KEY: process.env.POSTHOG_API_KEY!,
+      },
+      timeout: cdk.Duration.seconds(durationInSeconds)
     });
     const featureResource = api.root.addResource("feature");
     addPointResources(featureResource,methodOptions, pointFunction)
@@ -62,6 +67,10 @@ export class FakegeoApiStack extends cdk.Stack {
       entry: path.join(__dirname, "..", "lambda/handlers/point", "pointsHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
+      environment: {
+        POSTHOG_API_KEY: process.env.POSTHOG_API_KEY!,
+      },
+      timeout: cdk.Duration.seconds(durationInSeconds)
     });
     addPointsResources(featureCollectionResource,methodOptions, pointsFunction)
 
@@ -70,6 +79,10 @@ export class FakegeoApiStack extends cdk.Stack {
       entry: path.join(__dirname, "..", "lambda/handlers/multipoint", "multiPointHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
+      environment: {
+        POSTHOG_API_KEY: process.env.POSTHOG_API_KEY!,
+      },
+      timeout: cdk.Duration.seconds(durationInSeconds)
     });
     addMultiPointResources(featureResource,methodOptions, multiPointFunction)
 
@@ -78,6 +91,10 @@ export class FakegeoApiStack extends cdk.Stack {
       entry: path.join(__dirname, "..", "lambda/handlers/multipoint", "multiPointsHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
+      environment: {
+        POSTHOG_API_KEY: process.env.POSTHOG_API_KEY!,
+      },
+      timeout: cdk.Duration.seconds(durationInSeconds)
     });
     addMultiPointsResources(featureCollectionResource,methodOptions, multiPointsFunction)
 
@@ -86,6 +103,10 @@ export class FakegeoApiStack extends cdk.Stack {
       entry: path.join(__dirname, "..", "lambda/handlers/line", "LineHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
+      environment: {
+        POSTHOG_API_KEY: process.env.POSTHOG_API_KEY!,
+      },
+      timeout: cdk.Duration.seconds(durationInSeconds)
     });
     addLineResources(featureResource,methodOptions, lineFunction)
 
@@ -94,6 +115,10 @@ export class FakegeoApiStack extends cdk.Stack {
       entry: path.join(__dirname, "..", "lambda/handlers/line", "linesHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
+      environment: {
+        POSTHOG_API_KEY: process.env.POSTHOG_API_KEY!,
+      },
+      timeout: cdk.Duration.seconds(durationInSeconds)
     });
     addLinesResources(featureCollectionResource,methodOptions, linesFunction)
 
@@ -102,6 +127,10 @@ export class FakegeoApiStack extends cdk.Stack {
       entry: path.join(__dirname, "..", "lambda/handlers/multiline", "multiLineHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
+      environment: {
+        POSTHOG_API_KEY: process.env.POSTHOG_API_KEY!,
+      },
+      timeout: cdk.Duration.seconds(durationInSeconds)
     });
     addMultiLineResources(featureResource,methodOptions, multiLineFunction)
 
@@ -110,6 +139,10 @@ export class FakegeoApiStack extends cdk.Stack {
       entry: path.join(__dirname, "..", "lambda/handlers/multiline", "multiLinesHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
+      environment: {
+        POSTHOG_API_KEY: process.env.POSTHOG_API_KEY!,
+      },
+      timeout: cdk.Duration.seconds(durationInSeconds)
     });
     addMultiLinesResources(featureCollectionResource,methodOptions, multiLinesFunction)
 
@@ -118,6 +151,10 @@ export class FakegeoApiStack extends cdk.Stack {
       entry: path.join(__dirname, "..", "lambda/handlers/polygon", "PolygonHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
+      environment: {
+        POSTHOG_API_KEY: process.env.POSTHOG_API_KEY!,
+      },
+      timeout: cdk.Duration.seconds(durationInSeconds)
     });
     addPolygonResources(featureResource,methodOptions, polygonFunction)
 
@@ -126,6 +163,10 @@ export class FakegeoApiStack extends cdk.Stack {
       entry: path.join(__dirname, "..", "lambda/handlers/polygon", "PolygonsHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
+      environment: {
+        POSTHOG_API_KEY: process.env.POSTHOG_API_KEY!,
+      },
+      timeout: cdk.Duration.seconds(durationInSeconds)
     });
     addPolygonsResources(featureCollectionResource,methodOptions, polygonsFunction)
 
@@ -134,6 +175,10 @@ export class FakegeoApiStack extends cdk.Stack {
       entry: path.join(__dirname, "..", "lambda/handlers/multipolygon", "multiPolygonHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
+      environment: {
+        POSTHOG_API_KEY: process.env.POSTHOG_API_KEY!,
+      },
+      timeout: cdk.Duration.seconds(durationInSeconds)
     });
     addMultiPolygonResources(featureResource,methodOptions, multiPolygonFunction)
 
@@ -142,6 +187,10 @@ export class FakegeoApiStack extends cdk.Stack {
       entry: path.join(__dirname, "..", "lambda/handlers/multipolygon", "multiPolygonsHandler.ts"),
       handler: "handler",
       bundling: { externalModules: [] },
+      environment: {
+        POSTHOG_API_KEY: process.env.POSTHOG_API_KEY!,
+      },
+      timeout: cdk.Duration.seconds(durationInSeconds)
     });
     addMultiPolygonsResources(featureCollectionResource,methodOptions, multiPolygonsFunction)
 
@@ -157,8 +206,8 @@ export class FakegeoApiStack extends cdk.Stack {
       },
     });
 
-    const key = api.addApiKey(process.env.FAKE_GEO_API_KEY!);
-    plan.addApiKey(key);
+    // const key = api.addApiKey(process.env.FAKE_GEO_API_KEY!);
+    // plan.addApiKey(key);
 
     plan.addApiStage({
       stage: api.deploymentStage,
