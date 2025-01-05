@@ -316,20 +316,27 @@ export class FakegeoApiStack extends cdk.Stack {
     const plan = new apigateway.UsagePlan(this, "UsagePlan", {
       name: "Easy",
       throttle: {
-        rateLimit: 100,
-        burstLimit: 2,
+        rateLimit: 100, // Maximum requests per second
+        burstLimit: 2,  // Burst limit for throttling
       },
       quota: {
-        limit: 1000,
-        period: apigateway.Period.DAY,
+        limit: 50000,    // Total requests allowed
+        period: apigateway.Period.DAY, // Quota period
       },
     });
-
-    // const key = api.addApiKey(process.env.FAKE_GEO_API_KEY!);
-    // plan.addApiKey(key);
-
+    
+    // Generate an API key
+    const apiKey = api.addApiKey("DefaultApiKey", {
+      value: process.env.FAKE_GEO_API_KEY!, // Use an environment variable to securely define the key
+      description: "Default API Key for all requests",
+    });
+    
+    // Add the API key to the usage plan
+    plan.addApiKey(apiKey);
+    
+    // Link the usage plan to the deployment stage of the API
     plan.addApiStage({
-      stage: api.deploymentStage,
+      stage: api.deploymentStage, // Associates the usage plan with the API's stage
     });
 
     // Route53 Record
